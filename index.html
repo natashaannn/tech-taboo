@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Taboo Card Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; margin: 0; }
+    .container { max-width: 600px; margin: auto; }
+    textarea { width: 100%; height: 120px; font-family: monospace; margin-bottom: 10px; box-sizing: border-box; }
+    button { padding: 10px 20px; font-size: 16px; margin: 4px 2px; }
+    #output { width: 100%; overflow-x: auto; }
+    svg { display: block; margin: 20px auto; background: white; max-width: 100%; height: auto; }
+    @media (max-width: 700px) {
+      .container { padding: 0 5px; }
+      svg { width: 100% !important; height: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Techie Taboo Card Generator</h1>
+    <p>Enter two lines like this:</p>
+    <pre>
+WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5
+WordToGuess2 | taboo1, taboo2, taboo3, taboo4, taboo5
+    </pre>
+    <textarea id="input">CLOUD | Internet, Server, Storage, AWS, Azure
+BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized</textarea><br>
+    <button onclick="generate()">Generate Card</button>
+    <button onclick="saveSVG()">Save as SVG</button>
+    <button onclick="savePNG()">Save as PNG</button>
+    <div id="output"></div>
+  </div>
+  <script>
+    function generate() {
+      const lines = document.getElementById("input").value.trim().split("\n");
+      const top = lines[0].split("|").map(s => s.trim());
+      const bottom = lines[1].split("|").map(s => s.trim());
+
+      const topWord = top[0];
+      const topTaboos = top[1].split(",").map(s => s.trim());
+      const bottomWord = bottom[0];
+      const bottomTaboos = bottom[1].split(",").map(s => s.trim());
+
+      const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="580" height="890"
+     viewBox="0 0 580 890"
+     version="1.1">
+
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A1F33"/>
+      <stop offset="100%" stop-color="#17424A"/>
+    </linearGradient>
+    <pattern id="binaryPattern" width="80" height="80" patternUnits="userSpaceOnUse">
+      <text x="0" y="35" font-family="sometype mono, monospace"
+            font-size="28" fill="rgba(200,220,255,0.18)">0101</text>
+      <text x="0" y="70" font-family="sometype mono, monospace"
+            font-size="28" fill="rgba(200,220,255,0.18)">1010</text>
+    </pattern>
+    <filter id="blur"><feGaussianBlur stdDeviation="0.8"/></filter>
+  </defs>
+
+  <!-- Bleed background -->
+  <rect x="0" y="0" width="580" height="890" fill="white"/>
+
+  <!-- Trim area -->
+  <g transform="translate(30,30)">
+    <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="url(#bgGrad)"/>
+    <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="url(#binaryPattern)" filter="url(#blur)"/>
+    <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="none" stroke="#17424A" stroke-width="14"/>
+    <line x1="0" y1="415" x2="520" y2="415" stroke="#17424A" stroke-width="3" opacity="0.7"/>
+
+    <!-- Top half -->
+    <g id="top-half">
+      <text x="260" y="110" text-anchor="middle"
+            font-family="sometype mono, monospace" font-size="56"
+            fill="white" font-weight="bold">${topWord}</text>
+      <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
+      ${topTaboos.map((w,i) =>
+        `<text x="260" y="${200+i*40}" text-anchor="middle"
+               font-family="sometype mono, monospace" font-size="28"
+               fill="#062E35">${w}</text>`
+      ).join("")}
+    </g>
+
+    <!-- Bottom half -->
+    <g id="bottom-half" transform="translate(520,830) rotate(180)">
+      <text x="260" y="110" text-anchor="middle"
+            font-family="sometype mono, monospace" font-size="56"
+            fill="white" font-weight="bold">${bottomWord}</text>
+      <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
+      ${bottomTaboos.map((w,i) =>
+        `<text x="260" y="${200+i*40}" text-anchor="middle"
+               font-family="sometype mono, monospace" font-size="28"
+               fill="#062E35">${w}</text>`
+      ).join("")}
+    </g>
+  </g>
+
+  <!-- Bleed marks -->
+  <rect x="0" y="0" width="580" height="890" fill="none" stroke="red" stroke-width="1" stroke-dasharray="6 4"/>
+  <rect x="30" y="30" width="520" height="830" rx="40" ry="40"
+        fill="none" stroke="blue" stroke-width="1" stroke-dasharray="6 4"/>
+</svg>`;
+
+      document.getElementById("output").innerHTML = svg;
+    }
+
+    function saveSVG() {
+      const svgData = document.getElementById("output").innerHTML;
+      const blob = new Blob([svgData], {type: "image/svg+xml"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "taboo-card.svg";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function savePNG() {
+      const svgElement = document.getElementById("output").querySelector("svg");
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const img = new Image();
+      const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+      const url = URL.createObjectURL(svgBlob);
+      img.onload = function() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 580;
+        canvas.height = 890;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob(function(blob) {
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "taboo-card.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, "image/png");
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = function() {
+        alert("PNG export failed. Try a different browser.");
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }
+
+    // Generate once on load
+    generate();
+  </script>
+</body>
+</html>
