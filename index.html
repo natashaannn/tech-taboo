@@ -8,7 +8,8 @@
     body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; margin: 0; }
     .container { max-width: 600px; margin: auto; }
     textarea { width: 100%; height: 120px; font-family: monospace; margin-bottom: 10px; box-sizing: border-box; }
-    button { padding: 10px 20px; font-size: 16px; margin: 4px 2px; }
+    button { background-color: white ; padding: 10px 20px; font-size: 16px; margin: 4px 2px; border-radius: 12px; }
+    .cta { background-color: #0A1F33; color: white; border: none; cursor: pointer; }
     #output { width: 100%; overflow-x: auto; }
     svg { display: block; margin: 20px auto; background: white; max-width: 100%; height: auto; }
     @media (max-width: 700px) {
@@ -19,97 +20,197 @@
 </head>
 <body>
   <div class="container">
-    <h1>Techie Taboo Card Generator</h1>
+    <h1>🎴Techie Taboo Card Generator</h1>
+    <i>Made with 💜 by <a href="https://linktr.ee/ragtechdev">ragTech</a>, a real life in tech podcast</i>
+    <div id="output"></div>
     <p>Enter two lines like this:</p>
     <pre>
-WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5
-WordToGuess2 | taboo1, taboo2, taboo3, taboo4, taboo5
+    WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5
+    WordToGuess2 | taboo1, taboo2, taboo3, taboo4, taboo5
     </pre>
     <textarea id="input">CLOUD | Internet, Server, Storage, AWS, Azure
-BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized</textarea><br>
-    <button onclick="generate()">Generate Card</button>
-    <button onclick="saveSVG()">Save as SVG</button>
-    <button onclick="savePNG()">Save as PNG</button>
-    <div id="output"></div>
+BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
+    </textarea><br>
+    <button class="cta" onclick="generate()">✨Generate Card</button>
+    <button onclick="fillInputRandom()">🎲Random Card</button>
+    <div>
+      <button onclick="showWordSelector()">❔Choose Words</button>
+      <span id="selector"></span>
+    </div>
+
+
+    <button onclick="saveSVG()">💾Save as SVG</button>
+    <button onclick="savePNG()">💾Save as PNG</button>
   </div>
+
   <script>
+    const tabooList = [
+      { word: "Router", taboo: ["Network", "WiFi", "Internet", "Connect", "Device"] },
+      { word: "Database", taboo: ["Storage", "Records", "Data", "Information", "System"] },
+      { word: "Encryption", taboo: ["Secure", "Lock", "Protect", "Code", "Cipher"] },
+      { word: "Algorithm", taboo: ["Math", "Formula", "Code", "Logic", "Sequence"] },
+      { word: "Pixel", taboo: ["Image", "Screen", "Display", "Graphics", "Resolution"] },
+      { word: "Firewall", taboo: ["Security", "Block", "Protect", "Network", "Safety"] },
+      { word: "Cache", taboo: ["Memory", "Store", "Fast", "Access", "Speed"] },
+      { word: "Server", taboo: ["Computer", "Host", "Network", "Service", "Provider"] },
+      { word: "Bandwidth", taboo: ["Speed", "Internet", "Connection", "Data", "Transfer"] },
+      { word: "Cookie", taboo: ["Tracking", "Browser", "Data", "Information", "Store"] },
+      { word: "Object Oriented Programming", taboo: ["Class", "Polymorphism", "Inheritance", "Encapsulation", "Method"] },
+      { word: "Phishing", taboo: ["Scam", "Email", "Hack", "Password", "Steal"] },
+      { word: "GPU", taboo: ["Graphics", "Card", "Processing", "Unit", "Fast"] },
+      { word: "RAM", taboo: ["Memory", "Upgrade", "Performance", "Speed", "Fast"] },
+      { word: "Browser", taboo: ["Internet", "Explorer", "Chrome", "Firefox", "Safari"] },
+      { word: "HTML", taboo: ["Code", "Markup", "Language", "Web", "Page"] },
+      { word: "CSS", taboo: ["Style", "Sheet", "Design", "Layout", "Format"] },
+      { word: "JavaScript", taboo: ["Script", "Code", "Programming", "Language", "Web"] },
+      { word: "API", taboo: ["Interface", "Application", "Programming", "Data", "Exchange"] },
+      { word: "Malware", taboo: ["Virus", "Spyware", "Trojan", "Horse", "Malicious"] },
+      { word: "LAN", taboo: ["Local", "Network", "Area", "Connection", "Fast"] },
+      { word: "WAN", taboo: ["Wide", "Area", "Network", "Connection", "Remote"] },
+      { word: "IP Address", taboo: ["Internet", "Protocol", "Address", "Number", "Unique"] },
+      { word: "DNS", taboo: ["Domain", "Name", "System", "Server", "Resolve"] },
+      { word: "HTTP", taboo: ["Hypertext", "Transfer", "Protocol", "Web", "Data"] },
+      { word: "HTTPS", taboo: ["Secure", "Hypertext", "Transfer", "Protocol", "Web"] },
+      { word: "SSL", taboo: ["Secure", "Sockets", "Layer", "Certificate", "HTTP"] },
+      { word: "TLS", taboo: ["Transport", "Layer", "Security", "Protocol", "Secure"] },
+      { word: "Certificate", taboo: ["Secure", "Authority", "Verify", "Identity", "Trusted"] },
+      { word: "Biometric", taboo: ["Security", "Fingerprint", "Face", "Recognition", "Scan"] },
+      { word: "Password", taboo: ["Login", "Credential", "Secure", "Access", "Code"] },
+      { word: "Authentication", taboo: ["Login", "Verify", "Identity", "Secure", "Access"] },
+      { word: "Authorization", taboo: ["Access", "Control", "Permission", "Secure", "Verify"] },
+      { word: "Encryption Key", taboo: ["Secure", "Code", "Cipher", "Decrypt", "Unlock"] },
+      { word: "Decryption", taboo: ["Secure", "Unlock", "Code", "Cipher", "Break"] },
+      { word: "Cybercrime", taboo: ["Hacking", "Crime", "Security", "Threat", "Online"] },
+      { word: "Hacker", taboo: ["Cracker", "Security", "Threat", "Online", "Malicious"] },
+      { word: "Vulnerability", taboo: ["Weakness", "Exploit", "Security", "Threat", "Risk"] },
+      { word: "Patch", taboo: ["Update", "Fix", "Security", "Vulnerability", "Bug"] },
+      { word: "Artificial Intelligence", taboo: ["Machine", "Learning", "AI", "Smart", "Robot"] },
+      { word: "Machine Learning", taboo: ["AI", "Algorithm", "Data", "Model", "Train"] },
+      { word: "Deep Learning", taboo: ["Neural", "Network", "AI", "Model", "Complex"] },
+      { word: "NLP", taboo: ["Natural", "Language", "Processing", "Model", "Understand"] },
+      { word: "Computer Vision", taboo: ["Image", "Recognition", "AI", "Model", "Analyze"] },
+      { word: "Robotics", taboo: ["Robot", "Automation", "AI", "Control", "System"] },
+      { word: "Internet of Things", taboo: ["Sensor", "Arduino", "Device", "Connect", "Smart"] },
+      { word: "Blockchain", taboo: ["Bitcoin", "Cryptocurrency", "Secure", "Ledger", "Block"] },
+      { word: "Cloud Computing", taboo: ["Cloud", "Server", "Network", "Storage", "Online"] },
+      { word: "Big Data", taboo: ["Large", "Analytics", "Data", "Insight", "Volume"] },
+      { word: "Data Mining", taboo: ["Data", "Analysis", "Pattern", "Discovery", "Insights"] },
+      { word: "Predictive Analytics", taboo: ["Forecast", "Model", "Data", "Insights", "Future"] },
+      { word: "Cybersecurity", taboo: ["Security", "Threat", "Protection", "Network", "Safe"] },
+      { word: "Network Architecture", taboo: ["Design", "Layout", "Network", "Infrastructure", "Plan"] },
+      { word: "Database Management", taboo: ["Data", "Storage", "Organization", "System", "Control"] },
+      { word: "Software Development", taboo: ["Code", "Programming", "Design", "Test", "Deploy"] },
+      { word: "Agile Development", taboo: ["Iterative", "Flexible", "Adaptive", "Development", "Fast"] },
+      { word: "DevOps", taboo: ["Development", "Operations", "Automation", "Pipeline", "CI/CD"] },
+      { word: "Containerization", taboo: ["Docker", "Virtualization", "Deployment", "Isolation", "Lightweight"] },
+      { word: "Virtual Reality", taboo: ["VR", "Simulation", "Immersive", "Experience", "Interactive"] },
+      { word: "Augmented Reality", taboo: ["AR", "Overlay", "Digital", "Information", "Interactive"] },
+      { word: "Machine Vision", taboo: ["Image", "Processing", "Analysis", "Recognition", "AI"] },
+      { word: "SaaS", taboo: ["Software", "Cloud", "Subscription", "Service", "Online"] },
+      { word: "Chatbot", taboo: ["AI", "Bot", "Conversation", "Interface", "Interactive"] },
+      { word: "Voice Assistant", taboo: ["AI", "Voice", "Recognition", "Assistant", "Help"] },
+      { word: "Data Visualization", taboo: ["Graph", "Chart", "Insights", "Data", "Storytelling"] },
+      { word: "Business Intelligence", taboo: ["BI", "Data", "Insights", "Analytics", "Reporting"] },
+      { word: "Data Warehouse", taboo: ["Data", "Storage", "Repository", "Analytics", "Insights"] },
+      { word: "ETL", taboo: ["Extract", "Transform", "Load", "Data", "Integration"] },
+      { word: "Data Governance", taboo: ["Data", "Management", "Policy", "Security", "Quality"] },
+      { word: "Information Security", taboo: ["Security", "Threat", "Protection", "Data", "Confidential"] },
+      { word: "Penetration Testing", taboo: ["Security", "Testing", "Vulnerability", "Assessment", "Risk"] },
+      { word: "Incident Response", taboo: ["Security", "Breach", "Bug", "Plan", "Recovery"] },
+      { word: "Threat Intelligence", taboo: ["Security", "Threat", "Analysis", "Insights", "Predictive"] },
+      { word: "Security Information", taboo: ["Security", "Event", "Management", "Log", "Analysis"] },
+      { word: "Identity Management", taboo: ["Access", "Control", "Authentication", "Authorization", "Secure"] },
+      { word: "Git", taboo: ["Version", "Control", "Repository", "Branch", "Commit"] },
+      { word: "Compiler", taboo: ["Code", "Translate", "Language", "Program", "Binary"] },
+      { word: "Debugging", taboo: ["Error", "Fix", "Code", "Problem", "Bug"] },
+      { word: "Open Source", taboo: ["Free", "Code", "Community", "Modify", "License"] },
+      { word: "IDE", taboo: ["Integrated", "Development", "Environment", "Code", "Editor"] },
+      { word: "Load Balancer", taboo: ["Traffic", "Server", "Distribute", "Network", "Request"] },
+      { word: "Round Robin", taboo: ["Schedule", "Equal", "Rotate", "Turn", "Load Balancing"] },
+      { word: "Quantum Computing", taboo: ["Qubit", "Superposition", "Entanglement", "Physics", "Classical"] },
+      { word: "Edge Computing", taboo: ["Distributed", "Computing", "Network", "Edge", "Fast"] },
+      { word: "5G Network", taboo: ["Fast", "Mobile", "Network", "Connectivity", "Future"] },
+      { word: "Internet Security", taboo: ["Security", "Threat", "Protection", "Network", "Safe"] },
+      { word: "Recursion", taboo: ["Function", "Call", "Itself", "Loop", "Repeat"] },
+      { word: "Endpoint Security", taboo: ["Device", "Security", "Protection", "Threat", "Detection"] },
+      { word: "Network Security", taboo: ["Protect", "Firewall", "Threat", "Access", "Data"] },
+      { word: "Application Security", taboo: ["Secure", "Development", "Testing", "Deployment", "Safe"] },
+      { word: "Data Protection", taboo: ["Security", "Data", "Safe", "Confidential", "Private"] },
+      { word: "Compliance", taboo: ["Regulation", "Law", "Policy", "Adherence", "Rules"] },
+      { word: "Risk Management", taboo: ["Risk", "Assessment", "Mitigation", "Plan", "Control"] },
+      { word: "Responsive Design", taboo: ["Mobile", "Web", "Design", "Layout", "CSS"] },
+      { word: "Incident Management", taboo: ["Response", "Plan", "Recovery", "Security", "Incident"] },
+      { word: "Vulnerability Management", taboo: ["Security", "Risk", "Assessment", "Mitigation", "Plan"] },
+      { word: "Threat Modeling", taboo: ["Security", "Risk", "Detection", "Identify", "Vulnerability"] },
+      { word: "Security Orchestration", taboo: ["Automation", "Security", "Response", "Plan", "Integration"] },
+      { word: "AI Security", taboo: ["Artificial", "Intelligence", "Threat", "Protection", "Safe"] },
+      { word: "Cybersecurity Framework", taboo: ["Security", "Framework", "Guidelines", "Best", "Practices"] }
+    ];
+
+    function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos) {
+      return `<?xml version="1.0" encoding="UTF-8"?>
+    <svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
+      <defs>
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0A1F33"/>
+          <stop offset="100%" stop-color="#17424A"/>
+        </linearGradient>
+        <pattern id="binaryPattern" width="580" height="80" patternUnits="userSpaceOnUse">
+          <text x="0" y="35" font-family="sometype mono, monospace"
+                font-size="28" fill="rgba(200,220,255,0.18)">
+            0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
+          </text>
+          <text x="0" y="70" font-family="sometype mono, monospace"
+                font-size="28" fill="rgba(200,220,255,0.18)">
+            1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
+          </text>
+        </pattern>
+        <filter id="blur"><feGaussianBlur stdDeviation="0.8"/></filter>
+      </defs>
+      <rect x="0" y="0" width="580" height="890" fill="white"/>
+      <g transform="translate(30,30)">
+        <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="url(#bgGrad)"/>
+        <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="url(#binaryPattern)" filter="url(#blur)"/>
+        <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="none" stroke="#17424A" stroke-width="14"/>
+        <line x1="0" y1="415" x2="520" y2="415" stroke="#17424A" stroke-width="3" opacity="0.7"/>
+        <g id="top-half">
+          <text x="260" y="110" text-anchor="middle"
+                font-family="sometype mono, monospace" font-size="56"
+                fill="white" font-weight="bold">${topWord}</text>
+          <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
+          ${topTaboos.map((w,i) =>
+            `<text x="260" y="${200+i*40}" text-anchor="middle"
+                  font-family="sometype mono, monospace" font-size="28"
+                  fill="#062E35">${w}</text>`
+          ).join("")}
+        </g>
+        <g id="bottom-half" transform="translate(520,830) rotate(180)">
+          <text x="260" y="110" text-anchor="middle"
+                font-family="sometype mono, monospace" font-size="56"
+                fill="white" font-weight="bold">${bottomWord}</text>
+          <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
+          ${bottomTaboos.map((w,i) =>
+            `<text x="260" y="${200+i*40}" text-anchor="middle"
+                  font-family="sometype mono, monospace" font-size="28"
+                  fill="#062E35">${w}</text>`
+          ).join("")}
+        </g>
+      </g>
+      <rect x="0" y="0" width="580" height="890" fill="none" stroke="red" stroke-width="1" stroke-dasharray="6 4"/>
+      <rect x="30" y="30" width="520" height="830" rx="40" ry="40"
+            fill="none" stroke="blue" stroke-width="1" stroke-dasharray="6 4"/>
+    </svg>`;
+    }
+
     function generate() {
       const lines = document.getElementById("input").value.trim().split("\n");
       const top = lines[0].split("|").map(s => s.trim());
       const bottom = lines[1].split("|").map(s => s.trim());
-
       const topWord = top[0];
       const topTaboos = top[1].split(",").map(s => s.trim());
       const bottomWord = bottom[0];
       const bottomTaboos = bottom[1].split(",").map(s => s.trim());
-
-      const svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg"
-     width="580" height="890"
-     viewBox="0 0 580 890"
-     version="1.1">
-
-  <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0A1F33"/>
-      <stop offset="100%" stop-color="#17424A"/>
-    </linearGradient>
-    <pattern id="binaryPattern" width="580" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="sometype mono, monospace"
-            font-size="28" fill="rgba(200,220,255,0.18)">
-        0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
-      </text>
-      <text x="0" y="70" font-family="sometype mono, monospace"
-            font-size="28" fill="rgba(200,220,255,0.18)">
-        1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
-      </text>
-    </pattern>
-    <filter id="blur"><feGaussianBlur stdDeviation="0.8"/></filter>
-  </defs>
-
-  <!-- Bleed background -->
-  <rect x="0" y="0" width="580" height="890" fill="white"/>
-
-  <!-- Trim area -->
-  <g transform="translate(30,30)">
-    <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="url(#bgGrad)"/>
-    <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="url(#binaryPattern)" filter="url(#blur)"/>
-    <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="none" stroke="#17424A" stroke-width="14"/>
-    <line x1="0" y1="415" x2="520" y2="415" stroke="#17424A" stroke-width="3" opacity="0.7"/>
-
-    <!-- Top half -->
-    <g id="top-half">
-      <text x="260" y="110" text-anchor="middle"
-            font-family="sometype mono, monospace" font-size="56"
-            fill="white" font-weight="bold">${topWord}</text>
-      <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
-      ${topTaboos.map((w,i) =>
-        `<text x="260" y="${200+i*40}" text-anchor="middle"
-               font-family="sometype mono, monospace" font-size="28"
-               fill="#062E35">${w}</text>`
-      ).join("")}
-    </g>
-
-    <!-- Bottom half -->
-    <g id="bottom-half" transform="translate(520,830) rotate(180)">
-      <text x="260" y="110" text-anchor="middle"
-            font-family="sometype mono, monospace" font-size="56"
-            fill="white" font-weight="bold">${bottomWord}</text>
-      <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
-      ${bottomTaboos.map((w,i) =>
-        `<text x="260" y="${200+i*40}" text-anchor="middle"
-               font-family="sometype mono, monospace" font-size="28"
-               fill="#062E35">${w}</text>`
-      ).join("")}
-    </g>
-  </g>
-
-  <!-- Bleed marks -->
-  <rect x="0" y="0" width="580" height="890" fill="none" stroke="red" stroke-width="1" stroke-dasharray="6 4"/>
-  <rect x="30" y="30" width="520" height="830" rx="40" ry="40"
-        fill="none" stroke="blue" stroke-width="1" stroke-dasharray="6 4"/>
-</svg>`;
-
+      const svg = generateSVG(topWord, topTaboos, bottomWord, bottomTaboos);
       document.getElementById("output").innerHTML = svg;
     }
 
@@ -158,7 +259,43 @@ BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized</textarea><br>
       img.src = url;
     }
 
-    // Generate once on load
+    function fillInputFromList(index1, index2) {
+      if (index1 === undefined || index2 === undefined) return;
+      const w1 = tabooList[index1];
+      const w2 = tabooList[index2];
+      document.getElementById("input").value =
+        `${w1.word} | ${w1.taboo.join(", ")}\n${w2.word} | ${w2.taboo.join(", ")}`;
+      generate();
+    }
+
+    function fillInputRandom() {
+      let idx1 = Math.floor(Math.random() * tabooList.length);
+      let idx2;
+      do {
+        idx2 = Math.floor(Math.random() * tabooList.length);
+      } while (idx2 === idx1);
+      fillInputFromList(idx1, idx2);
+    }
+
+    function showWordSelector() {
+      let html = '<select id="sel1">';
+      tabooList.forEach((w, i) => {
+        html += `<option value="${i}">${w.word}</option>`;
+      });
+      html += '</select> &amp; <select id="sel2">';
+      tabooList.forEach((w, i) => {
+        html += `<option value="${i}">${w.word}</option>`;
+      });
+      html += `</select> <button class="cta" onclick="selectWords()">✨Generate</button>`;
+      document.getElementById("selector").innerHTML = html;
+    }
+
+    function selectWords() {
+      const idx1 = parseInt(document.getElementById("sel1").value, 10);
+      const idx2 = parseInt(document.getElementById("sel2").value, 10);
+      fillInputFromList(idx1, idx2);
+    }
+
     generate();
   </script>
 </body>
