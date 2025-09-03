@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Taboo Card Generator</title>
+  <title>Techie Taboo Card Generator</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; margin: 0; }
     .container { max-width: 600px; margin: auto; }
-    textarea { width: 100%; height: 120px; font-family: monospace; margin-bottom: 10px; box-sizing: border-box; }
+    textarea { width: 100%; height: 50px; font-family: monospace; margin-bottom: 10px; box-sizing: border-box; }
     button { background-color: white ; padding: 10px 20px; font-size: 16px; margin: 4px 2px; border-radius: 12px; }
     .cta { background-color: #0A1F33; color: white; border: none; cursor: pointer; }
     #output { width: 100%; overflow-x: auto; }
@@ -20,7 +21,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>🎴Techie Taboo Card Generator</h1>
+    <h1><object type="image/svg+xml" data="favicon.svg">
+      Your browser does not support SVG
+    </object> Techie Taboo Card Generator</h1>
     <i>Made with 💜 by <a href="https://linktr.ee/ragtechdev">ragTech</a>, a real life in tech podcast</i>
     <div id="output"></div>
     <p>Enter two lines like this:</p>
@@ -28,8 +31,8 @@
     WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5
     WordToGuess2 | taboo1, taboo2, taboo3, taboo4, taboo5
     </pre>
-    <textarea id="input">CLOUD | Internet, Server, Storage, AWS, Azure
-BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
+    <textarea id="input">Cloud | Internet, Server, Storage, AWS, Azure
+Blockchain | Bitcoin, Ledger, Crypto, Token, Decentralized
     </textarea><br>
     <button class="cta" onclick="generate()">✨Generate Card</button>
     <button onclick="fillInputRandom()">🎲Random Card</button>
@@ -144,7 +147,108 @@ BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
       { word: "Threat Modeling", taboo: ["Security", "Risk", "Detection", "Identify", "Vulnerability"] },
       { word: "Security Orchestration", taboo: ["Automation", "Security", "Response", "Plan", "Integration"] },
       { word: "AI Security", taboo: ["Artificial", "Intelligence", "Threat", "Protection", "Safe"] },
-      { word: "Cybersecurity Framework", taboo: ["Security", "Framework", "Guidelines", "Best", "Practices"] }
+      { word: "Cybersecurity Framework", taboo: ["Security", "Framework", "Guidelines", "Best", "Practices"] },
+      { word: "Microservices", taboo: ["Architecture", "Service", "API", "Distributed", "Component"] },
+      { word: "NoSQL", taboo: ["Database", "SQL", "Document", "Schema", "Table"] },
+      { word: "Docker", taboo: ["Container", "Virtualization", "Image", "Deploy", "Platform"] },
+      { word: "Kubernetes", taboo: ["Container", "Orchestration", "Cluster", "Pods", "Deploy"] },
+      { word: "Scrum", taboo: ["Agile", "Sprint", "Team", "Backlog", "Meeting"] },
+      { word: "Sprint", taboo: ["Scrum", "Agile", "Iteration", "Goal", "Backlog"] },
+      { word: "Repository", taboo: ["Git", "Code", "Version", "Control", "Storage"] },
+      { word: "Branch", taboo: ["Git", "Repository", "Merge", "Commit", "Code"] },
+      { word: "Pull Request", taboo: ["Git", "Merge", "Branch", "Review", "Code"] },
+      { word: "Merge", taboo: ["Branch", "Git", "Pull Request", "Conflict", "Code"] },
+      { word: "CI/CD", taboo: ["Continuous", "Integration", "Deployment", "Pipeline", "Automation"] },
+      { word: "Pipeline", taboo: ["CI/CD", "Automation", "Build", "Deploy", "Stages"] },
+      { word: "Unit Test", taboo: ["Test", "Code", "Function", "Automated", "Pass"] },
+      { word: "Integration Test", taboo: ["Test", "System", "Component", "Automated", "Pass"] },
+      { word: "Regression", taboo: ["Test", "Bug", "Old", "Code", "Break"] },
+      { word: "Staging", taboo: ["Environment", "Deploy", "Test", "Production", "Pre"] },
+      { word: "Production", taboo: ["Live", "Deploy", "Environment", "Users", "Release"] },
+      { word: "Rollback", taboo: ["Deploy", "Undo", "Version", "Error", "Production"] },
+      { word: "Hotfix", taboo: ["Bug", "Urgent", "Patch", "Production", "Deploy"] },
+      { word: "Feature Flag", taboo: ["Toggle", "Enable", "Disable", "Release", "Code"] },
+      { word: "REST", taboo: ["API", "HTTP", "Request", "Endpoint", "Resource"] },
+      { word: "GraphQL", taboo: ["API", "Query", "Schema", "Data", "Request"] },
+      { word: "WebSocket", taboo: ["Connection", "Real-time", "Socket", "Message", "Protocol"] },
+      { word: "OAuth", taboo: ["Authentication", "Authorization", "Token", "Login", "API"] },
+      { word: "JWT", taboo: ["Token", "Authentication", "JSON", "Web", "API"] },
+      { word: "SPA", taboo: ["Single", "Page", "Application", "Web", "Frontend"] },
+      { word: "SSR", taboo: ["Server", "Side", "Rendering", "Web", "Page"] },
+      { word: "PWA", taboo: ["Progressive", "Web", "App", "Offline", "Install"] },
+      { word: "Service Worker", taboo: ["PWA", "Cache", "Offline", "Script", "Browser"] },
+      { word: "Responsive", taboo: ["Design", "Mobile", "Web", "Layout", "CSS"] },
+      { word: "Bootstrap", taboo: ["CSS", "Framework", "Grid", "Responsive", "Web"] },
+      { word: "Tailwind", taboo: ["CSS", "Utility", "Framework", "Class", "Style"] },
+      { word: "React", taboo: ["JavaScript", "Library", "Component", "UI", "Frontend"] },
+      { word: "Vue", taboo: ["JavaScript", "Framework", "Component", "UI", "Frontend"] },
+      { word: "Angular", taboo: ["JavaScript", "Framework", "Component", "UI", "Frontend"] },
+      { word: "Redux", taboo: ["State", "Management", "React", "Store", "Action"] },
+      { word: "Context", taboo: ["React", "State", "Provider", "Consumer", "Component"] },
+      { word: "Hook", taboo: ["React", "Function", "State", "Effect", "Component"] },
+      { word: "Props", taboo: ["React", "Component", "Data", "Pass", "Parent"] },
+      { word: "State", taboo: ["React", "Component", "Data", "Change", "Update"] },
+      { word: "Node.js", taboo: ["JavaScript", "Server", "Runtime", "Backend", "Event"] },
+      { word: "Express", taboo: ["Node.js", "Framework", "Server", "API", "Route"] },
+      { word: "MongoDB", taboo: ["Database", "NoSQL", "Document", "Collection", "Query"] },
+      { word: "PostgreSQL", taboo: ["Database", "SQL", "Table", "Query", "Relational"] },
+      { word: "SQLite", taboo: ["Database", "SQL", "File", "Lightweight", "Table"] },
+      { word: "Redis", taboo: ["Database", "Cache", "Key", "Value", "Memory"] },
+      { word: "Elasticsearch", taboo: ["Search", "Engine", "Index", "Query", "Document"] },
+      { word: "RabbitMQ", taboo: ["Queue", "Message", "Broker", "Exchange", "Publish"] },
+      { word: "Kafka", taboo: ["Stream", "Message", "Broker", "Topic", "Publish"] },
+      { word: "S3", taboo: ["AWS", "Storage", "Bucket", "Object", "Cloud"] },
+      { word: "Lambda", taboo: ["AWS", "Function", "Serverless", "Event", "Cloud"] },
+      { word: "LLM", taboo: ["AI", "GPT", "Large", "Language", "Model"] },
+      { word: "Prompt Engineering", taboo: ["AI", "Input", "Instruction", "LLM", "Query"] },
+      { word: "Diffusion Model", taboo: ["AI", "Image", "Generation", "Stable", "Noise"] },
+      { word: "Stable Diffusion", taboo: ["AI", "Image", "Model", "Generation", "Open Source"] },
+      { word: "ChatGPT", taboo: ["OpenAI", "Chatbot", "LLM", "AI", "Text"] },
+      { word: "GPT-4", taboo: ["OpenAI", "Model", "LLM", "AI", "Text"] },
+      { word: "DALL-E", taboo: ["OpenAI", "Image", "Generation", "AI", "Prompt"] },
+      { word: "Midjourney", taboo: ["AI", "Image", "Generation", "Prompt", "Art"] },
+      { word: "Anthropic", taboo: ["AI", "Claude", "Company", "Safety", "LLM"] },
+      { word: "Claude", taboo: ["Anthropic", "AI", "Chatbot", "LLM", "Text"] },
+      { word: "Gemini", taboo: ["Google", "AI", "Model", "LLM", "Chatbot"] },
+      { word: "SLM", taboo: ["Small", "Language", "Model", "AI", "Efficient"] },
+      { word: "Llama", taboo: ["Meta", "AI", "Model", "LLM", "Open Source"] },
+      { word: "Fine-tuning", taboo: ["AI", "Model", "Training", "Weights", "Custom"] },
+      { word: "Retrieval Augmented Generation", taboo: ["RAG", "AI", "Search", "Context", "LLM"] },
+      { word: "Vector Database", taboo: ["Embedding", "AI", "Similarity", "Search", "Index"] },
+      { word: "Embedding", taboo: ["AI", "Vector", "Representation", "Model", "Similarity"] },
+      { word: "Tokenization", taboo: ["AI", "Text", "Split", "Model", "Word"] },
+      { word: "Transformer", taboo: ["AI", "Model", "Attention", "Neural", "Network"] },
+      { word: "Self-Attention", taboo: ["AI", "Transformer", "Weights", "Focus", "Model"] },
+      { word: "Zero-shot", taboo: ["AI", "Inference", "No Training", "Task", "Generalize"] },
+      { word: "Few-shot", taboo: ["AI", "Prompt", "Example", "Generalize", "Model"] },
+      { word: "Chain-of-Thought", taboo: ["AI", "Reasoning", "Prompt", "LLM", "Step"] },
+      { word: "AutoML", taboo: ["AI", "Automation", "Model", "Training", "Pipeline"] },
+      { word: "Vibe Coding", taboo: ["Casual", "Programming", "Fun", "Relaxed", "Music"] },
+      { word: "Quantization", taboo: ["AI", "Model", "Compression", "Weights", "Size"] },
+      { word: "Diffusers", taboo: ["AI", "Image", "Library", "Stable", "HuggingFace"] },
+      { word: "HuggingFace", taboo: ["AI", "Models", "Transformers", "Library", "Community"] },
+      { word: "OpenAI API", taboo: ["AI", "Service", "Key", "Request", "Model"] },
+      { word: "Computer Vision", taboo: ["Image", "Recognition", "AI", "Model", "Analyze"] },
+      { word: "Agent", taboo: ["AI", "Autonomous", "Task", "LLM", "Action"] },
+      { word: "Autonomous AI", taboo: ["Agent", "Task", "Self", "LLM", "Decision"] },
+      { word: "Voice Cloning", taboo: ["AI", "Speech", "Synthesis", "Imitate", "Audio"] },
+      { word: "Text-to-Speech", taboo: ["AI", "Voice", "Synthesis", "Audio", "Model"] },
+      { word: "Speech-to-Text", taboo: ["AI", "Transcription", "Audio", "Model", "Voice"] },
+      { word: "Multimodal", taboo: ["AI", "Text", "Image", "Audio", "Model"] },
+      { word: "SAM", taboo: ["Meta", "Segment", "Anything", "AI", "Image"] },
+      { word: "RLHF", taboo: ["AI", "Reinforcement", "Learning", "Human", "Feedback"] },
+      { word: "Synthetic Data", taboo: ["AI", "Fake", "Generated", "Training", "Model"] },
+      { word: "Data Lakehouse", taboo: ["Data", "Warehouse", "Lake", "Storage", "Analytics"] },
+      { word: "Federated Learning", taboo: ["AI", "Distributed", "Training", "Privacy", "Model"] },
+      { word: "Edge AI", taboo: ["Device", "Inference", "Local", "Model", "IoT"] },
+      { word: "Prompt Injection", taboo: ["AI", "Attack", "Security", "Prompt", "Exploit"] },
+      { word: "AI Alignment", taboo: ["Safety", "Goal", "Ethics", "Model", "Behavior"] },
+      { word: "Reinforcement Learning", taboo: ["AI", "Reward", "Agent", "Environment", "Policy"] },
+      { word: "AI Hallucination", taboo: ["Model", "False", "Output", "Error", "LLM"] },
+      { word: "Diffusion Pipeline", taboo: ["AI", "Image", "Generation", "Steps", "Model"] },
+      { word: "AI Moderation", taboo: ["Content", "Filter", "Safety", "Detection", "Automated"] },
+      { word: "AI Ethics", taboo: ["Morality", "Bias", "Fairness", "Model", "Society"] },
+      { word: "AI Regulation", taboo: ["Law", "Policy", "Governance", "Model", "Compliance"] }
     ];
 
     function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos) {
@@ -174,7 +278,7 @@ BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
         <rect x="0" y="0" width="520" height="830" rx="40" ry="40" fill="none" stroke="#17424A" stroke-width="14"/>
         <line x1="0" y1="415" x2="520" y2="415" stroke="#17424A" stroke-width="3" opacity="0.7"/>
         <g id="top-half">
-          <text x="260" y="110" text-anchor="middle"
+          <text id="topWordText" x="260" y="110" text-anchor="middle"
                 font-family="sometype mono, monospace" font-size="56"
                 fill="white" font-weight="bold">${topWord}</text>
           <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
@@ -185,7 +289,7 @@ BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
           ).join("")}
         </g>
         <g id="bottom-half" transform="translate(520,830) rotate(180)">
-          <text x="260" y="110" text-anchor="middle"
+          <text id="bottomWordText" x="260" y="110" text-anchor="middle"
                 font-family="sometype mono, monospace" font-size="56"
                 fill="white" font-weight="bold">${bottomWord}</text>
           <rect x="60" y="150" width="400" height="240" rx="20" ry="20" fill="white" opacity="0.85"/>
@@ -286,7 +390,7 @@ BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
       tabooList.forEach((w, i) => {
         html += `<option value="${i}">${w.word}</option>`;
       });
-      html += `</select> <button class="cta" onclick="selectWords()">✨Generate</button>`;
+      html += `</select> <button class="cta" onclick="selectWords()">✨Generate Selected Words</button>`;
       document.getElementById("selector").innerHTML = html;
     }
 
@@ -295,6 +399,31 @@ BLOCKCHAIN | Bitcoin, Ledger, Crypto, Token, Decentralized
       const idx2 = parseInt(document.getElementById("sel2").value, 10);
       fillInputFromList(idx1, idx2);
     }
+
+    function fitTextToWidth(textId, maxWidth, minFontSize = 24) {
+      const svg = document.getElementById("output").querySelector("svg");
+      if (!svg) return;
+      const textElem = svg.getElementById(textId);
+      if (!textElem) return;
+      let fontSize = parseInt(textElem.getAttribute("font-size"), 10);
+      textElem.setAttribute("font-size", fontSize);
+      let bbox = textElem.getBBox();
+      while (bbox.width > maxWidth && fontSize > minFontSize) {
+        fontSize -= 2;
+        textElem.setAttribute("font-size", fontSize);
+        bbox = textElem.getBBox();
+      }
+    }
+
+      // Patch generate() to call fitTextToWidth for both top and bottom words
+    const originalGenerate = generate;
+    generate = function() {
+      originalGenerate();
+      // fit top word
+      fitTextToWidth("topWordText", 510);
+      // fit bottom word
+      fitTextToWidth("bottomWordText", 510);
+    };
 
     generate();
   </script>

@@ -1,0 +1,14 @@
+<!-- filepath: d:\Environment\tech-taboo\images\favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A1F33"/>
+      <stop offset="100%" stop-color="#17424A"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="28" height="28" rx="5" fill="url(#g)" stroke="#17424A" stroke-width="2"/>
+  <rect x="7" y="8" width="18" height="6" rx="2" fill="#fff" opacity="0.85"/>
+  <rect x="7" y="18" width="18" height="6" rx="2" fill="#fff" opacity="0.85"/>
+  <text x="16" y="13" text-anchor="middle" font-family="monospace" font-size="6" fill="#0A1F33" font-weight="bold">TECH</text>
+  <text x="16" y="23" text-anchor="middle" font-family="monospace" font-size="6" fill="#0A1F33" font-weight="bold">TABOO</text>
+</svg>
