@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Print Cards (A4 2×2)</title>
+  <style>
+    @page { size: A4; margin: 8mm; }
+    html, body { height: 100%; }
+    body { margin: 0; font-family: Arial, sans-serif; background: white; }
+    .page {
+      /* Fit inside the printable content box (A4 minus margins) */
+      width: calc(210mm - 16mm);
+      height: calc(297mm - 16mm);
+      margin: 0 auto;
+      box-sizing: border-box;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 4mm; /* space between cards for cutting */
+    }
+    .cell { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    /* Scale SVG to fit cell height while preserving aspect ratio */
+    .cell svg { height: 100%; width: auto; }
+
+    /* Print settings */
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="cell" id="c1"></div>
+    <div class="cell" id="c2"></div>
+    <div class="cell" id="c3"></div>
+    <div class="cell" id="c4"></div>
+  </div>
+
+  <script type="module" src="./scripts/print.js"></script>
+</body>
+</html>

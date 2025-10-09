@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Techie Taboo Card Generator</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; margin: 0; }
+    .container { max-width: 700px; margin: auto; }
+    textarea { width: 100%; height: 70px; font-family: monospace; margin-bottom: 10px; box-sizing: border-box; }
+    button { background-color: white; padding: 10px 20px; font-size: 16px; margin: 4px 2px; border-radius: 12px; }
+    .cta { background-color: #0A1F33; color: white; border: none; cursor: pointer; }
+    #output { width: 100%; overflow-x: auto; }
+    svg { display: block; margin: 20px auto; background: white; max-width: 100%; height: auto; }
+    @media (max-width: 700px) {
+      .container { padding: 0 5px; }
+      svg { width: 100% !important; height: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <object type="image/svg+xml" data="./favicon.svg">Your browser does not support SVG</object>
+      Techie Taboo Card Generator
+    </h1>
+    <i>Made with 💜 by <a href="https://linktr.ee/ragtechdev" target="_blank" rel="noopener noreferrer">ragTech</a>, a real life in tech podcast</i>
+
+    <div id="output"></div>
+
+    <p>Enter two lines like this:</p>
+    <pre>
+WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5
+WordToGuess2 | taboo1, taboo2, taboo3, taboo4, taboo5
+    </pre>
+    <textarea id="input">Cloud | Internet, Server, Storage, AWS, Azure
+Blockchain | Bitcoin, Ledger, Crypto, Token, Decentralized</textarea>
+
+    <div style="margin: 8px 0;">
+      <button class="cta" id="btn-generate">✨Generate Card</button>
+      <button id="btn-random">🎲Random Card</button>
+      <button id="btn-choose">❔Choose Words</button>
+      <span id="selector"></span>
+    </div>
+
+    <div style="margin: 8px 0;">
+      <button id="btn-save-svg">💾Save as SVG</button>
+      <button id="btn-save-png">💾Save as PNG</button>
+      <button id="btn-print">🖨️ Print (A4 2×2)</button>
+      <button id="btn-colors">🎨Colors</button>
+      <span id="colors"></span>
+    </div>
+  </div>
+
+  <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>

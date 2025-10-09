@@ -1,0 +1,12 @@
+{
+  "name": "tech-taboo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "serve public -l 5173",
+    "start": "serve public"
+  },
+  "devDependencies": {
+    "serve": "14.2.3"
+  }
+}
