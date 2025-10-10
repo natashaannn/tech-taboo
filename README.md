@@ -34,3 +34,73 @@ Below is an example of a generated card ([`card-example.svg`](card-example.svg))
 ---
 
 Enjoy making your own tech-themed taboo cards!
+
+## System Cards
+
+## Synergy Map
+
+```mermaid
+graph TD
+    %% Data & Storage Layer
+    DB[Database] --> DS[Database Sharding / Partitioning]
+    DB --> ETL[ETL Pipeline]
+    DB --> Cache[Cache]
+    DB --> SE[Spatial Database]
+    DB --> BV[Backup Vault]
+    SE --> WM[Web Map]
+    SE --> GP[GeoProcessor]
+
+    %% Compute / Core Infrastructure
+    Server --> API[API Gateway]
+    Server --> LB[Load Balancer]
+    Server --> WS[WebSockets]
+    Server --> Cloud[Cloud Hosting]
+
+    %% Networking / Communication
+    API --> RateLimiter[Rate Limiter]
+    API --> MB[Message Broker]
+    Webhook --> MB
+    WebSockets --> Chat[Chat Service]
+    WebSockets --> Notif[Notification Service]
+    TCP --> API
+    MB --> PubSub[Pub/Sub]
+    PubSub --> Notif
+    Queue --> Batch[Batch Processing]
+    LB --> Queue
+
+    %% Performance / Optimization
+    Cache --> Search[Search Index]
+    CDN --> Server
+    Monitoring[Monitoring System] --> Observ[Observability s]
+    Observ --> Server
+
+    %% Analytics / Insights
+    ETL --> Analytics[Analytics Engine]
+    Analytics --> Dashboard[Dashboard]
+    Analytics --> DataViz[Data Visualization]
+    Dashboard --> ABTesting[A/B Testing]
+
+    %% Security / Risk Mitigation
+    DataSec[Data Security] --> Payment[Payment Gateway]
+    DataSec --> Patch[Security Patch]
+    Patch --> Server
+    Failover --> Server
+    Failover --> LB
+
+    %% User Interaction / Features
+    Chat --> WebSockets
+    Chat --> PubSub
+    Notification --> PubSub
+    Notification --> Webhook
+    WebMap --> SpatialDB
+    WebMap --> GeoProcessor
+    GeoProcessor --> SpatialDB
+
+    %% Special / Bonus Actions
+    Sandbox --> Server
+    Sandbox --> ETL
+    ModelAPI --> Server
+    ModelAPI --> Analytics
+    ABTesting --> Dashboard
+    ABTesting --> Analytics
+```

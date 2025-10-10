@@ -21,6 +21,8 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     emojiB = undefined,
     // description rendering control
     descAsText = false,
+    // optional effect text to show in a second box within the description area
+    effect = undefined,
     // remove filters for better decoder compatibility during PNG export
     rasterSafe = false,
   } = options;
@@ -64,7 +66,12 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
 
   const titleFontSize = computeFontSize(titleWord || "");
   const rawDesc = descriptionText || "";
-  const safeDesc = rawDesc.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const rawEffect = effect || "";
+  // Trim leading whitespace/newlines to avoid an initial blank line
+  const rawDescTrim = rawDesc.replace(/^\s+/, '');
+  const rawEffectTrim = rawEffect.replace(/^\s+/, '');
+  const safeDesc = rawDescTrim.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const safeEffect = rawEffectTrim.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const safeCat = (category || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
   // Layout
@@ -141,56 +148,69 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     <g id="description" transform="translate(0,0)">
       <rect x="50" y="430" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.92"/>
       ${descAsText ? (() => {
-        // Wrapping into tspans with constraints for box size (380x230) using monospace approximation
-        const maxChars = 56; // ~380px / (avg 6.7px per char at 18px mono)
+        // Split description area if effect is present
+        const hasEffect = !!rawEffectTrim.trim();
+        const totalWidth = 380;
+        const totalHeight = 230;
         const lineHeight = 22;
-        const maxLines = Math.floor(230 / lineHeight); // ~10 lines
-        const lines = [];
+        const maxChars = 56; // monospace approximation
+        const effectBlockLines = hasEffect ? 3 : 0; // label + up to 2 lines
+        const effectBlockHeight = hasEffect ? (lineHeight * (1 + 2)) + 6 : 0; // label + 2 lines + spacing
+        const descMaxLines = Math.max(0, Math.floor((totalHeight - effectBlockHeight) / lineHeight));
 
-        const pushWrapped = (text) => {
-          if (!text) { lines.push(''); return; }
-          const words = text.split(/\s+/);
-          let line = '';
-          const pushLine = (l) => { if (lines.length < maxLines) lines.push(l); };
-          const flushLine = () => { if (line) { pushLine(line); line=''; } };
-          for (let w of words) {
-            // Break very long words
-            while (w.length > maxChars) {
-              const part = w.slice(0, maxChars);
-              w = w.slice(maxChars);
-              if (line) { pushLine(line); line=''; }
-              pushLine(part);
-              if (lines.length >= maxLines) return;
+        const wrapLines = (text, maxLns) => {
+          const lines = [];
+          const pushLine = (l) => { if (lines.length < maxLns) lines.push(l); };
+          const pushWrapped = (segment) => {
+            if (!segment) { pushLine(''); return; }
+            const words = segment.split(/\s+/);
+            let line = '';
+            for (let w of words) {
+              while (w.length > maxChars) {
+                const part = w.slice(0, maxChars);
+                w = w.slice(maxChars);
+                if (line) { pushLine(line); line=''; }
+                pushLine(part);
+                if (lines.length >= maxLns) return;
+              }
+              const candidate = line ? line + ' ' + w : w;
+              if (candidate.length > maxChars) {
+                pushLine(line);
+                line = w;
+                if (lines.length >= maxLns) return;
+              } else {
+                line = candidate;
+              }
             }
-            const candidate = line ? line + ' ' + w : w;
-            if (candidate.length > maxChars) {
-              pushLine(line);
-              line = w;
-              if (lines.length >= maxLines) return;
-            } else {
-              line = candidate;
-            }
+            if (line && lines.length < maxLns) pushLine(line);
+          };
+          text.split(/\r?\n/).forEach(seg => { if (lines.length < maxLns) pushWrapped(seg); });
+          if (lines.length === maxLns && (text.split(/\r?\n/).join(' ').length > lines.join(' ').length)) {
+            // ellipsis on last
+            const last = lines[maxLns - 1] || '';
+            lines[maxLns - 1] = last.length >= 1 ? (last.slice(0, Math.max(0, last.length - 1)) + '…') : '…';
           }
-          if (lines.length < maxLines) flushLine();
+          return lines;
         };
 
-        rawDesc.split(/\r?\n/).forEach(seg => {
-          if (lines.length < maxLines) pushWrapped(seg);
-        });
+        const descLines = wrapLines(rawDescTrim, descMaxLines);
+        const descY = 444;
+        const descText = `<text x="70" y="${descY}" font-family="sometype mono, monospace" font-size="18" fill="#062E35">${descLines.map((ln,i)=>`<tspan x="70" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('')}</text>`;
 
-        //Ellipsis if truncated
-        let truncated = lines.length > maxLines;
-        if (lines.length === maxLines && (rawDesc.split(/\r?\n/).join(' ').length > lines.join(' ').length)) truncated = true;
-        if (truncated) {
-          const last = lines[maxLines - 1] || '';
-          lines[maxLines - 1] = last.length >= 1 ? (last.slice(0, Math.max(0, last.length - 1)) + '…') : '…';
-        }
+        if (!hasEffect) return descText;
 
-        const tspans = lines.slice(0, maxLines).map((ln, i) => `<tspan x="70" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('');
-        return `<text x="70" y="462" font-family="sometype mono, monospace" font-size="18" fill="#062E35" xml:space="preserve">${tspans}</text>`;
+        const effectLabelY = descY + (Math.max(1, descLines.length) * lineHeight) + 10;
+        const effectLines = wrapLines(rawEffectTrim, 2);
+        const effectText = `
+          <text x="70" y="${effectLabelY}" font-family="sometype mono, monospace" font-size="18" fill="#062E35" font-weight="bold">Effect:</text>
+          <text x="70" y="${effectLabelY + lineHeight}" font-family="sometype mono, monospace" font-size="18" fill="#062E35">${effectLines.map((ln,i)=>`<tspan x="70" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('')}</text>`;
+        return descText + effectText;
       })() : `
-      <foreignObject x="60" y="440" width="380" height="230">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sometype mono, monospace; font-size: 18px; color: #062E35; line-height: 1.3; white-space: pre-wrap; word-wrap: break-word;">${safeDesc}</div>
+      <foreignObject x="60" y="434" width="380" height="230">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sometype mono, monospace; font-size: 18px; color: #062E35; line-height: 1.3; white-space: normal; overflow-wrap: anywhere;">
+          <div>${safeDesc}</div>
+          ${rawEffectTrim.trim() ? `<div style="margin-top:8px;"><strong>Effect:</strong> ${safeEffect}</div>` : ''}
+        </div>
       </foreignObject>`}
     </g>
 

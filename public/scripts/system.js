@@ -1,12 +1,13 @@
 // public/scripts/system.js
 import { generateSystemSVG } from './lib/generateSystemSVG.js';
-import { saveSVG, savePNGFromSVG } from './lib/exporters.js';
 import { getIconNames, loadIcons } from './lib/icons.js';
 import { systemSamples } from './data/systemSamples.js';
 
 const FIXED_STROKE = '#17424A';
 
-const CATEGORIES = ['Idea Card','Role Card','System Card','Challenge Card','AI Tool Card'];
+// Available categories used in editor and samples fallback
+const CATEGORIES = ['Idea Card','Role Card','System Card','Challenge Card','Tool Card'];
+
 let LAST_SVGS = [];
 
 function iconOptions(selected) {
@@ -71,6 +72,10 @@ function cardEditorItem(idx, card) {
         <label>Card Description (free text)</label>
         <textarea class="card-desc" style="height:100px;">${card.desc || ''}</textarea>
       </div>
+      <div style="flex-basis:100%;">
+        <label>Effect (optional)</label>
+        <textarea class="card-effect" style="height:70px;" placeholder="e.g., Prevent next hacking challenge or draw one extra card">${card.effect || ''}</textarea>
+      </div>
       <div style="flex-basis:100%; text-align:right;">
         <button class="btn-remove-card">🗑️ Remove</button>
       </div>
@@ -82,6 +87,7 @@ function readCardsFromEditor() {
   return items.map(it => {
     const title = it.querySelector('.card-title')?.value?.trim() || '';
     const desc = it.querySelector('.card-desc')?.value || '';
+    const effect = it.querySelector('.card-effect')?.value || '';
     const category = it.querySelector('.card-category')?.value || 'System Card';
     const iconMode = it.querySelector('.card-source')?.value || 'icon';
     const twoUp = (it.querySelector('.card-count')?.value || '1') === '2';
@@ -89,7 +95,7 @@ function readCardsFromEditor() {
     const iconNameB = it.querySelector('.card-icon-b')?.value || undefined;
     const emojiA = it.querySelector('.card-emoji-a')?.value || '';
     const emojiB = it.querySelector('.card-emoji-b')?.value || '';
-    return { title, desc, category, iconMode, twoUp, iconNameA, iconNameB, emojiA, emojiB };
+    return { title, desc, effect, category, iconMode, twoUp, iconNameA, iconNameB, emojiA, emojiB };
   });
 }
 
@@ -161,14 +167,15 @@ async function renderPreview(cards) {
     iconNameB: card.iconNameB,
     emojiA: card.emojiA,
     emojiB: card.emojiB,
+    effect: card.effect,
   }));
-  const scale = cards.length <= 1 ? 1 : cards.length === 2 ? 0.8 : 0.6;
   const html = svgs.map(svg => {
-    const w = Math.round(580 * scale);
-    const h = Math.round(890 * scale);
-    return `<div style="transform:scale(${scale}); transform-origin: top left; width:${w}px; height:${h}px;">${svg}</div>`;
+    const w = 580;
+    const h = 890;
+    // Full scale, stacked vertically, centered
+    return `<div style="width:${w}px; height:${h}px; margin:16px auto;">${svg}</div>`;
   }).join('');
-  const containerStyle = `display:flex; flex-wrap:wrap; gap:16px; justify-content:center; align-items:flex-start;`;
+  const containerStyle = `display:block; width:100%;`;
   document.getElementById('preview').innerHTML = `<div style="${containerStyle}">${html}</div>`;
 }
 function setup() {
@@ -180,6 +187,7 @@ function setup() {
       initialCards = [{
         title: sample.title,
         desc: sample.desc,
+        effect: sample.effect || '',
         category: sample.category || 'Idea Card',
         iconMode: sample.iconMode || (sample.emojiA || sample.emojiB ? 'emoji' : 'icon'),
         twoUp: !!(sample.twoUp || (sample.iconNameB || sample.emojiB)),
@@ -189,7 +197,7 @@ function setup() {
         emojiB: sample.emojiB || '',
       }];
     } else {
-      initialCards = [{ title: '', desc: '', category: 'System Card', iconMode: 'icon', twoUp: false, iconNameA: '', iconNameB: '', emojiA: '', emojiB: '' }];
+      initialCards = [{ title: '', desc: '', effect: '', category: 'System Card', iconMode: 'icon', twoUp: false, iconNameA: '', iconNameB: '', emojiA: '', emojiB: '' }];
     }
   } catch (_) {
     initialCards = [{ title: '', desc: '', category: 'System Card', iconMode: 'icon', twoUp: false, iconNameA: '', iconNameB: '', emojiA: '', emojiB: '' }];
@@ -202,12 +210,11 @@ function setup() {
   const selWord = document.getElementById('sample-word');
   try {
     const catKeys = Object.keys(systemSamples || {});
-    selCat.innerHTML = (catKeys.length ? catKeys : ['Idea Card','Role Card','System Card','Challenge Card','AI Tool Card'])
-      .map(c => `<option>${c}</option>`).join('');
+    const options = (catKeys.length ? catKeys : CATEGORIES);
+    selCat.innerHTML = options.map(c => `<option>${c}</option>`).join('');
   } catch (e) {
     console.error('Failed to load samples:', e);
-    selCat.innerHTML = ['Idea Card','Role Card','System Card','Challenge Card','AI Tool Card']
-      .map(c => `<option>${c}</option>`).join('');
+    selCat.innerHTML = CATEGORIES.map(c => `<option>${c}</option>`).join('');
   }
 
   function refreshWords() {
@@ -235,7 +242,8 @@ function setup() {
     const payload = {
       title: item.title,
       desc: item.desc,
-      category: item.category || 'System Card',
+      effect: item.effect || '',
+      category: item.category || 'Idea Card',
       iconMode: item.iconMode || (item.emojiA || item.emojiB ? 'emoji' : 'icon'),
       twoUp: !!(item.twoUp || (item.iconNameB || item.emojiB)),
       iconNameA: item.iconNameA || item.iconName || '',

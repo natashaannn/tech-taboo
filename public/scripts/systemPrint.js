@@ -102,6 +102,7 @@ async function render2x2() {
       iconNameB: card.iconNameB,
       emojiA: card.emojiA,
       emojiB: card.emojiB,
+      effect: card.effect,
       descAsText: false,
     });
     const cell = document.getElementById(id);
