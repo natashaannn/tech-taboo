@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Print System Cards (A4 2×2)</title>
+  <style>
+    @page { size: A4; margin: 8mm; }
+    html, body { height: 100%; }
+    body { margin: 0; font-family: Arial, sans-serif; background: white; }
+    .sheet {
+      width: calc(210mm - 16mm);
+      height: calc(297mm - 16mm);
+      margin: 0 auto;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sheet + .sheet { page-break-before: always; }
+    .page {
+      width: calc(210mm - 16mm);
+      height: calc(297mm - 16mm);
+      box-sizing: border-box;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 4mm;
+    }
+    .cell { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .cell svg { height: 100%; width: auto; }
+    @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="page" id="front-page">
+      <div class="cell" id="c1"></div>
+      <div class="cell" id="c2"></div>
+      <div class="cell" id="c3"></div>
+      <div class="cell" id="c4"></div>
+    </div>
+  </div>
+  <div class="sheet" id="back-sheet" style="display:none;">
+    <div class="page" id="back-page">
+      <div class="cell" id="b1"></div>
+      <div class="cell" id="b2"></div>
+      <div class="cell" id="b3"></div>
+      <div class="cell" id="b4"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./scripts/systemPrint.js"></script>
+</body>
+</html>

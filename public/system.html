@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>System Design Card Generator</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; margin: 0; }
+    .container { max-width: 900px; margin: auto; }
+    textarea { width: 100%; height: 160px; font-family: monospace; margin-bottom: 10px; box-sizing: border-box; }
+    input[type="text"] { width: 100%; box-sizing: border-box; padding: 8px; }
+    select { padding: 8px; }
+    button { background-color: white; padding: 10px 20px; font-size: 16px; margin: 4px 2px; border-radius: 12px; }
+    .cta { background-color: #0A1F33; color: white; border: none; cursor: pointer; }
+    #preview { width: 100%; overflow-x: auto; }
+    svg { display: block; margin: 20px auto; background: white; max-width: 100%; height: auto; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .row > * { flex: 1; min-width: 240px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <object type="image/svg+xml" data="./favicon.svg">Your browser does not support SVG</object>
+      System Design Card Generator
+    </h1>
+    <i>Made with 💜 by <a href="https://linktr.ee/ragtechdev" target="_blank" rel="noopener noreferrer">ragTech</a> for the tech taboo suite</i>
+
+    <div id="preview"></div>
+
+    <div class="row">
+      <div>
+        <label>Theme</label><br/>
+        <select id="theme">
+          <option value="#17424A" selected>Classic Teal</option>
+          <option value="#0A1F33">Midnight Blue</option>
+          <option value="#3F51B5">Indigo</option>
+          <option value="#2E7D32">Emerald</option>
+          <option value="#6A1B9A">Purple</option>
+          <option value="#F57C00">Orange</option>
+          <option value="#1976D2">Blue</option>
+          <option value="#009688">Teal</option>
+          <option value="#9C27B0">Violet</option>
+          <option value="#C2185B">Magenta</option>
+          <option value="#E64A19">Deep Orange</option>
+          <option value="#455A64">Blue Grey</option>
+        </select>
+      </div>
+      <div>
+        <label>
+          <input type="checkbox" id="whiteBg" /> White canvas background
+        </label>
+      </div>
+    </div>
+
+    <h3>Cards (up to 4)</h3>
+    <div style="margin-bottom:8px;">
+      <label>Samples: </label>
+      <select id="sample-category"></select>
+      <select id="sample-word"></select>
+      <button id="btn-add-sample">Add Sample</button>
+    </div>
+    <div id="cards-editor"></div>
+    <button id="btn-add-card">➕ Add Card</button>
+
+    <div style="margin: 8px 0;">
+      <button class="cta" id="btn-generate">✨Generate</button>
+      <button id="btn-save-svg">💾Save as SVG</button>
+      <button id="btn-save-png">💾Save as PNG</button>
+      <button id="btn-print">🖨️ Print (A4 2×2)</button>
+      <label style="margin-left:8px;">
+        <input type="checkbox" id="sys-chk-backing" /> Include branded backing
+      </label>
+      <a href="./index.html" style="margin-left:12px;">⤺ Back to Tech Taboo</a>
+    </div>
+  </div>
+
+  <script type="module" src="./scripts/system.js"></script>
+</body>
+</html>

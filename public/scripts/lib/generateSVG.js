@@ -7,7 +7,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     matchStrokeBackground = false,    // if true, stroke = background
     showBleed = false,                // bleed guides visibility
     bleedColor = "red",              // bleed guides color
-    trimColor = "blue",              // trim guides color
+    trimColor = "grey",              // trim guides color
     strokeWidth = 14,                 // outer card border width
     dividerWidth = 3,                 // middle divider line width
     trimInset = 30,                   // distance of trim guide from the page edge (was 40)

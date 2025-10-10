@@ -40,8 +40,6 @@ function generate() {
     setSVGOutput("");
     return;
   }
-  const n = pairs.length;
-  const scale = n === 1 ? 1 : n === 2 ? 0.8 : 0.6;
   const cards = pairs.map(({top, bottom}) => {
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
       baseColor: colorOptions.baseColor,
@@ -50,9 +48,9 @@ function generate() {
       matchStrokeBackground: false,
       showBleed: false,
     });
-    const w = Math.round(580 * scale);
-    const h = Math.round(890 * scale);
-    return `<div style="transform:scale(${scale}); transform-origin: top left; width:${w}px; height:${h}px;">${svg}</div>`;
+    const w = 580;
+    const h = 890;
+    return `<div style="transform-origin: center; width:${w}px; height:${h}px;">${svg}</div>`;
   }).join("");
   const containerStyle = `display:flex; flex-wrap:wrap; gap:16px; justify-content:center; align-items:flex-start;`;
   setSVGOutput(`<div style="${containerStyle}">${cards}</div>`);
@@ -113,25 +111,13 @@ document.getElementById("btn-choose").addEventListener("click", showWordSelector
 document.getElementById("input").addEventListener("tt-input-updated", patchedGenerate);
 
 document.getElementById("btn-save-svg").addEventListener("click", async () => {
-  const svgs = Array.from(document.querySelectorAll("#output svg"));
-  if (svgs.length <= 1) {
-    const svgMarkup = svgs.length === 1 ? svgs[0].outerHTML : document.getElementById("output").innerHTML;
-    saveSVG(svgMarkup);
-  } else {
-    const items = svgs.map((el, i) => ({ name: `card-${i + 1}.svg`, markup: el.outerHTML }));
-    await saveSVGsAsZip(items, "taboo-cards-svg.zip");
-  }
+  const { saveSvgsFromContainer } = await import('./lib/utils.js');
+  await saveSvgsFromContainer('#output', 'card.svg', 'taboo-cards-svg.zip');
 });
 
 document.getElementById("btn-save-png").addEventListener("click", async () => {
-  const svgs = Array.from(document.querySelectorAll("#output svg"));
-  if (svgs.length <= 1) {
-    const svgMarkup = svgs.length === 1 ? svgs[0].outerHTML : document.getElementById("output").innerHTML;
-    savePNGFromSVG(svgMarkup);
-  } else {
-    const items = svgs.map((el, i) => ({ name: `card-${i + 1}.svg`, markup: el.outerHTML }));
-    await savePNGsAsZip(items, "taboo-cards-png.zip", 580, 890);
-  }
+  const { savePngsFromContainer } = await import('./lib/utils.js');
+  await savePngsFromContainer('#output', 'card.png', 'taboo-cards-png.zip', 580, 890);
 });
 
 // Open print view (A4 2x2)
@@ -195,6 +181,12 @@ function showColors() {
     { name: "Emerald", value: "#2E7D32" },
     { name: "Purple", value: "#6A1B9A" },
     { name: "Orange", value: "#F57C00" },
+    { name: "Blue", value: "#1976D2" },
+    { name: "Teal", value: "#009688" },
+    { name: "Violet", value: "#9C27B0" },
+    { name: "Magenta", value: "#C2185B" },
+    { name: "Deep Orange", value: "#E64A19" },
+    { name: "Blue Grey", value: "#455A64" },
   ];
   const optionsHtml = themes
     .map(t => `<option value="${t.value}" ${t.value===colorOptions.baseColor?"selected":""}>${t.name}</option>`) 

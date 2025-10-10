@@ -48,10 +48,16 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
   const JSZip = await ensureJSZip();
   const zip = new JSZip();
 
+  function sanitizeForCanvas(markup) {
+    // Remove foreignObject blocks to avoid tainting the canvas when drawing the SVG image
+    return String(markup).replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
+  }
+
   async function svgToPngBlob(markup) {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      const svgBlob = new Blob([markup], { type: "image/svg+xml;charset=utf-8" });
+      const safe = sanitizeForCanvas(markup);
+      const svgBlob = new Blob([safe], { type: "image/svg+xml;charset=utf-8" });
       const url = URL.createObjectURL(svgBlob);
       img.onload = function () {
         const canvas = document.createElement("canvas");
@@ -94,7 +100,8 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
 
 export function savePNGFromSVG(svgMarkup, filename = "taboo-card.png", width = 580, height = 890) {
   const img = new Image();
-  const svgBlob = new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" });
+  const safe = String(svgMarkup).replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
+  const svgBlob = new Blob([safe], { type: "image/svg+xml;charset=utf-8" });
   const url = URL.createObjectURL(svgBlob);
   img.onload = function () {
     const canvas = document.createElement("canvas");
