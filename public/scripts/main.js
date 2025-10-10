@@ -171,6 +171,7 @@ function openPrint() {
     baseColor: colorOptions.baseColor,
     whiteBackground: !!colorOptions.whiteBackground,
     strokeColor: FIXED_STROKE,
+    includeBacking: !!(document.getElementById("chk-backing") && document.getElementById("chk-backing").checked),
     createdAt: Date.now(),
   };
   try {

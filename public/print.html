@@ -8,11 +8,21 @@
     @page { size: A4; margin: 8mm; }
     html, body { height: 100%; }
     body { margin: 0; font-family: Arial, sans-serif; background: white; }
-    .page {
-      /* Fit inside the printable content box (A4 minus margins) */
+    /* Sheet fills printable area; centers inner .page so margins are equal */
+    .sheet {
       width: calc(210mm - 16mm);
       height: calc(297mm - 16mm);
       margin: 0 auto;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sheet + .sheet { page-break-before: always; }
+    .page {
+      /* Page content area (we center this within the sheet) */
+      width: calc(210mm - 16mm);
+      height: calc(297mm - 16mm);
       box-sizing: border-box;
       padding: 0;
       display: grid;
@@ -31,11 +41,21 @@
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="cell" id="c1"></div>
-    <div class="cell" id="c2"></div>
-    <div class="cell" id="c3"></div>
-    <div class="cell" id="c4"></div>
+  <div class="sheet">
+    <div class="page" id="front-page">
+      <div class="cell" id="c1"></div>
+      <div class="cell" id="c2"></div>
+      <div class="cell" id="c3"></div>
+      <div class="cell" id="c4"></div>
+    </div>
+  </div>
+  <div class="sheet" id="back-sheet" style="display:none;">
+    <div class="page" id="back-page">
+      <div class="cell" id="b1"></div>
+      <div class="cell" id="b2"></div>
+      <div class="cell" id="b3"></div>
+      <div class="cell" id="b4"></div>
+    </div>
   </div>
 
   <script type="module" src="./scripts/print.js"></script>
