@@ -48,12 +48,25 @@ function generate() {
       matchStrokeBackground: false,
       showBleed: false,
     });
-    const w = 580;
-    const h = 890;
-    return `<div style="transform-origin: center; width:${w}px; height:${h}px;">${svg}</div>`;
-  }).join("");
-  const containerStyle = `display:flex; flex-wrap:wrap; gap:16px; justify-content:center; align-items:flex-start;`;
-  setSVGOutput(`<div style="${containerStyle}">${cards}</div>`);
+    const aspectRatio = 580 / 890;
+    return `
+      <div style="
+        width: min(90vw, 580px);
+        aspect-ratio: ${aspectRatio};
+        transform-origin: center;
+      ">
+        ${svg}
+      </div>
+    `;
+  }).join('');
+  
+  const containerStyle = `
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    justify-content:center;
+    align-items:flex-start;
+  `;  setSVGOutput(`<div style="${containerStyle}">${cards}</div>`);
 }
 
 function fillInputFromList(index1, index2) {
