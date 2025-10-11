@@ -13,7 +13,7 @@ function readPayload() {
 }
 
 function generateBackSVG({ baseColor = '#17424A', background = '#062E35', strokeColor = '#17424A' } = {}) {
-  // Reverse binary: darker digits on lighter background; lighter gradient for background
+  // Match system card: white background with binary gradient overlay driven by baseColor
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
   function hexToRgb(hex) {
     const m = hex.replace('#','');
@@ -32,26 +32,28 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
       clamp(b + amt, 0, 255)
     );
   }
-  const gradTop = adjust(baseColor, +25);
-  const gradBottom = adjust(baseColor, +60);
+  // Match card gradient stops
+  const gradTop = adjust(baseColor, +60);
+  const gradBottom = adjust(baseColor, +85);
   const stroke = strokeColor;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
   <defs>
-    <linearGradient id="bgGradBackSys" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${gradTop}"/>
-      <stop offset="100%" stop-color="${gradBottom}"/>
+    <linearGradient id="binaryGradBackSys" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${gradTop}" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="${gradBottom}" stop-opacity="0.35"/>
     </linearGradient>
     <pattern id="binaryPatternBackSys" width="580" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="sometype mono, monospace" font-size="28" fill="rgba(0,0,0,0.22)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
-      <text x="0" y="70" font-family="sometype mono, monospace" font-size="28" fill="rgba(0,0,0,0.22)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
+      <text x="0" y="35" font-family="sometype mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
+      <text x="0" y="70" font-family="sometype mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
     </pattern>
+    <filter id="blurBackSys"><feGaussianBlur stdDeviation="0.8"/></filter>
   </defs>
   <rect x="0" y="0" width="580" height="890" fill="#062E35"/>
   <g transform="translate(40,40)">
-    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#bgGradBackSys)"/>
-    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#binaryPatternBackSys)"/>
+    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="#FFFFFF"/>
+    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#binaryPatternBackSys)" filter="url(#blurBackSys)"/>
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="none" stroke="${stroke}" stroke-width="10"/>
 
     <!-- Centered branding for System Design backing -->
