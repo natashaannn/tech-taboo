@@ -108,10 +108,11 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     if (twoUp) {
       const halfW = Math.floor((boxW - 20) / 2);
       graphicMarkup =
-        renderIconAt(boxX + 0, boxY, halfW, boxH, nameA, '#FFFFFF', 2) +
-        renderIconAt(boxX + halfW + 20, boxY, halfW, boxH, nameB || nameA, '#FFFFFF', 2);
+
+        renderIconAt(boxX + 0, boxY, halfW, boxH, nameA, baseColor, 2) +
+        renderIconAt(boxX + halfW + 20, boxY, halfW, boxH, nameB || nameA, baseColor, 2);
     } else {
-      graphicMarkup = renderIconAt(boxX, boxY, boxW, boxH, nameA, '#FFFFFF', 2);
+      graphicMarkup = renderIconAt(boxX, boxY, boxW, boxH, nameA, baseColor, 2);
     }
   } else {
     // none: leave placeholder only
@@ -120,33 +121,33 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
   <defs>
-    ${rasterSafe ? '' : `<linearGradient id="bgGradSys" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${gradTop}"/>
-      <stop offset="100%" stop-color="${gradBottom}"/>
+    ${rasterSafe ? '' : `<linearGradient id="binaryGradSys" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${gradTop}" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="${gradBottom}" stop-opacity="0.35"/>
     </linearGradient>`}
     ${rasterSafe ? '' : `<pattern id="binaryPatternSys" width="580" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="sometype mono, monospace" font-size="28" fill="rgba(0,0,0,0.16)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
-      <text x="0" y="70" font-family="sometype mono, monospace" font-size="28" fill="rgba(0,0,0,0.16)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
+      <text x="0" y="35" font-family="sometype mono, monospace" font-size="28" fill="url(#binaryGradSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
+      <text x="0" y="70" font-family="sometype mono, monospace" font-size="28" fill="url(#binaryGradSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
     </pattern>`}
     ${rasterSafe ? '' : '<filter id="blurSys"><feGaussianBlur stdDeviation="0.8"/></filter>'}
   </defs>
 
   <rect x="0" y="0" width="580" height="890" fill="#062E35"/>
   <g transform="translate(40,40)">
-    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="${rasterSafe ? '#F7FAFC' : 'url(#bgGradSys)'}"/>
+    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="#FFFFFF"/>
     ${rasterSafe ? '' : `<rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#binaryPatternSys)" ${rasterSafe ? '' : 'filter="url(#blurSys)"'}/>`}
 
     <!-- Title Word -->
-    <text id="titleWordText" x="250" y="110" text-anchor="middle" font-family="sometype mono, monospace" font-size="${titleFontSize}" fill="white" font-weight="bold">${titleWord || ''}</text>
+    <text id="titleWordText" x="250" y="110" text-anchor="middle" font-family="sometype mono, monospace" font-size="${titleFontSize}" fill="${baseColor}" font-weight="bold">${titleWord || ''}</text>
 
     <!-- Icon Area (1/3 height ~ 270px) -->
     <g id="icon-area">
-      <rect x="100" y="140" width="300" height="270" rx="20" ry="20" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-dasharray="8 6"/>
-      ${graphicMarkup || `<text x="250" y="285" text-anchor="middle" font-family="sometype mono, monospace" font-size="18" fill="rgba(255,255,255,0.6)">Icon/Emoji area (optional)</text>`}
+      <rect x="100" y="140" width="300" height="270" rx="20" ry="20" fill="none" stroke="${baseColor}" stroke-width="2" stroke-dasharray="8 6"/>
+      ${graphicMarkup || `<text x="250" y="285" text-anchor="middle" font-family="sometype mono, monospace" font-size="18" fill="${baseColor}">Icon/Emoji area (optional)</text>`}
 
     <!-- Description Area (free text) -->
     <g id="description" transform="translate(0,0)">
-      <rect x="50" y="430" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.92"/>
+      <rect x="50" y="430" width="400" height="250" rx="20" ry="20" fill="white" stroke="${baseColor}" stroke-width="3"/>
       ${descAsText ? (() => {
         // Split description area if effect is present
         const hasEffect = !!rawEffectTrim.trim();
@@ -202,12 +203,12 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
         const effectLabelY = descY + (Math.max(1, descLines.length) * lineHeight) + 10;
         const effectLines = wrapLines(rawEffectTrim, 2);
         const effectText = `
-          <text x="70" y="${effectLabelY}" font-family="sometype mono, monospace" font-size="18" fill="#062E35" font-weight="bold">Effect:</text>
-          <text x="70" y="${effectLabelY + lineHeight}" font-family="sometype mono, monospace" font-size="18" fill="#062E35">${effectLines.map((ln,i)=>`<tspan x="70" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('')}</text>`;
+          <text x="70" y="${effectLabelY}" font-family="sometype mono, monospace" font-size="18" fill="white" font-weight="bold">Effect:</text>
+          <text x="70" y="${effectLabelY + lineHeight}" font-family="sometype mono, monospace" font-size="18" fill="white">${effectLines.map((ln,i)=>`<tspan x="70" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('')}</text>`;
         return descText + effectText;
       })() : `
       <foreignObject x="60" y="434" width="380" height="230">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sometype mono, monospace; font-size: 18px; color: #062E35; line-height: 1.3; white-space: normal; overflow-wrap: anywhere;">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sometype mono, monospace; font-size: 20px; color: ${baseColor}; line-height: 1.3; white-space: normal; overflow-wrap: anywhere;">
           <div>${safeDesc}</div>
           ${rawEffectTrim.trim() ? `<div style="margin-top:8px;"><strong>Effect:</strong> ${safeEffect}</div>` : ''}
         </div>
@@ -216,7 +217,7 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
 
     <!-- Category Badge -->
     <g id="badge">
-      <rect x="150" y="705" width="200" height="44" rx="22" ry="22" fill="${stroke}" opacity="0.9"/>
+      <rect x="150" y="705" width="200" height="44" rx="22" ry="22" fill="${baseColor}" opacity="0.9"/>
       <text x="250" y="734" text-anchor="middle" font-family="sometype mono, monospace" font-size="18" fill="white">${safeCat}</text>
     </g>
   </g>
