@@ -310,6 +310,15 @@ export const systemSamples = {
       "iconMode": "icon",
       "iconName": "figma",
       "twoUp": false,
+    },
+    {
+      "title": "Vibe Code",
+      "category": "Tool Card",
+      "desc": "Ai assistant that helps generate code, documentation, and design ideas quickly..",
+      "effect": "Combo: If paired with a Developer Role, gain +1 extra action each turn. Mitigates 'Slow App' challenges by providing quick prototyping.",
+      "iconMode": "icon",
+      "iconName": "bot",
+      "twoUp": false,
     }
   ],  
 
