@@ -31,7 +31,7 @@ export function setupSelector({ tabooList, onSelect }) {
     html += '<label>Word 2: <select id="sel2"></select></label>';
     html += '</div>';
     html += '<div>';
-    html += '<button class="cta" id="btn-select-generate">✨Generate Selected Words</button> ';
+    html += '<button class="cta" id="btn-select-generate">✨ Generate Selected Words</button> ';
     html += '<button id="btn-select-add">➕ Add word pair</button>';
     html += '</div>';
     html += '</div>';
