@@ -205,14 +205,20 @@ function showColors() {
     .map(t => `<option value="${t.value}" ${t.value===colorOptions.baseColor?"selected":""}>${t.name}</option>`) 
     .join("");
   host.innerHTML = `
-    <label>Theme 
-      <select id="sel-base">
-        ${optionsHtml}
-      </select>
-    </label>
-    <label>
-      <input type="checkbox" id="chk-white" ${colorOptions.whiteBackground?"checked":""}/> White background
-    </label>
+    <br><div style="margin-top: 8px;">
+      <div style="margin-bottom: 8px;">
+        <label>Theme 
+          <select id="sel-base">
+            ${optionsHtml}
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="checkbox" id="chk-white" ${colorOptions.whiteBackground?"checked":""}/> White background
+        </label>
+      </div>
+    </div>
   `;
 
   const selBase = document.getElementById("sel-base");

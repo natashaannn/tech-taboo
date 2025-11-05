@@ -18,14 +18,23 @@ export function setupSelector({ tabooList, onSelect }) {
   function showWordSelector() {
     const defaultCat = "AI";
     let html = '';
+    html += '<br><div style="margin-top: 8px;">';
+    html += '<div style="margin-bottom: 8px;">';
     html += '<label>Category: <select id="selCat">';
     html += CATEGORIES.map(c => `<option value="${c}" ${c===defaultCat?"selected":""}>${c}</option>`).join("");
-    html += '</select></label> ';
-    html += '<label>Word 1: <select id="sel1"></select></label> ';
-    html += '&amp; ';
-    html += '<label>Word 2: <select id="sel2"></select></label> ';
-    html += '<button class="cta" id="btn-select-generate">✨Generate Selected Words</button> ';
+    html += '</select></label>';
+    html += '</div>';
+    html += '<div style="margin-bottom: 8px;">';
+    html += '<label>Word 1: <select id="sel1"></select></label>';
+    html += '</div>';
+    html += '<div style="margin-bottom: 8px;">';
+    html += '<label>Word 2: <select id="sel2"></select></label>';
+    html += '</div>';
+    html += '<div>';
+    html += '<button class="cta" id="btn-select-generate">✨ Generate Selected Words</button> ';
     html += '<button id="btn-select-add">➕ Add word pair</button>';
+    html += '</div>';
+    html += '</div>';
     selectorSpan.innerHTML = html;
 
     // initial population

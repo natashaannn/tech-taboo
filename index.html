@@ -35,15 +35,15 @@
 Blockchain | Bitcoin, Ledger, Crypto, Token, Decentralized
     </textarea><br>
     <button class="cta" onclick="generate()">✨Generate Card</button>
-    <button onclick="fillInputRandom()">🎲Random Card</button>
+    <button onclick="fillInputRandom()">🎲 Random Card</button>
     <div>
       <button onclick="showWordSelector()">❔Choose Words</button>
       <span id="selector"></span>
     </div>
 
 
-    <button onclick="saveSVG()">💾Save as SVG</button>
-    <button onclick="savePNG()">💾Save as PNG</button>
+    <button onclick="saveSVG()">💾 Save as SVG</button>
+    <button onclick="savePNG()">💾 Save as PNG</button>
   </div>
 
   <script>
@@ -390,7 +390,7 @@ Blockchain | Bitcoin, Ledger, Crypto, Token, Decentralized
       tabooList.forEach((w, i) => {
         html += `<option value="${i}">${w.word}</option>`;
       });
-      html += `</select> <button class="cta" onclick="selectWords()">✨Generate Selected Words</button>`;
+      html += `</select> <button class="cta" onclick="selectWords()">✨ Generate Selected Words</button>`;
       document.getElementById("selector").innerHTML = html;
     }
 
