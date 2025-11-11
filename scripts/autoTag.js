@@ -1,6 +1,7 @@
-// scripts/autoTag.js
-// Auto-tag tabooList items with a `category` field based on detectCategory()
-// Usage: node scripts/autoTag.js
+// scripts/autoSort.js
+// Sort tabooList items by category and word alphabetically
+// Also auto-tags items with a `category` field based on detectCategory() if missing
+// Usage: node scripts/autoSort.js
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -20,16 +21,11 @@ function withCategories(list) {
 }
 
 function sortByCategory(list) {
-  return list
-    .map(item => ({
-      ...item,
-      category: item.category === 'Software Enginerring' ? 'Software Engineering' : item.category
-    }))
-    .sort((a, b) => {
-      const categoryCompare = a.category.localeCompare(b.category);
-      if (categoryCompare !== 0) return categoryCompare;
-      return a.word.localeCompare(b.word);
-    });
+  return list.sort((a, b) => {
+    const categoryCompare = a.category.localeCompare(b.category);
+    if (categoryCompare !== 0) return categoryCompare;
+    return a.word.localeCompare(b.word);
+  });
 }
 
 function serialize(list) {
