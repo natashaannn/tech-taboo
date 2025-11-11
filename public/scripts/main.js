@@ -44,7 +44,31 @@ function generate() {
     setSVGOutput("");
     return;
   }
-  const cards = pairs.map(({top, bottom}) => {
+
+  const aspectRatio = 580 / 890;
+
+  // Generate first card (preview - larger)
+  const firstPair = pairs[0];
+  const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
+    baseColor: colorOptions.baseColor,
+    background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
+    strokeColor: FIXED_STROKE,
+    matchStrokeBackground: false,
+    showBleed: false,
+  });
+  const previewCard = `
+    <div style="
+      width: min(90vw, 400px);
+      aspect-ratio: ${aspectRatio};
+      transform-origin: center;
+      margin: 0 auto 20px;
+    ">
+      ${previewSVG}
+    </div>
+  `;
+
+  // Generate remaining cards (smaller grid)
+  const gridCards = pairs.slice(1).map(({top, bottom}) => {
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
       baseColor: colorOptions.baseColor,
       background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
@@ -52,7 +76,6 @@ function generate() {
       matchStrokeBackground: false,
       showBleed: false,
     });
-    const aspectRatio = 580 / 890;
     return `
       <div style="
         width: 150px;
@@ -65,13 +88,20 @@ function generate() {
     `;
   }).join('');
 
-  const containerStyle = `
+  const gridStyle = `
     display:flex;
     flex-wrap:wrap;
     gap:8px;
     justify-content:flex-start;
     align-items:flex-start;
-  `;  setSVGOutput(`<div style="${containerStyle}">${cards}</div>`);
+  `;
+
+  setSVGOutput(`
+    <div style="text-align: center;">
+      ${previewCard}
+    </div>
+    <div style="${gridStyle}">${gridCards}</div>
+  `);
 }
 
 function fillInputFromList(index1, index2) {
