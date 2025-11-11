@@ -51,20 +51,21 @@ function generate() {
     const aspectRatio = 580 / 890;
     return `
       <div style="
-        width: min(90vw, 580px);
+        width: 150px;
         aspect-ratio: ${aspectRatio};
         transform-origin: center;
+        flex-shrink: 0;
       ">
         ${svg}
       </div>
     `;
   }).join('');
-  
+
   const containerStyle = `
     display:flex;
     flex-wrap:wrap;
-    gap:16px;
-    justify-content:center;
+    gap:8px;
+    justify-content:flex-start;
     align-items:flex-start;
   `;  setSVGOutput(`<div style="${containerStyle}">${cards}</div>`);
 }
@@ -78,12 +79,25 @@ function fillInputFromList(index1, index2) {
 }
 
 function fillInputRandom() {
-  let idx1 = Math.floor(Math.random() * tabooList.length);
-  let idx2;
-  do {
-    idx2 = Math.floor(Math.random() * tabooList.length);
-  } while (idx2 === idx1);
-  fillInputFromList(idx1, idx2);
+  // Generate ALL cards from the taboo list
+  // Create shuffled array of all indices
+  const indices = Array.from({ length: tabooList.length }, (_, i) => i);
+
+  // Shuffle the indices using Fisher-Yates algorithm
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+
+  // Create lines for all words in shuffled order
+  const lines = [];
+  for (const idx of indices) {
+    const word = tabooList[idx];
+    lines.push(`${word.word} | ${word.taboo.join(", ")}`);
+  }
+
+  document.getElementById("input").value = lines.join("\n");
+  generate();
 }
 
 function fitTextToWidth(textSelector, maxWidth, minFontSize = 24) {
