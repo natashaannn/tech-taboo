@@ -19,6 +19,19 @@ function withCategories(list) {
   }));
 }
 
+function sortByCategory(list) {
+  return list
+    .map(item => ({
+      ...item,
+      category: item.category === 'Software Enginerring' ? 'Software Engineering' : item.category
+    }))
+    .sort((a, b) => {
+      const categoryCompare = a.category.localeCompare(b.category);
+      if (categoryCompare !== 0) return categoryCompare;
+      return a.word.localeCompare(b.word);
+    });
+}
+
 function serialize(list) {
   // Pretty-print JS module with export
   const entries = list.map((it) => {
@@ -29,7 +42,16 @@ function serialize(list) {
 }
 
 const updated = withCategories(originalList);
-const content = serialize(updated);
+const sorted = sortByCategory(updated);
+const content = serialize(sorted);
 fs.writeFileSync(targetPath, content, { encoding: 'utf8' });
 
-console.log(`Updated categories for ${updated.length} items -> ${targetPath}`);
+console.log(`✓ Sorted ${sorted.length} items by category`);
+const categoryCount = {};
+sorted.forEach(item => {
+  categoryCount[item.category] = (categoryCount[item.category] || 0) + 1;
+});
+console.log('\nCategory breakdown:');
+Object.entries(categoryCount).forEach(([category, count]) => {
+  console.log(`  - ${category}: ${count} items`);
+});
