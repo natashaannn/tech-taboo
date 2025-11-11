@@ -33,8 +33,12 @@ function generate() {
   const pairs = [];
   for (let i = 0; i < rawLines.length; i += 2) {
     const top = parseLine(rawLines[i]);
-    const bottom = parseLine(rawLines[i + 1] || rawLines[i]);
-    if (top && bottom) pairs.push({ top, bottom });
+    // Only create a pair if we have a second word (don't duplicate)
+    if (i + 1 < rawLines.length) {
+      const bottom = parseLine(rawLines[i + 1]);
+      if (top && bottom) pairs.push({ top, bottom });
+    }
+    // Skip if no pair available
   }
   if (pairs.length === 0) {
     setSVGOutput("");
