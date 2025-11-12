@@ -88,6 +88,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       ${topTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
+      <image href="./peek out front.png" x="50" y="110" width="100" height="40"/>
     </g>
     <g id="bottom-half" transform="translate(500,810) rotate(180)">
       <text id="bottomWordText" x="250" y="110" text-anchor="middle"
@@ -97,6 +98,9 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       ${bottomTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
+      <g transform="translate(500, 320) rotate(360) scale(-1, 1)">
+        <image href="./peek out.png" x="413" y="-120" width="100" height="60"/>
+      </g>
     </g>
   </g>
   ${showBleed ? `<rect x="0" y="0" width="580" height="890" fill="none" stroke="${bleedColor}" stroke-width="1" stroke-dasharray="6 4"/>` : ''}
