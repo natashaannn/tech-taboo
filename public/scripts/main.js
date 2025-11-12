@@ -156,32 +156,8 @@ function fillInputAllCards() {
   generate();
 }
 
-function fitTextToWidth(textSelector, maxWidth, minFontSize = 24) {
-  const svgs = Array.from(document.getElementById("output").querySelectorAll("svg"));
-  svgs.forEach(svg => {
-    const textElem = svg.querySelector(textSelector);
-    if (!textElem) return;
-    let fontSize = parseInt(textElem.getAttribute("font-size"), 10) || 56;
-    textElem.setAttribute("font-size", fontSize);
-    let bbox = textElem.getBBox();
-    while (bbox.width > maxWidth && fontSize > minFontSize) {
-      fontSize -= 2;
-      textElem.setAttribute("font-size", fontSize);
-      bbox = textElem.getBBox();
-    }
-  });
-}
-
-// patch generate to fit
-const originalGenerate = generate;
-function patchedGenerate() {
-  originalGenerate();
-  fitTextToWidth("#topWordText", 490);
-  fitTextToWidth("#bottomWordText", 490);
-}
-
 // wire UI
-document.getElementById("btn-generate").addEventListener("click", patchedGenerate);
+document.getElementById("btn-generate").addEventListener("click", generate);
 document.getElementById("btn-random").addEventListener("click", fillInputRandomCard);
 document.getElementById("btn-generate-all").addEventListener("click", fillInputAllCards);
 
@@ -192,7 +168,7 @@ const { showWordSelector } = setupSelector({
 document.getElementById("btn-choose").addEventListener("click", showWordSelector);
 
 // re-render when selector appends pairs
-document.getElementById("input").addEventListener("tt-input-updated", patchedGenerate);
+document.getElementById("input").addEventListener("tt-input-updated", generate);
 
 document.getElementById("btn-save-svg").addEventListener("click", async () => {
   const { saveSvgsFromContainer } = await import('./lib/utils.js');
@@ -298,17 +274,17 @@ function showColors() {
   const selBase = document.getElementById("sel-base");
   selBase.addEventListener("change", () => {
     colorOptions.baseColor = selBase.value;
-    patchedGenerate();
+    generate();
   });
 
   const chkWhite = document.getElementById("chk-white");
   chkWhite.addEventListener("change", () => {
     colorOptions.whiteBackground = chkWhite.checked;
-    patchedGenerate();
+    generate();
   });
 }
 
 document.getElementById("btn-colors").addEventListener("click", showColors);
 
 // initial render
-patchedGenerate();
+generate();

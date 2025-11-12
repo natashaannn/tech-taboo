@@ -38,23 +38,70 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   const gradBottom = adjust(baseColor, +15);
   const stroke = matchStrokeBackground ? background : strokeColor;
 
-  // Auto-fit word font sizes to max width using canvas measurement
-  function computeFontSize(text, baseSize = 56, maxWidth = 490) {
+  // Split long text into multiple lines and compute font size
+  function splitAndSizeText(text, baseSize = 56, maxWidth = 490) {
     try {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       ctx.font = `bold ${baseSize}px sometype mono, monospace`;
       const w = ctx.measureText(text).width;
-      if (w <= maxWidth) return baseSize;
+      
+      // First, check for special break points like parentheses
+      const specialBreaks = [' (', ') ', ' / ', '/', ' - '];
+      for (const bp of specialBreaks) {
+        const idx = text.indexOf(bp);
+        if (idx > 0 && idx < text.length - 1) {
+          // For ' (' keep everything before the space on line 1
+          const line1 = text.substring(0, idx).trim();
+          // For ' (' start line 2 with the opening paren
+          const line2 = text.substring(idx + 1).trim();
+          
+          // Try 44px first, then 40px if needed
+          for (const fontSize of [44, 40]) {
+            ctx.font = `bold ${fontSize}px sometype mono, monospace`;
+            const w1 = ctx.measureText(line1).width;
+            const w2 = ctx.measureText(line2).width;
+            
+            if (w1 <= maxWidth && w2 <= maxWidth) {
+              return { lines: [line1, line2], fontSize };
+            }
+          }
+        }
+      }
+      
+      // Try splitting after 2 words for multi-word phrases (3+ words)
+      const words = text.split(' ');
+      if (words.length >= 3) {
+        const line1 = words.slice(0, 2).join(' ');
+        const line2 = words.slice(2).join(' ');
+        
+        // Try 44px first, then 40px if needed
+        for (const fontSize of [44, 40]) {
+          ctx.font = `bold ${fontSize}px sometype mono, monospace`;
+          const w1 = ctx.measureText(line1).width;
+          const w2 = ctx.measureText(line2).width;
+          
+          if (w1 <= maxWidth && w2 <= maxWidth) {
+            return { lines: [line1, line2], fontSize };
+          }
+        }
+      }
+      
+      // If text fits on one line, return as-is
+      if (w <= maxWidth) {
+        return { lines: [text], fontSize: baseSize };
+      }
+      
+      // Otherwise, shrink to fit on one line
       const ratio = maxWidth / w;
-      return Math.max(24, Math.floor(baseSize * ratio));
+      return { lines: [text], fontSize: Math.max(24, Math.floor(baseSize * ratio)) };
     } catch (_) {
-      // Fallback if canvas is unavailable
-      return baseSize;
+      return { lines: [text], fontSize: baseSize };
     }
   }
-  const topFontSize = computeFontSize(topWord);
-  const bottomFontSize = computeFontSize(bottomWord);
+  
+  const topTextInfo = splitAndSizeText(topWord);
+  const bottomTextInfo = splitAndSizeText(bottomWord);
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
   <defs>
@@ -81,18 +128,34 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}"/>
     <line x1="0" y1="415" x2="500" y2="415" stroke="${stroke}" stroke-width="${dividerWidth}" opacity="0.7"/>
     <g id="top-half">
-      <text id="topWordText" x="250" y="110" text-anchor="middle"
-            font-family="sometype mono, monospace" font-size="${topFontSize}"
-            fill="white" font-weight="bold">${topWord}</text>
+      ${topTextInfo.lines.length === 1 
+        ? `<text id="topWordText" x="250" y="110" text-anchor="middle"
+              font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
+              fill="white" font-weight="bold">${topTextInfo.lines[0]}</text>`
+        : `<text id="topWordText" x="250" y="85" text-anchor="middle"
+              font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
+              fill="white" font-weight="bold">${topTextInfo.lines[0]}</text>
+           <text x="250" y="130" text-anchor="middle"
+              font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
+              fill="white" font-weight="bold">${topTextInfo.lines[1]}</text>`
+      }
       <rect x="50" y="140" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.85"/>
       ${topTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
     </g>
     <g id="bottom-half" transform="translate(500,810) rotate(180)">
-      <text id="bottomWordText" x="250" y="110" text-anchor="middle"
-            font-family="sometype mono, monospace" font-size="${bottomFontSize}"
-            fill="white" font-weight="bold">${bottomWord}</text>
+      ${bottomTextInfo.lines.length === 1 
+        ? `<text id="bottomWordText" x="250" y="110" text-anchor="middle"
+              font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
+              fill="white" font-weight="bold">${bottomTextInfo.lines[0]}</text>`
+        : `<text id="bottomWordText" x="250" y="85" text-anchor="middle"
+              font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
+              fill="white" font-weight="bold">${bottomTextInfo.lines[0]}</text>
+           <text x="250" y="130" text-anchor="middle"
+              font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
+              fill="white" font-weight="bold">${bottomTextInfo.lines[1]}</text>`
+      }
       <rect x="50" y="140" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.85"/>
       ${bottomTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`

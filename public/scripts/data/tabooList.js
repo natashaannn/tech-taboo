@@ -29,7 +29,7 @@ export const tabooList = [
   { word: "OpenAI API", category: "AI", taboo: ["AI", "Call", "Key", "Request", "Model"] },
   { word: "Prompt Engineering", category: "AI", taboo: ["AI", "Input", "Instruction", "LLM", "Query"] },
   { word: "Prompt Injection", category: "AI", taboo: ["AI", "Attack", "Security", "Vulnerability", "Exploit"] },
-  { word: "Retrieval Augmented Generation", category: "AI", taboo: ["RAG", "AI", "Search", "Context", "LLM"] },
+  { word: "Retrieval Augmented Generation (RAG)", category: "AI", taboo: ["Document", "AI", "Search", "Context", "LLM"] },
   { word: "Self-Attention", category: "AI", taboo: ["AI", "Transformer", "Weights", "Focus", "Model"] },
   { word: "Small Language Model", category: "AI", taboo: ["Llama", "Compact", "Phi", "AI", "Efficient"] },
   { word: "Speech-to-Text", category: "AI", taboo: ["AI", "Transcription", "Audio", "Model", "Voice"] },
