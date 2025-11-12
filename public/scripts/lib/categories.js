@@ -9,8 +9,8 @@ export const CATEGORIES = [
 // Default colors for each category
 export const CATEGORY_COLORS = {
   "AI": "#3F51B5",              // Indigo
-  "Data": "#00796B",           // Teal
-  "Software Engineering": "#455A64", // Blue Grey
+  "Data": "#6A1B9A",           // Teal
+  "Software Engineering": "#00796B", // Blue Grey
   "Web3/Blockchain": "#E64A19", // Deep Orange
 };
 
@@ -25,7 +25,7 @@ export const CATEGORY_KEYWORDS = {
     "data","database","sql","nosql","etl","bi","business intelligence","visualization","warehouse","lakehouse","analytics","mining","predictive","governance","elasticsearch","kafka","rabbitmq","redis",
   ],
   "Software Engineering": [
-    "api","http","rest","graphql","websocket","react","vue","angular","node","express","docker","kubernetes","git","compiler","debug","ide","microservices","devops","ci/cd","pipeline","test","unit","integration","regression","staging","production","rollback","hotfix","feature flag","scrum","sprint","responsive","bootstrap","tailwind","spa","ssr","pwa","service worker","oauth","jwt","browser","html","css","javascript","server","cache","router","firewall","bandwidth","lan","wan","dns","ip","tls","ssl","certificate",
+    "api","http","rest","graphql","websocket","react","vue","angular","node","express","docker","kubernetes","git","compiler","debug","ide","microservices","devops","ci/cd","pipeline","test","unit","integration","regression","staging","production","rollback","hotfix","feature flag","scrum","sprint","responsive","bootstrap","tailwind","spa","ssr","pwa","service worker","oauth","jwt","browser","html","css","javascript","server","cache","router","firewall","bandwidth","lan","wan","dns","ip","tls","ssl","certificate","cloud","aws","azure","gcp",
   ],
 };
 

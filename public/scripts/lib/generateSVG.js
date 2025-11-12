@@ -47,14 +47,21 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       const w = ctx.measureText(text).width;
       
       // First, check for special break points like parentheses
-      const specialBreaks = [' (', ') ', ' / ', '/', ' - '];
+      // Note: Only use ' / ' with spaces, not '/' alone, to avoid splitting acronyms like CI/CD
+      const specialBreaks = [' (', ') ', ' / ', ' - '];
       for (const bp of specialBreaks) {
         const idx = text.indexOf(bp);
         if (idx > 0 && idx < text.length - 1) {
-          // For ' (' keep everything before the space on line 1
-          const line1 = text.substring(0, idx).trim();
-          // For ' (' start line 2 with the opening paren
-          const line2 = text.substring(idx + 1).trim();
+          let line1, line2;
+          if (bp === ' (') {
+            // For ' (' keep everything before the space on line 1, start line 2 with '('
+            line1 = text.substring(0, idx).trim();
+            line2 = text.substring(idx + 1).trim(); // Skip the space, keep the '('
+          } else {
+            // For other breaks, split at the break point but keep the character
+            line1 = text.substring(0, idx + bp.length).trim();
+            line2 = text.substring(idx + bp.length).trim();
+          }
           
           // Try 44px first, then 40px if needed
           for (const fontSize of [44, 40]) {
@@ -69,7 +76,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
         }
       }
       
-      // Try splitting after 2 words for multi-word phrases (3+ words)
+      // Always split multi-word phrases (3+ words) after 2 words
       const words = text.split(' ');
       if (words.length >= 3) {
         const line1 = words.slice(0, 2).join(' ');
@@ -85,9 +92,20 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
             return { lines: [line1, line2], fontSize };
           }
         }
+        
+        // If even at 40px it doesn't fit, try smaller sizes
+        for (let fontSize = 38; fontSize >= 32; fontSize -= 2) {
+          ctx.font = `bold ${fontSize}px sometype mono, monospace`;
+          const w1 = ctx.measureText(line1).width;
+          const w2 = ctx.measureText(line2).width;
+          
+          if (w1 <= maxWidth && w2 <= maxWidth) {
+            return { lines: [line1, line2], fontSize };
+          }
+        }
       }
       
-      // If text fits on one line, return as-is
+      // If text fits on one line (1-2 words), return as-is
       if (w <= maxWidth) {
         return { lines: [text], fontSize: baseSize };
       }
@@ -102,14 +120,21 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   
   const topTextInfo = splitAndSizeText(topWord);
   const bottomTextInfo = splitAndSizeText(bottomWord);
+  
+  // Generate unique IDs for this SVG to avoid conflicts when multiple SVGs are on the same page
+  const uniqueId = `svg_${Math.random().toString(36).substr(2, 9)}`;
+  const gradId = `bgGrad_${uniqueId}`;
+  const patternId = `binaryPattern_${uniqueId}`;
+  const blurId = `blur_${uniqueId}`;
+  
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
   <defs>
-    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="${gradTop}"/>
       <stop offset="100%" stop-color="${gradBottom}"/>
     </linearGradient>
-    <pattern id="binaryPattern" width="580" height="80" patternUnits="userSpaceOnUse">
+    <pattern id="${patternId}" width="580" height="80" patternUnits="userSpaceOnUse">
       <text x="0" y="35" font-family="sometype mono, monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
@@ -119,12 +144,12 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
         1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
       </text>
     </pattern>
-    <filter id="blur"><feGaussianBlur stdDeviation="0.8"/></filter>
+    <filter id="${blurId}"><feGaussianBlur stdDeviation="0.8"/></filter>
   </defs>
   <rect x="0" y="0" width="580" height="890" fill="${background}"/>
   <g transform="translate(40,40)">
-    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#bgGrad)"/>
-    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#binaryPattern)" filter="url(#blur)"/>
+    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#${gradId})"/>
+    <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#${patternId})" filter="url(#${blurId})"/>
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}"/>
     <line x1="0" y1="415" x2="500" y2="415" stroke="${stroke}" stroke-width="${dividerWidth}" opacity="0.7"/>
     <g id="top-half">

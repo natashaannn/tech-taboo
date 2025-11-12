@@ -120,40 +120,176 @@ function fillInputFromList(index1, index2) {
 }
 
 function fillInputRandomCard() {
-  // Generate a random single card (pair of words)
+  // Generate a random single card (pair of words from the same category)
   const idx1 = Math.floor(Math.random() * tabooList.length);
-  let idx2 = Math.floor(Math.random() * tabooList.length);
-  // Ensure we get two different words
-  while (idx2 === idx1 && tabooList.length > 1) {
+  const w1 = tabooList[idx1];
+  const category1 = w1.category || detectCategory(w1.word);
+  
+  // Find all words in the same category
+  const sameCategory = tabooList
+    .map((item, idx) => ({ item, idx }))
+    .filter(({ item, idx }) => {
+      const cat = item.category || detectCategory(item.word);
+      return cat === category1 && idx !== idx1;
+    });
+  
+  // Pick a random word from the same category, or fall back to any word if none available
+  let idx2;
+  if (sameCategory.length > 0) {
+    const randomPick = sameCategory[Math.floor(Math.random() * sameCategory.length)];
+    idx2 = randomPick.idx;
+  } else {
+    // Fallback: pick any different word
     idx2 = Math.floor(Math.random() * tabooList.length);
+    while (idx2 === idx1 && tabooList.length > 1) {
+      idx2 = Math.floor(Math.random() * tabooList.length);
+    }
   }
 
-  const w1 = tabooList[idx1];
   const w2 = tabooList[idx2];
   document.getElementById("input").value = `${w1.word} | ${w1.taboo.join(", ")}\n${w2.word} | ${w2.taboo.join(", ")}`;
   generate();
 }
 
 function fillInputAllCards() {
-  // Generate ALL cards from the taboo list
-  // Create shuffled array of all indices
-  const indices = Array.from({ length: tabooList.length }, (_, i) => i);
+  // Generate ALL cards from the taboo list, pairing words from same category
+  // Group words by category
+  const byCategory = {};
+  tabooList.forEach((item, idx) => {
+    const cat = item.category || detectCategory(item.word);
+    if (!byCategory[cat]) byCategory[cat] = [];
+    byCategory[cat].push({ item, idx });
+  });
 
-  // Shuffle the indices using Fisher-Yates algorithm
-  for (let i = indices.length - 1; i > 0; i--) {
+  // Shuffle words within each category
+  Object.keys(byCategory).forEach(cat => {
+    const arr = byCategory[cat];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  });
+
+  // Create pairs from each category
+  const pairsByCategory = [];
+  Object.keys(byCategory).forEach(cat => {
+    const words = byCategory[cat];
+    const categoryPairs = [];
+    for (let i = 0; i < words.length; i += 2) {
+      const w1 = tabooList[words[i].idx];
+      
+      // If there's a second word in this category, pair them
+      if (i + 1 < words.length) {
+        const w2 = tabooList[words[i + 1].idx];
+        categoryPairs.push([w1, w2]);
+      } else {
+        // Odd number of words in category - pair with itself
+        categoryPairs.push([w1, w1]);
+      }
+    }
+    pairsByCategory.push(...categoryPairs);
+  });
+
+  // Shuffle all pairs so categories are mixed
+  for (let i = pairsByCategory.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
+    [pairsByCategory[i], pairsByCategory[j]] = [pairsByCategory[j], pairsByCategory[i]];
   }
 
-  // Create lines for all words in shuffled order
+  // Create lines from shuffled pairs (for display in textarea)
   const lines = [];
-  for (const idx of indices) {
-    const word = tabooList[idx];
-    lines.push(`${word.word} | ${word.taboo.join(", ")}`);
+  pairsByCategory.forEach(([w1, w2]) => {
+    lines.push(`${w1.word} | ${w1.taboo.join(", ")}`);
+    lines.push(`${w2.word} | ${w2.taboo.join(", ")}`);
+  });
+
+  // Update textarea without triggering events
+  const inputEl = document.getElementById("input");
+  inputEl.value = lines.join("\n");
+  
+  // Generate directly with the pairs data (preserving category info)
+  generateFromPairs(pairsByCategory);
+}
+
+function generateFromPairs(pairData) {
+  // Generate cards directly from pair data with preserved categories
+  const pairs = pairData.map(([w1, w2]) => ({
+    top: {
+      word: w1.word,
+      taboos: w1.taboo,
+      category: w1.category || detectCategory(w1.word)
+    },
+    bottom: {
+      word: w2.word,
+      taboos: w2.taboo,
+      category: w2.category || detectCategory(w2.word)
+    }
+  }));
+
+  if (pairs.length === 0) {
+    setSVGOutput("");
+    return;
   }
 
-  document.getElementById("input").value = lines.join("\n");
-  generate();
+  const aspectRatio = 580 / 890;
+
+  // Generate first card (preview - larger)
+  const firstPair = pairs[0];
+  const firstCardColor = getCategoryColor(firstPair.top.category);
+  const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
+    baseColor: firstCardColor,
+    background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
+    strokeColor: FIXED_STROKE,
+    matchStrokeBackground: false,
+    showBleed: false,
+  });
+  const previewCard = `
+    <div style="
+      width: min(90vw, 400px);
+      aspect-ratio: ${aspectRatio};
+      transform-origin: center;
+      margin: 0 auto 20px;
+    ">
+      ${previewSVG}
+    </div>
+  `;
+
+  // Generate remaining cards (smaller grid)
+  const gridCards = pairs.slice(1).map(({top, bottom}) => {
+    const cardColor = getCategoryColor(top.category);
+    const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
+      baseColor: cardColor,
+      background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
+      strokeColor: FIXED_STROKE,
+      matchStrokeBackground: false,
+      showBleed: false,
+    });
+    return `
+      <div style="
+        width: 150px;
+        aspect-ratio: ${aspectRatio};
+        transform-origin: center;
+        flex-shrink: 0;
+      ">
+        ${svg}
+      </div>
+    `;
+  }).join("");
+
+  const gridContainer = pairs.length > 1 ? `
+    <div style="
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    ">
+      ${gridCards}
+    </div>
+  ` : "";
+
+  setSVGOutput(previewCard + gridContainer);
 }
 
 // wire UI
