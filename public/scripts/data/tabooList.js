@@ -87,7 +87,7 @@ export const tabooList = [
   { word: "Application Programming Interface (API)", category: "Software Engineering", taboo: ["Endpoint", "Request", "Response", "Data", "Exchange"] },
   { word: "Application Security", category: "Software Engineering", taboo: ["AppSec", "Firewall", "Certificates", "Deployment", "Safe"] },
   { word: "Artificial Intelligence", category: "Software Engineering", taboo: ["Machine", "Learning", "AI", "Smart", "Robot"] },
-  { word: "Augmented Reality", category: "Software Engineering", taboo: ["AR", "Overlay", "Digital", "Information", "Interactive"] },
+  { word: "Augmented Reality (AR)", category: "Software Engineering", taboo: ["Virtual", "Overlay", "Digital", "Information", "Interactive"] },
   { word: "Authentication", category: "Software Engineering", taboo: ["Login", "Verify", "Identity", "Secure", "Access"] },
   { word: "Authorization", category: "Software Engineering", taboo: ["Access", "Control", "Permission", "Secure", "Verify"] },
   { word: "Bandwidth", category: "Software Engineering", taboo: ["Speed", "Internet", "Connection", "Data", "Transfer"] },
