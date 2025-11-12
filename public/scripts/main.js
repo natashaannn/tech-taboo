@@ -33,14 +33,42 @@ function generate() {
   const pairs = [];
   for (let i = 0; i < rawLines.length; i += 2) {
     const top = parseLine(rawLines[i]);
-    const bottom = parseLine(rawLines[i + 1] || rawLines[i]);
-    if (top && bottom) pairs.push({ top, bottom });
+    // Only create a pair if we have a second word (don't duplicate)
+    if (i + 1 < rawLines.length) {
+      const bottom = parseLine(rawLines[i + 1]);
+      if (top && bottom) pairs.push({ top, bottom });
+    }
+    // Skip if no pair available
   }
   if (pairs.length === 0) {
     setSVGOutput("");
     return;
   }
-  const cards = pairs.map(({top, bottom}) => {
+
+  const aspectRatio = 580 / 890;
+
+  // Generate first card (preview - larger)
+  const firstPair = pairs[0];
+  const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
+    baseColor: colorOptions.baseColor,
+    background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
+    strokeColor: FIXED_STROKE,
+    matchStrokeBackground: false,
+    showBleed: false,
+  });
+  const previewCard = `
+    <div style="
+      width: min(90vw, 400px);
+      aspect-ratio: ${aspectRatio};
+      transform-origin: center;
+      margin: 0 auto 20px;
+    ">
+      ${previewSVG}
+    </div>
+  `;
+
+  // Generate remaining cards (smaller grid)
+  const gridCards = pairs.slice(1).map(({top, bottom}) => {
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
       baseColor: colorOptions.baseColor,
       background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
@@ -48,25 +76,32 @@ function generate() {
       matchStrokeBackground: false,
       showBleed: false,
     });
-    const aspectRatio = 580 / 890;
     return `
       <div style="
-        width: min(90vw, 580px);
+        width: 150px;
         aspect-ratio: ${aspectRatio};
         transform-origin: center;
+        flex-shrink: 0;
       ">
         ${svg}
       </div>
     `;
   }).join('');
-  
-  const containerStyle = `
+
+  const gridStyle = `
     display:flex;
     flex-wrap:wrap;
-    gap:16px;
-    justify-content:center;
+    gap:8px;
+    justify-content:flex-start;
     align-items:flex-start;
-  `;  setSVGOutput(`<div style="${containerStyle}">${cards}</div>`);
+  `;
+
+  setSVGOutput(`
+    <div style="text-align: center;">
+      ${previewCard}
+    </div>
+    <div style="${gridStyle}">${gridCards}</div>
+  `);
 }
 
 function fillInputFromList(index1, index2) {
@@ -77,13 +112,41 @@ function fillInputFromList(index1, index2) {
   generate();
 }
 
-function fillInputRandom() {
-  let idx1 = Math.floor(Math.random() * tabooList.length);
-  let idx2;
-  do {
+function fillInputRandomCard() {
+  // Generate a random single card (pair of words)
+  const idx1 = Math.floor(Math.random() * tabooList.length);
+  let idx2 = Math.floor(Math.random() * tabooList.length);
+  // Ensure we get two different words
+  while (idx2 === idx1 && tabooList.length > 1) {
     idx2 = Math.floor(Math.random() * tabooList.length);
-  } while (idx2 === idx1);
-  fillInputFromList(idx1, idx2);
+  }
+
+  const w1 = tabooList[idx1];
+  const w2 = tabooList[idx2];
+  document.getElementById("input").value = `${w1.word} | ${w1.taboo.join(", ")}\n${w2.word} | ${w2.taboo.join(", ")}`;
+  generate();
+}
+
+function fillInputAllCards() {
+  // Generate ALL cards from the taboo list
+  // Create shuffled array of all indices
+  const indices = Array.from({ length: tabooList.length }, (_, i) => i);
+
+  // Shuffle the indices using Fisher-Yates algorithm
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+
+  // Create lines for all words in shuffled order
+  const lines = [];
+  for (const idx of indices) {
+    const word = tabooList[idx];
+    lines.push(`${word.word} | ${word.taboo.join(", ")}`);
+  }
+
+  document.getElementById("input").value = lines.join("\n");
+  generate();
 }
 
 function fitTextToWidth(textSelector, maxWidth, minFontSize = 24) {
@@ -112,7 +175,8 @@ function patchedGenerate() {
 
 // wire UI
 document.getElementById("btn-generate").addEventListener("click", patchedGenerate);
-document.getElementById("btn-random").addEventListener("click", fillInputRandom);
+document.getElementById("btn-random").addEventListener("click", fillInputRandomCard);
+document.getElementById("btn-generate-all").addEventListener("click", fillInputAllCards);
 
 const { showWordSelector } = setupSelector({
   tabooList,
