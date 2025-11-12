@@ -154,13 +154,13 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     <line x1="0" y1="415" x2="500" y2="415" stroke="${stroke}" stroke-width="${dividerWidth}" opacity="0.7"/>
     <g id="top-half">
       ${topTextInfo.lines.length === 1 
-        ? `<text id="topWordText" x="250" y="110" text-anchor="middle"
+        ? `<text id="topWordText" x="250" y="90" text-anchor="middle"
               font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
               fill="white" font-weight="bold">${topTextInfo.lines[0]}</text>`
-        : `<text id="topWordText" x="250" y="85" text-anchor="middle"
+        : `<text id="topWordText" x="250" y="65" text-anchor="middle"
               font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
               fill="white" font-weight="bold">${topTextInfo.lines[0]}</text>
-           <text x="250" y="130" text-anchor="middle"
+           <text x="250" y="110" text-anchor="middle"
               font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
               fill="white" font-weight="bold">${topTextInfo.lines[1]}</text>`
       }

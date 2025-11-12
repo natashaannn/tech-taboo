@@ -3,10 +3,31 @@ import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { saveSVG, savePNGFromSVG, saveSVGsAsZip, savePNGsAsZip } from "./lib/exporters.js";
 import { setupSelector } from "./ui/selector.js";
-import { getCategoryColor, detectCategory } from "./lib/categories.js";
+import { getCategoryColor, detectCategory, CATEGORIES, CATEGORY_COLORS } from "./lib/categories.js";
 
 function setSVGOutput(html) {
   document.getElementById("output").innerHTML = html;
+}
+
+// Render category color legend
+function renderLegend() {
+  const legendEl = document.getElementById("legend");
+  const legendItems = CATEGORIES.map(cat => {
+    const color = CATEGORY_COLORS[cat];
+    return `
+      <div style="display: inline-flex; align-items: center; margin-right: 16px; margin-bottom: 8px;">
+        <div style="width: 24px; height: 24px; background: ${color}; border-radius: 4px; margin-right: 8px; border: 1px solid #ccc;"></div>
+        <span style="font-size: 14px; font-weight: 500;">${cat}</span>
+      </div>
+    `;
+  }).join('');
+  
+  legendEl.innerHTML = `
+    <div style="display: flex; flex-wrap: wrap; align-items: center;">
+      <strong style="margin-right: 16px; margin-bottom: 8px;">Card Colors:</strong>
+      ${legendItems}
+    </div>
+  `;
 }
 
 // Fixed stroke color for the card border
@@ -423,4 +444,5 @@ function showColors() {
 document.getElementById("btn-colors").addEventListener("click", showColors);
 
 // initial render
+renderLegend();
 generate();
