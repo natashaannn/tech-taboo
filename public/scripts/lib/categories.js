@@ -3,7 +3,6 @@ export const CATEGORIES = [
   "Software Engineering",
   "Data",
   "AI",
-  "Web3/Blockchain",
 ];
 
 // Default colors for each category
@@ -28,7 +27,6 @@ export const CATEGORY_KEYWORDS = {
 
 export function detectCategory(word) {
   const w = word.toLowerCase();
-  if (CATEGORY_KEYWORDS["Web3/Blockchain"].some((k) => w.includes(k))) return "Web3/Blockchain";
   if (CATEGORY_KEYWORDS.AI.some((k) => w.includes(k))) return "AI";
   if (CATEGORY_KEYWORDS.Data.some((k) => w.includes(k))) return "Data";
   return "Software Engineering";
