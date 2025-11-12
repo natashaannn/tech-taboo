@@ -203,5 +203,5 @@ export const tabooList = [
   { word: "Vue", category: "Software Engineering", taboo: ["JavaScript", "Framework", "Component", "UI", "Frontend"] },
   { word: "Vulnerability", category: "Software Engineering", taboo: ["Weakness", "Exploit", "Security", "Threat", "Risk"] },
   { word: "WebSocket", category: "Software Engineering", taboo: ["Connection", "Real-time", "Socket", "Message", "Protocol"] },
-  { word: "Wide Area Network (WAN)", category: "Software Engineering", taboo: ["Connection", "Remote", "Internet", "Router", "Distance"] },
+  { word: "Wide Area Network (WAN)", category: "Software Engineering", taboo: ["Connection", "Remote", "Internet", "Router", "Distance"] }
 ];
