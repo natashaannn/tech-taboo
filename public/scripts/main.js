@@ -112,7 +112,22 @@ function fillInputFromList(index1, index2) {
   generate();
 }
 
-function fillInputRandom() {
+function fillInputRandomCard() {
+  // Generate a random single card (pair of words)
+  const idx1 = Math.floor(Math.random() * tabooList.length);
+  let idx2 = Math.floor(Math.random() * tabooList.length);
+  // Ensure we get two different words
+  while (idx2 === idx1 && tabooList.length > 1) {
+    idx2 = Math.floor(Math.random() * tabooList.length);
+  }
+
+  const w1 = tabooList[idx1];
+  const w2 = tabooList[idx2];
+  document.getElementById("input").value = `${w1.word} | ${w1.taboo.join(", ")}\n${w2.word} | ${w2.taboo.join(", ")}`;
+  generate();
+}
+
+function fillInputAllCards() {
   // Generate ALL cards from the taboo list
   // Create shuffled array of all indices
   const indices = Array.from({ length: tabooList.length }, (_, i) => i);
@@ -160,7 +175,8 @@ function patchedGenerate() {
 
 // wire UI
 document.getElementById("btn-generate").addEventListener("click", patchedGenerate);
-document.getElementById("btn-random").addEventListener("click", fillInputRandom);
+document.getElementById("btn-random").addEventListener("click", fillInputRandomCard);
+document.getElementById("btn-generate-all").addEventListener("click", fillInputAllCards);
 
 const { showWordSelector } = setupSelector({
   tabooList,
