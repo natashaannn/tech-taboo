@@ -171,13 +171,13 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     </g>
     <g id="bottom-half" transform="translate(500,810) rotate(180)">
       ${bottomTextInfo.lines.length === 1 
-        ? `<text id="bottomWordText" x="250" y="110" text-anchor="middle"
+        ? `<text id="bottomWordText" x="250" y="90" text-anchor="middle"
               font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
               fill="white" font-weight="bold">${bottomTextInfo.lines[0]}</text>`
-        : `<text id="bottomWordText" x="250" y="85" text-anchor="middle"
+        : `<text id="bottomWordText" x="250" y="65" text-anchor="middle"
               font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
               fill="white" font-weight="bold">${bottomTextInfo.lines[0]}</text>
-           <text x="250" y="130" text-anchor="middle"
+           <text x="250" y="110" text-anchor="middle"
               font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
               fill="white" font-weight="bold">${bottomTextInfo.lines[1]}</text>`
       }
