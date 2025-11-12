@@ -3,6 +3,7 @@ import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { saveSVG, savePNGFromSVG, saveSVGsAsZip, savePNGsAsZip } from "./lib/exporters.js";
 import { setupSelector } from "./ui/selector.js";
+import { getCategoryColor, detectCategory } from "./lib/categories.js";
 
 function setSVGOutput(html) {
   document.getElementById("output").innerHTML = html;
@@ -25,9 +26,11 @@ function generate() {
   const parseLine = (line) => {
     const [w, t] = line.split("|");
     if (!w || !t) return null;
+    const word = w.trim();
     return {
-      word: w.trim(),
-      taboos: t.split(",").map(s => s.trim()).filter(Boolean)
+      word,
+      taboos: t.split(",").map(s => s.trim()).filter(Boolean),
+      category: detectCategory(word)
     };
   };
   const pairs = [];
@@ -49,8 +52,10 @@ function generate() {
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
+  // Use category-based color from the top word
+  const firstCardColor = getCategoryColor(firstPair.top.category);
   const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
-    baseColor: colorOptions.baseColor,
+    baseColor: firstCardColor,
     background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
     strokeColor: FIXED_STROKE,
     matchStrokeBackground: false,
@@ -69,8 +74,10 @@ function generate() {
 
   // Generate remaining cards (smaller grid)
   const gridCards = pairs.slice(1).map(({top, bottom}) => {
+    // Use category-based color from the top word of each card
+    const cardColor = getCategoryColor(top.category);
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
-      baseColor: colorOptions.baseColor,
+      baseColor: cardColor,
       background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
       strokeColor: FIXED_STROKE,
       matchStrokeBackground: false,
@@ -208,9 +215,11 @@ function openPrint() {
   const parseLine = (line) => {
     const [w, t] = line.split("|");
     if (!w || !t) return null;
+    const word = w.trim();
     return {
-      word: w.trim(),
-      taboos: t.split(",").map(s => s.trim()).filter(Boolean)
+      word,
+      taboos: t.split(",").map(s => s.trim()).filter(Boolean),
+      category: detectCategory(word)
     };
   };
   // Build cards from pairs of lines: [top, bottom]
@@ -230,11 +239,12 @@ function openPrint() {
   }
 
   const payload = {
-    cards: pairs.slice(0, 4), // [{top:{word,taboos}, bottom:{word,taboos}}]
+    cards: pairs.slice(0, 4), // [{top:{word,taboos,category}, bottom:{word,taboos,category}}]
     baseColor: colorOptions.baseColor,
     whiteBackground: !!colorOptions.whiteBackground,
     strokeColor: FIXED_STROKE,
     includeBacking: !!(document.getElementById("chk-backing") && document.getElementById("chk-backing").checked),
+    useCategoryColors: true, // flag to indicate category-based colors should be used
     createdAt: Date.now(),
   };
   try {

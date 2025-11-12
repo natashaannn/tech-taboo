@@ -1,5 +1,6 @@
 // public/scripts/print.js
 import { generateSVG } from './lib/generateSVG.js';
+import { getCategoryColor } from './lib/categories.js';
 
 function readPayload() {
   try {
@@ -24,14 +25,18 @@ function render2x2() {
     whiteBackground: false,
     strokeColor: '#17424A',
   };
-  const { cards, baseColor, whiteBackground, strokeColor, includeBacking } = payload || fallback;
+  const { cards, baseColor, whiteBackground, strokeColor, includeBacking, useCategoryColors } = payload || fallback;
   const background = whiteBackground ? '#ffffff' : strokeColor;
 
   const cellIds = ['c1','c2','c3','c4'];
   cellIds.forEach((id, i) => {
     const card = cards[i] || cards[0];
+    // Use category-based color if enabled and category is available
+    const cardColor = (useCategoryColors && card.top.category) 
+      ? getCategoryColor(card.top.category) 
+      : baseColor;
     const svg = generateSVG(card.top.word, card.top.taboos, card.bottom.word, card.bottom.taboos, {
-      baseColor,
+      baseColor: cardColor,
       background,
       strokeColor,
       matchStrokeBackground: false,

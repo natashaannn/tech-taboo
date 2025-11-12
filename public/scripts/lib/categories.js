@@ -6,6 +6,14 @@ export const CATEGORIES = [
   "Web3/Blockchain",
 ];
 
+// Default colors for each category
+export const CATEGORY_COLORS = {
+  "AI": "#3F51B5",              // Indigo
+  "Data": "#00796B",           // Teal
+  "Software Engineering": "#455A64", // Blue Grey
+  "Web3/Blockchain": "#E64A19", // Deep Orange
+};
+
 export const CATEGORY_KEYWORDS = {
   AI: [
     "ai","ml","machine learning","deep learning","neural","transformer","llm","gpt","chatgpt","dall-e","midjourney","anthropic","claude","gemini","slm","llama","fine-tuning","retrieval","vector","embedding","tokenization","vision","computer vision","voice","speech","text-to-speech","speech-to-text","multimodal","sam","rlhf","synthetic","diffusion","stable diffusion","diffusers","prompt","prompt engineering","alignment","hallucination","moderation","ethics","regulation","autonomous","agent",
@@ -46,4 +54,9 @@ export function buildCategoryMaps(tabooList) {
     map[cat].push({ index, word: item.word });
   });
   return map;
+}
+
+// Get the default color for a category
+export function getCategoryColor(category) {
+  return CATEGORY_COLORS[category] || "#17424A"; // fallback to classic teal
 }

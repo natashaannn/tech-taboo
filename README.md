@@ -31,6 +31,27 @@ Below is an example of a generated card ([`card-example.svg`](card-example.svg))
 - [`card-example.svg`](card-example.svg): Example output card.
 - [`README.md`](README.md): Project documentation.
 
+## Development
+
+### Auto-Sort Script
+
+The `autoSort.js` script helps maintain the taboo word list by automatically sorting entries and ensuring all items have proper categories.
+
+**Usage:**
+```bash
+node scripts/autoSort.js
+```
+
+**What it does:**
+- Sorts all taboo list entries alphabetically by category, then by word
+- Auto-tags items with a category if missing (based on `detectCategory()` logic)
+- Outputs a category breakdown showing the count of items per category
+
+**When to use:**
+- After adding new words to `public/scripts/data/tabooList.js`
+- After modifying word names or categories
+- To ensure consistent alphabetical ordering
+
 ---
 
 Enjoy making your own tech-themed taboo cards!
