@@ -3,9 +3,31 @@ import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { saveSVG, savePNGFromSVG, saveSVGsAsZip, savePNGsAsZip } from "./lib/exporters.js";
 import { setupSelector } from "./ui/selector.js";
+import { getCategoryColor, detectCategory, CATEGORIES, CATEGORY_COLORS } from "./lib/categories.js";
 
 function setSVGOutput(html) {
   document.getElementById("output").innerHTML = html;
+}
+
+// Render category color legend
+function renderLegend() {
+  const legendEl = document.getElementById("legend");
+  const legendItems = CATEGORIES.map(cat => {
+    const color = CATEGORY_COLORS[cat];
+    return `
+      <div style="display: inline-flex; align-items: center; margin-right: 16px; margin-bottom: 8px;">
+        <div style="width: 24px; height: 24px; background: ${color}; border-radius: 4px; margin-right: 8px; border: 1px solid #ccc;"></div>
+        <span style="font-size: 14px; font-weight: 500;">${cat}</span>
+      </div>
+    `;
+  }).join('');
+  
+  legendEl.innerHTML = `
+    <div style="display: flex; flex-wrap: wrap; align-items: center;">
+      <strong style="margin-right: 16px; margin-bottom: 8px;">Card Colors:</strong>
+      ${legendItems}
+    </div>
+  `;
 }
 
 // Fixed stroke color for the card border
@@ -15,7 +37,11 @@ const FIXED_STROKE = "#17424A";
 const colorOptions = {
   baseColor: "#17424A",      // drives gradient
   whiteBackground: false,     // if true => background #fff, else background = FIXED_STROKE
+  useCustomColor: false,      // if true, use baseColor instead of category color
 };
+
+// Store current cards for printing (preserves category info)
+let currentCards = null;
 
 function generate() {
   const rawLines = document.getElementById("input").value
@@ -25,9 +51,11 @@ function generate() {
   const parseLine = (line) => {
     const [w, t] = line.split("|");
     if (!w || !t) return null;
+    const word = w.trim();
     return {
-      word: w.trim(),
-      taboos: t.split(",").map(s => s.trim()).filter(Boolean)
+      word,
+      taboos: t.split(",").map(s => s.trim()).filter(Boolean),
+      category: detectCategory(word)
     };
   };
   const pairs = [];
@@ -49,8 +77,10 @@ function generate() {
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
+  // Use custom color if user has selected one, otherwise use category color
+  const firstCardColor = colorOptions.useCustomColor ? colorOptions.baseColor : getCategoryColor(firstPair.top.category);
   const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
-    baseColor: colorOptions.baseColor,
+    baseColor: firstCardColor,
     background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
     strokeColor: FIXED_STROKE,
     matchStrokeBackground: false,
@@ -69,8 +99,10 @@ function generate() {
 
   // Generate remaining cards (smaller grid)
   const gridCards = pairs.slice(1).map(({top, bottom}) => {
+    // Use category-based color from the top word of each card
+    const cardColor = getCategoryColor(top.category);
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
-      baseColor: colorOptions.baseColor,
+      baseColor: cardColor,
       background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
       strokeColor: FIXED_STROKE,
       matchStrokeBackground: false,
@@ -113,68 +145,244 @@ function fillInputFromList(index1, index2) {
 }
 
 function fillInputRandomCard() {
-  // Generate a random single card (pair of words)
+  // Generate a random single card (pair of words from the same category)
   const idx1 = Math.floor(Math.random() * tabooList.length);
-  let idx2 = Math.floor(Math.random() * tabooList.length);
-  // Ensure we get two different words
-  while (idx2 === idx1 && tabooList.length > 1) {
+  const w1 = tabooList[idx1];
+  const category1 = w1.category || detectCategory(w1.word);
+  
+  // Find all words in the same category
+  const sameCategory = tabooList
+    .map((item, idx) => ({ item, idx }))
+    .filter(({ item, idx }) => {
+      const cat = item.category || detectCategory(item.word);
+      return cat === category1 && idx !== idx1;
+    });
+  
+  // Pick a random word from the same category, or fall back to any word if none available
+  let idx2;
+  if (sameCategory.length > 0) {
+    const randomPick = sameCategory[Math.floor(Math.random() * sameCategory.length)];
+    idx2 = randomPick.idx;
+  } else {
+    // Fallback: pick any different word
     idx2 = Math.floor(Math.random() * tabooList.length);
+    while (idx2 === idx1 && tabooList.length > 1) {
+      idx2 = Math.floor(Math.random() * tabooList.length);
+    }
   }
 
-  const w1 = tabooList[idx1];
   const w2 = tabooList[idx2];
   document.getElementById("input").value = `${w1.word} | ${w1.taboo.join(", ")}\n${w2.word} | ${w2.taboo.join(", ")}`;
   generate();
 }
 
 function fillInputAllCards() {
-  // Generate ALL cards from the taboo list
-  // Create shuffled array of all indices
-  const indices = Array.from({ length: tabooList.length }, (_, i) => i);
-
-  // Shuffle the indices using Fisher-Yates algorithm
-  for (let i = indices.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
-  }
-
-  // Create lines for all words in shuffled order
-  const lines = [];
-  for (const idx of indices) {
-    const word = tabooList[idx];
-    lines.push(`${word.word} | ${word.taboo.join(", ")}`);
-  }
-
-  document.getElementById("input").value = lines.join("\n");
-  generate();
-}
-
-function fitTextToWidth(textSelector, maxWidth, minFontSize = 24) {
-  const svgs = Array.from(document.getElementById("output").querySelectorAll("svg"));
-  svgs.forEach(svg => {
-    const textElem = svg.querySelector(textSelector);
-    if (!textElem) return;
-    let fontSize = parseInt(textElem.getAttribute("font-size"), 10) || 56;
-    textElem.setAttribute("font-size", fontSize);
-    let bbox = textElem.getBBox();
-    while (bbox.width > maxWidth && fontSize > minFontSize) {
-      fontSize -= 2;
-      textElem.setAttribute("font-size", fontSize);
-      bbox = textElem.getBBox();
-    }
+  // Show custom modal for category selection
+  showCategoryModal((selectedCategory) => {
+    if (!selectedCategory) return; // User cancelled
+    
+    const categoriesToGenerate = selectedCategory === 'ALL' ? CATEGORIES : [selectedCategory];
+    
+    // Generate ALL cards from the taboo list, pairing words from same category
+    // Group words by category
+    const byCategory = {};
+    tabooList.forEach((item, idx) => {
+      const cat = item.category || detectCategory(item.word);
+      if (categoriesToGenerate.includes(cat)) {
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push({ item, idx });
+      }
+    });
+    
+    generateCardsFromCategories(byCategory, categoriesToGenerate);
   });
 }
 
-// patch generate to fit
-const originalGenerate = generate;
-function patchedGenerate() {
-  originalGenerate();
-  fitTextToWidth("#topWordText", 490);
-  fitTextToWidth("#bottomWordText", 490);
+function showCategoryModal(callback) {
+  const modal = document.getElementById('categoryModal');
+  const optionsContainer = document.getElementById('categoryOptions');
+  
+  // Create radio buttons - "All Categories" first, then individual categories
+  const allOption = `
+    <label style="display: flex; align-items: center; padding: 12px; margin-bottom: 8px; border: 2px solid #0A1F33; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: #f0f0f0;" onmouseover="this.style.borderColor='#0A1F33'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#0A1F33'">
+      <input type="radio" name="category" value="ALL" style="margin-right: 12px; cursor: pointer;" checked onchange="this.parentElement.parentElement.querySelectorAll('label').forEach(l => {l.style.borderColor='#ddd'; l.style.background='white';}); this.parentElement.style.borderColor='#0A1F33'; this.parentElement.style.background='#f0f0f0';">
+      <div style="width: 20px; height: 20px; background: linear-gradient(135deg, #3F51B5 0%, #6A1B9A 33%, #00796B 66%, #E64A19 100%); border-radius: 4px; margin-right: 10px;"></div>
+      <span style="font-weight: 600;">All Categories</span>
+    </label>
+  `;
+  
+  const categoryOptions = CATEGORIES.map((cat, idx) => {
+    const color = CATEGORY_COLORS[cat];
+    return `
+      <label style="display: flex; align-items: center; padding: 12px; margin-bottom: 8px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: white;" onmouseover="this.style.borderColor='${color}'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#ddd'">
+        <input type="radio" name="category" value="${cat}" style="margin-right: 12px; cursor: pointer;" onchange="this.parentElement.parentElement.querySelectorAll('label').forEach(l => {l.style.borderColor='#ddd'; l.style.background='white';}); this.parentElement.style.borderColor='${color}';">
+        <div style="width: 20px; height: 20px; background: ${color}; border-radius: 4px; margin-right: 10px;"></div>
+        <span style="font-weight: 500;">${cat}</span>
+      </label>
+    `;
+  }).join('');
+  
+  optionsContainer.innerHTML = allOption + categoryOptions;
+  
+  modal.style.display = 'flex';
+  
+  const confirm = () => {
+    const selected = optionsContainer.querySelector('input[name="category"]:checked');
+    modal.style.display = 'none';
+    callback(selected ? selected.value : null);
+  };
+  
+  const cancel = () => {
+    modal.style.display = 'none';
+    callback(null);
+  };
+  
+  document.getElementById('modalConfirm').onclick = confirm;
+  document.getElementById('modalCancel').onclick = cancel;
+  
+  // Close on background click
+  modal.onclick = (e) => {
+    if (e.target === modal) cancel();
+  };
+}
+
+function generateCardsFromCategories(byCategory, selectedCategories) {
+
+  // Shuffle words within each category
+  Object.keys(byCategory).forEach(cat => {
+    const arr = byCategory[cat];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  });
+
+  // Create pairs from each category, sorted by category
+  const pairsByCategory = [];
+  // Sort categories to maintain consistent order
+  const sortedCategories = selectedCategories.sort();
+  
+  sortedCategories.forEach(cat => {
+    if (!byCategory[cat]) return;
+    const words = byCategory[cat];
+    const categoryPairs = [];
+    for (let i = 0; i < words.length; i += 2) {
+      const w1 = tabooList[words[i].idx];
+      
+      // If there's a second word in this category, pair them
+      if (i + 1 < words.length) {
+        const w2 = tabooList[words[i + 1].idx];
+        categoryPairs.push([w1, w2]);
+      } else {
+        // Odd number of words in category - pair with itself
+        categoryPairs.push([w1, w1]);
+      }
+    }
+    // Add all pairs from this category together (sorted by category)
+    pairsByCategory.push(...categoryPairs);
+  });
+
+  // Create lines from shuffled pairs (for display in textarea)
+  const lines = [];
+  pairsByCategory.forEach(([w1, w2]) => {
+    lines.push(`${w1.word} | ${w1.taboo.join(", ")}`);
+    lines.push(`${w2.word} | ${w2.taboo.join(", ")}`);
+  });
+
+  // Update textarea without triggering events
+  const inputEl = document.getElementById("input");
+  inputEl.value = lines.join("\n");
+  
+  // Generate directly with the pairs data (preserving category info)
+  generateFromPairs(pairsByCategory);
+}
+
+function generateFromPairs(pairData) {
+  // Generate cards directly from pair data with preserved categories
+  const pairs = pairData.map(([w1, w2]) => ({
+    top: {
+      word: w1.word,
+      taboos: w1.taboo,
+      category: w1.category || detectCategory(w1.word)
+    },
+    bottom: {
+      word: w2.word,
+      taboos: w2.taboo,
+      category: w2.category || detectCategory(w2.word)
+    }
+  }));
+
+  // Store cards globally for printing
+  currentCards = pairs;
+
+  if (pairs.length === 0) {
+    setSVGOutput("");
+    return;
+  }
+
+  const aspectRatio = 580 / 890;
+
+  // Generate first card (preview - larger)
+  const firstPair = pairs[0];
+  const firstCardColor = getCategoryColor(firstPair.top.category);
+  const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
+    baseColor: firstCardColor,
+    background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
+    strokeColor: FIXED_STROKE,
+    matchStrokeBackground: false,
+    showBleed: false,
+  });
+  const previewCard = `
+    <div style="
+      width: min(90vw, 400px);
+      aspect-ratio: ${aspectRatio};
+      transform-origin: center;
+      margin: 0 auto 20px;
+    ">
+      ${previewSVG}
+    </div>
+  `;
+
+  // Generate remaining cards (smaller grid)
+  const gridCards = pairs.slice(1).map(({top, bottom}) => {
+    const cardColor = getCategoryColor(top.category);
+    const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
+      baseColor: cardColor,
+      background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
+      strokeColor: FIXED_STROKE,
+      matchStrokeBackground: false,
+      showBleed: false,
+    });
+    return `
+      <div style="
+        width: 150px;
+        aspect-ratio: ${aspectRatio};
+        transform-origin: center;
+        flex-shrink: 0;
+      ">
+        ${svg}
+      </div>
+    `;
+  }).join("");
+
+  const gridContainer = pairs.length > 1 ? `
+    <div style="
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 10px 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    ">
+      ${gridCards}
+    </div>
+  ` : "";
+
+  setSVGOutput(previewCard + gridContainer);
 }
 
 // wire UI
-document.getElementById("btn-generate").addEventListener("click", patchedGenerate);
+document.getElementById("btn-generate").addEventListener("click", generate);
 document.getElementById("btn-random").addEventListener("click", fillInputRandomCard);
 document.getElementById("btn-generate-all").addEventListener("click", fillInputAllCards);
 
@@ -185,7 +393,7 @@ const { showWordSelector } = setupSelector({
 document.getElementById("btn-choose").addEventListener("click", showWordSelector);
 
 // re-render when selector appends pairs
-document.getElementById("input").addEventListener("tt-input-updated", patchedGenerate);
+document.getElementById("input").addEventListener("tt-input-updated", generate);
 
 document.getElementById("btn-save-svg").addEventListener("click", async () => {
   const { saveSvgsFromContainer } = await import('./lib/utils.js');
@@ -199,42 +407,49 @@ document.getElementById("btn-save-png").addEventListener("click", async () => {
 
 // Open print view (A4 2x2)
 function openPrint() {
-  const rawLines = document.getElementById("input").value
-    .split("\n")
-    .map(l => l.trim())
-    .filter(Boolean);
+  let pairs;
+  
+  // Use stored cards if available (from Generate All Cards), otherwise parse from textarea
+  if (currentCards && currentCards.length > 0) {
+    pairs = currentCards;
+  } else {
+    const rawLines = document.getElementById("input").value
+      .split("\n")
+      .map(l => l.trim())
+      .filter(Boolean);
 
-  // Parse a single line of the form: Word | taboo1, taboo2, ...
-  const parseLine = (line) => {
-    const [w, t] = line.split("|");
-    if (!w || !t) return null;
-    return {
-      word: w.trim(),
-      taboos: t.split(",").map(s => s.trim()).filter(Boolean)
+    // Parse a single line of the form: Word | taboo1, taboo2, ...
+    const parseLine = (line) => {
+      const [w, t] = line.split("|");
+      if (!w || !t) return null;
+      const word = w.trim();
+      return {
+        word,
+        taboos: t.split(",").map(s => s.trim()).filter(Boolean),
+        category: detectCategory(word)
+      };
     };
-  };
-  // Build cards from pairs of lines: [top, bottom]
-  const pairs = [];
-  for (let i = 0; i < Math.min(rawLines.length, 8); i += 2) {
-    const top = parseLine(rawLines[i]);
-    const bottom = parseLine(rawLines[i + 1] || rawLines[i]);
-    if (top && bottom) pairs.push({ top, bottom });
+    // Build cards from pairs of lines: [top, bottom]
+    pairs = [];
+    for (let i = 0; i < rawLines.length; i += 2) {
+      const top = parseLine(rawLines[i]);
+      const bottom = parseLine(rawLines[i + 1] || rawLines[i]);
+      if (top && bottom) pairs.push({ top, bottom });
+    }
   }
 
   if (pairs.length === 0) {
     alert("Please provide at least one line in the input area to print.");
     return;
   }
-  while (pairs.length < 4) {
-    pairs.push(pairs[pairs.length % Math.min(pairs.length, 2)]);
-  }
 
   const payload = {
-    cards: pairs.slice(0, 4), // [{top:{word,taboos}, bottom:{word,taboos}}]
+    cards: pairs, // ALL cards with preserved category info
     baseColor: colorOptions.baseColor,
     whiteBackground: !!colorOptions.whiteBackground,
     strokeColor: FIXED_STROKE,
     includeBacking: !!(document.getElementById("chk-backing") && document.getElementById("chk-backing").checked),
+    useCategoryColors: true, // flag to indicate category-based colors should be used
     createdAt: Date.now(),
   };
   try {
@@ -288,17 +503,19 @@ function showColors() {
   const selBase = document.getElementById("sel-base");
   selBase.addEventListener("change", () => {
     colorOptions.baseColor = selBase.value;
-    patchedGenerate();
+    colorOptions.useCustomColor = true;  // User has manually selected a color
+    generate();
   });
 
   const chkWhite = document.getElementById("chk-white");
   chkWhite.addEventListener("change", () => {
     colorOptions.whiteBackground = chkWhite.checked;
-    patchedGenerate();
+    generate();
   });
 }
 
 document.getElementById("btn-colors").addEventListener("click", showColors);
 
 // initial render
-patchedGenerate();
+renderLegend();
+generate();

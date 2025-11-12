@@ -6,18 +6,23 @@ export const CATEGORIES = [
   "Web3/Blockchain",
 ];
 
+// Default colors for each category
+export const CATEGORY_COLORS = {
+  "AI": "#3F51B5",              // Indigo
+  "Data": "#6A1B9A",           // Purple
+  "Software Engineering": "#17424A", // Teal
+  "Product Management": "#E64A19", // Deep Orange
+};
+
 export const CATEGORY_KEYWORDS = {
   AI: [
-    "ai","ml","machine learning","deep learning","neural","transformer","llm","gpt","chatgpt","dall-e","midjourney","anthropic","claude","gemini","slm","llama","fine-tuning","retrieval","vector","embedding","tokenization","vision","computer vision","voice","speech","text-to-speech","speech-to-text","multimodal","sam","rlhf","synthetic","diffusion","stable diffusion","diffusers","prompt","prompt engineering","alignment","hallucination","moderation","ethics","regulation","autonomous","agent",
-  ],
-  "Web3/Blockchain": [
-    "blockchain","bitcoin","ethereum","web3","crypto","cryptocurrency","token","ledger","defi","nft","smart contract",
+    "ai","ml","machine learning","deep learning","neural","transformer","llm","gpt","chatgpt","dall-e","midjourney","anthropic","claude","gemini","slm","llama","fine-tuning","retrieval","vector","embedding","tokenization","vision","computer vision","voice","speech","text-to-speech","speech-to-text","multimodal","sam","rlhf","synthetic","diffusion","stable diffusion","diffusers","prompt","prompt engineering","alignment","hallucination","moderation","ethics","regulation","autonomous","agent","federated","few-shot","zero-shot","one-shot",
   ],
   Data: [
     "data","database","sql","nosql","etl","bi","business intelligence","visualization","warehouse","lakehouse","analytics","mining","predictive","governance","elasticsearch","kafka","rabbitmq","redis",
   ],
   "Software Engineering": [
-    "api","http","rest","graphql","websocket","react","vue","angular","node","express","docker","kubernetes","git","compiler","debug","ide","microservices","devops","ci/cd","pipeline","test","unit","integration","regression","staging","production","rollback","hotfix","feature flag","scrum","sprint","responsive","bootstrap","tailwind","spa","ssr","pwa","service worker","oauth","jwt","browser","html","css","javascript","server","cache","router","firewall","bandwidth","lan","wan","dns","ip","tls","ssl","certificate",
+    "api","http","rest","graphql","websocket","react","vue","angular","node","express","docker","kubernetes","git","compiler","debug","ide","microservices","devops","ci/cd","pipeline","test","unit","integration","regression","staging","production","rollback","hotfix","feature flag","scrum","sprint","responsive","bootstrap","tailwind","spa","ssr","pwa","service worker","oauth","jwt","browser","html","css","javascript","server","cache","router","firewall","bandwidth","lan","wan","dns","ip","tls","ssl","certificate","cloud","aws","azure","gcp",
   ],
 };
 
@@ -46,4 +51,9 @@ export function buildCategoryMaps(tabooList) {
     map[cat].push({ index, word: item.word });
   });
   return map;
+}
+
+// Get the default color for a category
+export function getCategoryColor(category) {
+  return CATEGORY_COLORS[category] || "#17424A"; // fallback to classic teal
 }
