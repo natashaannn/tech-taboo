@@ -31,6 +31,18 @@
 
     <div id="legend" style="margin: 16px 0; padding: 12px; background: white; border-radius: 8px; border: 1px solid #ddd;"></div>
 
+    <!-- Category Selection Modal -->
+    <div id="categoryModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+      <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 20px;">Select Category</h2>
+        <div id="categoryOptions" style="margin-bottom: 20px;"></div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button id="modalCancel" style="padding: 10px 20px; background: #ddd; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+          <button id="modalConfirm" class="cta" style="padding: 10px 20px;">Generate</button>
+        </div>
+      </div>
+    </div>
+
     <div id="output"></div>
 
     <p>Enter pairs of lines (2 lines per card) like this:</p>

@@ -186,7 +186,7 @@ export const tabooList = [
   { word: "Server", category: "Software Engineering", taboo: ["Computer", "Host", "Network", "Service", "Provider"] },
   { word: "Server Side Rendering", category: "Software Engineering", taboo: ["Next.js", "Web", "Page", "Hydration", "Client"] },
   { word: "Service Worker", category: "Software Engineering", taboo: ["PWA", "Cache", "Offline", "Script", "Browser"] },
-  { word: "Simple Storage Service (S3)", category: "Software Engineering", taboo: ["Amazon Web Service (AWS)", "Bucket", "Image", "Cloud", "Object"] },
+  { word: "Simple Storage Service (S3)", category: "Software Engineering", taboo: ["Amazon Web Service", "Bucket", "Image", "Cloud", "Object"] },
   { word: "Single Page Application", category: "Software Engineering", taboo: ["React", "Vue", "Angular", "Web", "Frontend"] },
   { word: "Software as a Service (SaaS)", category: "Software Engineering", taboo: ["Cloud", "Subscription", "Online", "Hosted", "Web"] },
   { word: "Software Development", category: "Software Engineering", taboo: ["Code", "Programming", "Test", "Build", "Deploy"] },

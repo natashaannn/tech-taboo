@@ -17,9 +17,6 @@ function render2x2() {
   const fallback = {
     cards: [
       { top: { word: 'CLOUD', taboos: ['Internet','Server','Storage','AWS','Azure'] }, bottom: { word: 'BLOCKCHAIN', taboos: ['Bitcoin','Ledger','Crypto','Token','Decentralized'] } },
-      { top: { word: 'CLOUD', taboos: ['Internet','Server','Storage','AWS','Azure'] }, bottom: { word: 'BLOCKCHAIN', taboos: ['Bitcoin','Ledger','Crypto','Token','Decentralized'] } },
-      { top: { word: 'CLOUD', taboos: ['Internet','Server','Storage','AWS','Azure'] }, bottom: { word: 'BLOCKCHAIN', taboos: ['Bitcoin','Ledger','Crypto','Token','Decentralized'] } },
-      { top: { word: 'CLOUD', taboos: ['Internet','Server','Storage','AWS','Azure'] }, bottom: { word: 'BLOCKCHAIN', taboos: ['Bitcoin','Ledger','Crypto','Token','Decentralized'] } },
     ],
     baseColor: '#17424A',
     whiteBackground: false,
@@ -28,39 +25,49 @@ function render2x2() {
   const { cards, baseColor, whiteBackground, strokeColor, includeBacking, useCategoryColors } = payload || fallback;
   const background = whiteBackground ? '#ffffff' : strokeColor;
 
-  const cellIds = ['c1','c2','c3','c4'];
-  cellIds.forEach((id, i) => {
-    const card = cards[i] || cards[0];
-    // Use category-based color if enabled and category is available
-    const cardColor = (useCategoryColors && card.top.category) 
-      ? getCategoryColor(card.top.category) 
-      : baseColor;
-    const svg = generateSVG(card.top.word, card.top.taboos, card.bottom.word, card.bottom.taboos, {
-      baseColor: cardColor,
-      background,
-      strokeColor,
-      matchStrokeBackground: false,
-      showBleed: false,
-      strokeWidth: 10,
-      dividerWidth: 2,
-    });
-    const cell = document.getElementById(id);
-    cell.innerHTML = svg;
-  });
-
-  // Optionally render backs page
-  if (includeBacking) {
-    const backSheet = document.getElementById('back-sheet');
-    const backPage = document.getElementById('back-page');
-    if (backSheet) backSheet.style.display = 'flex';
-    if (backPage) backPage.style.display = 'grid';
-
-    const backIds = ['b1','b2','b3','b4'];
-    const backSVG = generateBackSVG({ baseColor, background, strokeColor });
-    backIds.forEach((id) => {
-      const cell = document.getElementById(id);
-      if (cell) cell.innerHTML = backSVG;
-    });
+  // Clear existing content
+  document.body.innerHTML = '';
+  
+  // Generate pages - 4 cards per page
+  const cardsPerPage = 4;
+  const totalPages = Math.ceil(cards.length / cardsPerPage);
+  
+  for (let pageNum = 0; pageNum < totalPages; pageNum++) {
+    const sheet = document.createElement('div');
+    sheet.className = 'sheet';
+    
+    const page = document.createElement('div');
+    page.className = 'page';
+    
+    // Add 4 cards to this page
+    for (let i = 0; i < cardsPerPage; i++) {
+      const cardIndex = pageNum * cardsPerPage + i;
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      
+      if (cardIndex < cards.length) {
+        const card = cards[cardIndex];
+        // Use category-based color if enabled and category is available
+        const cardColor = (useCategoryColors && card.top.category) 
+          ? getCategoryColor(card.top.category) 
+          : baseColor;
+        const svg = generateSVG(card.top.word, card.top.taboos, card.bottom.word, card.bottom.taboos, {
+          baseColor: cardColor,
+          background,
+          strokeColor,
+          matchStrokeBackground: false,
+          showBleed: false,
+          strokeWidth: 10,
+          dividerWidth: 2,
+        });
+        cell.innerHTML = svg;
+      }
+      
+      page.appendChild(cell);
+    }
+    
+    sheet.appendChild(page);
+    document.body.appendChild(sheet);
   }
 
   // Slightly scale down all pages to avoid spill

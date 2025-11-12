@@ -37,6 +37,7 @@ const FIXED_STROKE = "#17424A";
 const colorOptions = {
   baseColor: "#17424A",      // drives gradient
   whiteBackground: false,     // if true => background #fff, else background = FIXED_STROKE
+  useCustomColor: false,      // if true, use baseColor instead of category color
 };
 
 function generate() {
@@ -73,8 +74,8 @@ function generate() {
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
-  // Use category-based color from the top word
-  const firstCardColor = getCategoryColor(firstPair.top.category);
+  // Use custom color if user has selected one, otherwise use category color
+  const firstCardColor = colorOptions.useCustomColor ? colorOptions.baseColor : getCategoryColor(firstPair.top.category);
   const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
     baseColor: firstCardColor,
     background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
@@ -173,14 +174,76 @@ function fillInputRandomCard() {
 }
 
 function fillInputAllCards() {
-  // Generate ALL cards from the taboo list, pairing words from same category
-  // Group words by category
-  const byCategory = {};
-  tabooList.forEach((item, idx) => {
-    const cat = item.category || detectCategory(item.word);
-    if (!byCategory[cat]) byCategory[cat] = [];
-    byCategory[cat].push({ item, idx });
+  // Show custom modal for category selection
+  showCategoryModal((selectedCategory) => {
+    if (!selectedCategory) return; // User cancelled
+    
+    const categoriesToGenerate = selectedCategory === 'ALL' ? CATEGORIES : [selectedCategory];
+    
+    // Generate ALL cards from the taboo list, pairing words from same category
+    // Group words by category
+    const byCategory = {};
+    tabooList.forEach((item, idx) => {
+      const cat = item.category || detectCategory(item.word);
+      if (categoriesToGenerate.includes(cat)) {
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push({ item, idx });
+      }
+    });
+    
+    generateCardsFromCategories(byCategory, categoriesToGenerate);
   });
+}
+
+function showCategoryModal(callback) {
+  const modal = document.getElementById('categoryModal');
+  const optionsContainer = document.getElementById('categoryOptions');
+  
+  // Create radio buttons - "All Categories" first, then individual categories
+  const allOption = `
+    <label style="display: flex; align-items: center; padding: 12px; margin-bottom: 8px; border: 2px solid #0A1F33; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: #f0f0f0;" onmouseover="this.style.borderColor='#0A1F33'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#0A1F33'">
+      <input type="radio" name="category" value="ALL" style="margin-right: 12px; cursor: pointer;" checked onchange="this.parentElement.parentElement.querySelectorAll('label').forEach(l => {l.style.borderColor='#ddd'; l.style.background='white';}); this.parentElement.style.borderColor='#0A1F33'; this.parentElement.style.background='#f0f0f0';">
+      <div style="width: 20px; height: 20px; background: linear-gradient(135deg, #3F51B5 0%, #6A1B9A 33%, #00796B 66%, #E64A19 100%); border-radius: 4px; margin-right: 10px;"></div>
+      <span style="font-weight: 600;">All Categories</span>
+    </label>
+  `;
+  
+  const categoryOptions = CATEGORIES.map((cat, idx) => {
+    const color = CATEGORY_COLORS[cat];
+    return `
+      <label style="display: flex; align-items: center; padding: 12px; margin-bottom: 8px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: white;" onmouseover="this.style.borderColor='${color}'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#ddd'">
+        <input type="radio" name="category" value="${cat}" style="margin-right: 12px; cursor: pointer;" onchange="this.parentElement.parentElement.querySelectorAll('label').forEach(l => {l.style.borderColor='#ddd'; l.style.background='white';}); this.parentElement.style.borderColor='${color}';">
+        <div style="width: 20px; height: 20px; background: ${color}; border-radius: 4px; margin-right: 10px;"></div>
+        <span style="font-weight: 500;">${cat}</span>
+      </label>
+    `;
+  }).join('');
+  
+  optionsContainer.innerHTML = allOption + categoryOptions;
+  
+  modal.style.display = 'flex';
+  
+  const confirm = () => {
+    const selected = optionsContainer.querySelector('input[name="category"]:checked');
+    modal.style.display = 'none';
+    callback(selected ? selected.value : null);
+  };
+  
+  const cancel = () => {
+    modal.style.display = 'none';
+    callback(null);
+  };
+  
+  document.getElementById('modalConfirm').onclick = confirm;
+  document.getElementById('modalCancel').onclick = cancel;
+  
+  // Close on background click
+  modal.onclick = (e) => {
+    if (e.target === modal) cancel();
+  };
+}
+
+function generateCardsFromCategories(byCategory, selectedCategories) {
 
   // Shuffle words within each category
   Object.keys(byCategory).forEach(cat => {
@@ -191,9 +254,13 @@ function fillInputAllCards() {
     }
   });
 
-  // Create pairs from each category
+  // Create pairs from each category, sorted by category
   const pairsByCategory = [];
-  Object.keys(byCategory).forEach(cat => {
+  // Sort categories to maintain consistent order
+  const sortedCategories = selectedCategories.sort();
+  
+  sortedCategories.forEach(cat => {
+    if (!byCategory[cat]) return;
     const words = byCategory[cat];
     const categoryPairs = [];
     for (let i = 0; i < words.length; i += 2) {
@@ -208,14 +275,9 @@ function fillInputAllCards() {
         categoryPairs.push([w1, w1]);
       }
     }
+    // Add all pairs from this category together (sorted by category)
     pairsByCategory.push(...categoryPairs);
   });
-
-  // Shuffle all pairs so categories are mixed
-  for (let i = pairsByCategory.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pairsByCategory[i], pairsByCategory[j]] = [pairsByCategory[j], pairsByCategory[i]];
-  }
 
   // Create lines from shuffled pairs (for display in textarea)
   const lines = [];
@@ -431,6 +493,7 @@ function showColors() {
   const selBase = document.getElementById("sel-base");
   selBase.addEventListener("change", () => {
     colorOptions.baseColor = selBase.value;
+    colorOptions.useCustomColor = true;  // User has manually selected a color
     generate();
   });
 

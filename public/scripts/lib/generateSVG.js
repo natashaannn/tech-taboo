@@ -39,7 +39,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   const stroke = matchStrokeBackground ? background : strokeColor;
 
   // Split long text into multiple lines and compute font size
-  function splitAndSizeText(text, baseSize = 56, maxWidth = 490) {
+  function splitAndSizeText(text, baseSize = 54, maxWidth = 490) {
     try {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
