@@ -40,6 +40,9 @@ const colorOptions = {
   useCustomColor: false,      // if true, use baseColor instead of category color
 };
 
+// Store current cards for printing (preserves category info)
+let currentCards = null;
+
 function generate() {
   const rawLines = document.getElementById("input").value
     .split("\n")
@@ -309,6 +312,9 @@ function generateFromPairs(pairData) {
     }
   }));
 
+  // Store cards globally for printing
+  currentCards = pairs;
+
   if (pairs.length === 0) {
     setSVGOutput("");
     return;
@@ -401,40 +407,44 @@ document.getElementById("btn-save-png").addEventListener("click", async () => {
 
 // Open print view (A4 2x2)
 function openPrint() {
-  const rawLines = document.getElementById("input").value
-    .split("\n")
-    .map(l => l.trim())
-    .filter(Boolean);
+  let pairs;
+  
+  // Use stored cards if available (from Generate All Cards), otherwise parse from textarea
+  if (currentCards && currentCards.length > 0) {
+    pairs = currentCards;
+  } else {
+    const rawLines = document.getElementById("input").value
+      .split("\n")
+      .map(l => l.trim())
+      .filter(Boolean);
 
-  // Parse a single line of the form: Word | taboo1, taboo2, ...
-  const parseLine = (line) => {
-    const [w, t] = line.split("|");
-    if (!w || !t) return null;
-    const word = w.trim();
-    return {
-      word,
-      taboos: t.split(",").map(s => s.trim()).filter(Boolean),
-      category: detectCategory(word)
+    // Parse a single line of the form: Word | taboo1, taboo2, ...
+    const parseLine = (line) => {
+      const [w, t] = line.split("|");
+      if (!w || !t) return null;
+      const word = w.trim();
+      return {
+        word,
+        taboos: t.split(",").map(s => s.trim()).filter(Boolean),
+        category: detectCategory(word)
+      };
     };
-  };
-  // Build cards from pairs of lines: [top, bottom]
-  const pairs = [];
-  for (let i = 0; i < Math.min(rawLines.length, 8); i += 2) {
-    const top = parseLine(rawLines[i]);
-    const bottom = parseLine(rawLines[i + 1] || rawLines[i]);
-    if (top && bottom) pairs.push({ top, bottom });
+    // Build cards from pairs of lines: [top, bottom]
+    pairs = [];
+    for (let i = 0; i < rawLines.length; i += 2) {
+      const top = parseLine(rawLines[i]);
+      const bottom = parseLine(rawLines[i + 1] || rawLines[i]);
+      if (top && bottom) pairs.push({ top, bottom });
+    }
   }
 
   if (pairs.length === 0) {
     alert("Please provide at least one line in the input area to print.");
     return;
   }
-  while (pairs.length < 4) {
-    pairs.push(pairs[pairs.length % Math.min(pairs.length, 2)]);
-  }
 
   const payload = {
-    cards: pairs.slice(0, 4), // [{top:{word,taboos,category}, bottom:{word,taboos,category}}]
+    cards: pairs, // ALL cards with preserved category info
     baseColor: colorOptions.baseColor,
     whiteBackground: !!colorOptions.whiteBackground,
     strokeColor: FIXED_STROKE,

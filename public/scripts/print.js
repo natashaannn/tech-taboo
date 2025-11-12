@@ -25,16 +25,22 @@ function render2x2() {
   const { cards, baseColor, whiteBackground, strokeColor, includeBacking, useCategoryColors } = payload || fallback;
   const background = whiteBackground ? '#ffffff' : strokeColor;
 
-  // Clear existing content
+  // Clear existing content but keep the head
+  const existingHead = document.head.innerHTML;
   document.body.innerHTML = '';
   
   // Generate pages - 4 cards per page
   const cardsPerPage = 4;
   const totalPages = Math.ceil(cards.length / cardsPerPage);
   
+  console.log(`Generating ${totalPages} pages for ${cards.length} cards`);
+  
   for (let pageNum = 0; pageNum < totalPages; pageNum++) {
     const sheet = document.createElement('div');
     sheet.className = 'sheet';
+    if (pageNum > 0) {
+      sheet.style.pageBreakBefore = 'always';
+    }
     
     const page = document.createElement('div');
     page.className = 'page';
