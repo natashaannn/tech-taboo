@@ -11,15 +11,12 @@ export const CATEGORY_COLORS = {
   "AI": "#3F51B5",              // Indigo
   "Data": "#6A1B9A",           // Purple
   "Software Engineering": "#17424A", // Teal
-  "Web3/Blockchain": "#E64A19", // Deep Orange
+  "Product Management": "#E64A19", // Deep Orange
 };
 
 export const CATEGORY_KEYWORDS = {
   AI: [
     "ai","ml","machine learning","deep learning","neural","transformer","llm","gpt","chatgpt","dall-e","midjourney","anthropic","claude","gemini","slm","llama","fine-tuning","retrieval","vector","embedding","tokenization","vision","computer vision","voice","speech","text-to-speech","speech-to-text","multimodal","sam","rlhf","synthetic","diffusion","stable diffusion","diffusers","prompt","prompt engineering","alignment","hallucination","moderation","ethics","regulation","autonomous","agent","federated","few-shot","zero-shot","one-shot",
-  ],
-  "Web3/Blockchain": [
-    "blockchain","bitcoin","ethereum","web3","crypto","cryptocurrency","token","ledger","defi","nft","smart contract",
   ],
   Data: [
     "data","database","sql","nosql","etl","bi","business intelligence","visualization","warehouse","lakehouse","analytics","mining","predictive","governance","elasticsearch","kafka","rabbitmq","redis",
