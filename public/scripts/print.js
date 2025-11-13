@@ -57,10 +57,11 @@ function render2x2() {
         const cardColor = (useCategoryColors && card.top.category) 
           ? getCategoryColor(card.top.category) 
           : baseColor;
+        const cardBackground = whiteBackground ? '#ffffff' : cardColor;
         const svg = generateSVG(card.top.word, card.top.taboos, card.bottom.word, card.bottom.taboos, {
           baseColor: cardColor,
-          background,
-          strokeColor,
+          background: cardBackground,
+          strokeColor: cardColor,
           matchStrokeBackground: false,
           showBleed: false,
           strokeWidth: 10,
