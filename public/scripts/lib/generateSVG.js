@@ -168,7 +168,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       ${topTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
-      <image href="./peek out front.png" x="50" y="110" width="100" height="40"/>
+      <image href="./techybara/teacher.png" x="380" y="320" width="80" height="80"/>
     </g>
     <g id="bottom-half" transform="translate(500,810) rotate(180)">
       ${bottomTextInfo.lines.length === 1 
@@ -187,7 +187,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
       <g transform="translate(500, 320) rotate(360) scale(-1, 1)">
-        <image href="./peek out.png" x="413" y="-120" width="100" height="60"/>
+        <image href="./techybara/peek out.png" x="413" y="-120" width="100" height="60"/>
       </g>
     </g>
   </g>

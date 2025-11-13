@@ -3,10 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "serve public -l 5173",
+    "dev": "nodemon --watch public --exec 'serve public -l 5173'",
     "start": "serve public"
   },
   "devDependencies": {
+    "nodemon": "^3.0.0",
     "serve": "14.2.3"
   }
 }

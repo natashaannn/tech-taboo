@@ -3,14 +3,15 @@ export const CATEGORIES = [
   "Software Engineering",
   "Data",
   "AI",
+  "Product Management",
 ];
 
 // Default colors for each category
 export const CATEGORY_COLORS = {
-  "AI": "#3F51B5",              // Indigo
-  "Data": "#6A1B9A",           // Purple
-  "Software Engineering": "#17424A", // Teal
-  "Product Management": "#E64A19", // Deep Orange
+  "AI": "#f97883",              // Primary Pink (darker)
+  "Data": "#7dbfba",           // Secondary Turquoise (darker)
+  "Software Engineering": "#e8c555", // Accent Cream (darker)
+  "Product Management": "#8b5a49", // Brown Dark
 };
 
 export const CATEGORY_KEYWORDS = {
@@ -21,7 +22,10 @@ export const CATEGORY_KEYWORDS = {
     "data","database","sql","nosql","etl","bi","business intelligence","visualization","warehouse","lakehouse","analytics","mining","predictive","governance","elasticsearch","kafka","rabbitmq","redis",
   ],
   "Software Engineering": [
-    "api","http","rest","graphql","websocket","react","vue","angular","node","express","docker","kubernetes","git","compiler","debug","ide","microservices","devops","ci/cd","pipeline","test","unit","integration","regression","staging","production","rollback","hotfix","feature flag","scrum","sprint","responsive","bootstrap","tailwind","spa","ssr","pwa","service worker","oauth","jwt","browser","html","css","javascript","server","cache","router","firewall","bandwidth","lan","wan","dns","ip","tls","ssl","certificate","cloud","aws","azure","gcp",
+    "api","http","rest","graphql","websocket","react","vue","angular","node","express","docker","kubernetes","git","compiler","debug","ide","microservices","devops","ci/cd","pipeline","test","unit","integration","regression","staging","production","rollback","hotfix","responsive","bootstrap","tailwind","spa","ssr","pwa","service worker","oauth","jwt","browser","html","css","javascript","server","cache","router","firewall","bandwidth","lan","wan","dns","ip","tls","ssl","certificate","cloud","aws","azure","gcp",
+  ],
+  "Product Management": [
+    "product","roadmap","backlog","epic","user story","persona","mvp","minimum viable product","kpi","okr","agile","scrum","sprint","standup","retrospective","iteration","velocity","story points","acceptance criteria","use case","user journey","customer journey","stakeholder","product sense","product market fit","product-led","churn","retention","a/b testing","beta","wireframe","prototype","go-to-market","gtm","pivot","value proposition","north star","user research","user acquisition","pdr","product document review","impact","roi","return on investment","rate of interest","technical debt","grooming","refinement",
   ],
 };
 
@@ -29,6 +33,7 @@ export function detectCategory(word) {
   const w = word.toLowerCase();
   if (CATEGORY_KEYWORDS.AI.some((k) => w.includes(k))) return "AI";
   if (CATEGORY_KEYWORDS.Data.some((k) => w.includes(k))) return "Data";
+  if (CATEGORY_KEYWORDS["Product Management"].some((k) => w.includes(k))) return "Product Management";
   return "Software Engineering";
 }
 
