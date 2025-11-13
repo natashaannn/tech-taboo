@@ -81,10 +81,11 @@ function generate() {
   const firstCardColor = colorOptions.useCustomColor ? colorOptions.baseColor : getCategoryColor(firstPair.top.category);
   const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
     baseColor: firstCardColor,
-    background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
-    strokeColor: FIXED_STROKE,
+    background: colorOptions.whiteBackground ? "#ffffff" : firstCardColor,
+    strokeColor: firstCardColor,
     matchStrokeBackground: false,
     showBleed: false,
+    category: firstPair.top.category,
   });
   const previewCard = `
     <div style="
@@ -103,10 +104,11 @@ function generate() {
     const cardColor = getCategoryColor(top.category);
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
       baseColor: cardColor,
-      background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
-      strokeColor: FIXED_STROKE,
+      background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+      strokeColor: cardColor,
       matchStrokeBackground: false,
       showBleed: false,
+      category: top.category,
     });
     return `
       <div style="
@@ -327,10 +329,11 @@ function generateFromPairs(pairData) {
   const firstCardColor = getCategoryColor(firstPair.top.category);
   const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
     baseColor: firstCardColor,
-    background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
-    strokeColor: FIXED_STROKE,
+    background: colorOptions.whiteBackground ? "#ffffff" : firstCardColor,
+    strokeColor: firstCardColor,
     matchStrokeBackground: false,
     showBleed: false,
+    category: firstPair.top.category,
   });
   const previewCard = `
     <div style="
@@ -348,10 +351,11 @@ function generateFromPairs(pairData) {
     const cardColor = getCategoryColor(top.category);
     const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
       baseColor: cardColor,
-      background: colorOptions.whiteBackground ? "#ffffff" : FIXED_STROKE,
-      strokeColor: FIXED_STROKE,
+      background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+      strokeColor: cardColor,
       matchStrokeBackground: false,
       showBleed: false,
+      category: top.category,
     });
     return `
       <div style="
