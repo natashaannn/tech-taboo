@@ -66,6 +66,7 @@ function render2x2() {
           showBleed: false,
           strokeWidth: 10,
           dividerWidth: 2,
+          category: card.top.category,
         });
         cell.innerHTML = svg;
       }

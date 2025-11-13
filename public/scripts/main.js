@@ -85,6 +85,7 @@ function generate() {
     strokeColor: firstCardColor,
     matchStrokeBackground: false,
     showBleed: false,
+    category: firstPair.top.category,
   });
   const previewCard = `
     <div style="
@@ -107,6 +108,7 @@ function generate() {
       strokeColor: cardColor,
       matchStrokeBackground: false,
       showBleed: false,
+      category: top.category,
     });
     return `
       <div style="
@@ -331,6 +333,7 @@ function generateFromPairs(pairData) {
     strokeColor: firstCardColor,
     matchStrokeBackground: false,
     showBleed: false,
+    category: firstPair.top.category,
   });
   const previewCard = `
     <div style="
@@ -352,6 +355,7 @@ function generateFromPairs(pairData) {
       strokeColor: cardColor,
       matchStrokeBackground: false,
       showBleed: false,
+      category: top.category,
     });
     return `
       <div style="
