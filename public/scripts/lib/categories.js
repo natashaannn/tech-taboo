@@ -14,6 +14,14 @@ export const CATEGORY_COLORS = {
   "Product Management": "#8b5a49", // Brown Dark
 };
 
+// Text title colors for each category
+export const CATEGORY_TEXT_COLORS = {
+  "Product Management": "#efe7e4",
+  "Data": "#ebf5f6",
+  "AI": "#ffebed",
+  "Software Engineering": "#fdf7e7",
+};
+
 export const CATEGORY_KEYWORDS = {
   AI: [
     "ai","ml","machine learning","deep learning","neural","transformer","llm","gpt","chatgpt","dall-e","midjourney","anthropic","claude","gemini","slm","llama","fine-tuning","retrieval","vector","embedding","tokenization","vision","computer vision","voice","speech","text-to-speech","speech-to-text","multimodal","sam","rlhf","synthetic","diffusion","stable diffusion","diffusers","prompt","prompt engineering","alignment","hallucination","moderation","ethics","regulation","autonomous","agent","federated","few-shot","zero-shot","one-shot",
@@ -59,4 +67,9 @@ export function buildCategoryMaps(tabooList) {
 // Get the default color for a category
 export function getCategoryColor(category) {
   return CATEGORY_COLORS[category] || "#17424A"; // fallback to classic teal
+}
+
+// Get the text title color for a category
+export function getCategoryTextColor(category) {
+  return CATEGORY_TEXT_COLORS[category] || "#ffffff"; // fallback to white
 }

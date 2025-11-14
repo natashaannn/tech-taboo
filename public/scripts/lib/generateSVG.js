@@ -1,4 +1,6 @@
 // public/scripts/lib/generateSVG.js
+import { getCategoryTextColor } from './categories.js';
+
 export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, options = {}) {
   const {
     baseColor = "#17424A",           // used to derive gradient
@@ -15,14 +17,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   } = options;
   
   // Determine text color based on category
-  let textColor;
-  if (category === "Product Management") {
-    textColor = "white";
-  } else if (category === "AI") {
-    textColor = "#fff3c1";  // Accent cream
-  } else {
-    textColor = "#8b5a49";  // Dark brown for Data and Software Engineering
-  }
+  const textColor = getCategoryTextColor(category);
 
   // helpers to adjust hex colors a bit lighter/darker
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
