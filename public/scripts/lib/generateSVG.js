@@ -14,6 +14,8 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     dividerWidth = 3,                 // middle divider line width
     trimInset = 30,                   // distance of trim guide from the page edge (was 40)
     category = null,                  // category for determining text color
+    teacherImage = "./techybara/teacher.png",  // teacher image (can be data URI or path)
+    peekOutImage = "./techybara/peek out.png", // peek out image (can be data URI or path)
   } = options;
   
   // Determine text color based on category
@@ -167,7 +169,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       ${topTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
-      <image href="./techybara/teacher.png" x="400" y="320" width="80" height="80"/>
+      <image href="${teacherImage}" x="400" y="320" width="80" height="80"/>
     </g>
     <g id="bottom-half" transform="translate(500,810) rotate(180)">
       ${bottomTextInfo.lines.length === 1 
@@ -185,7 +187,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       ${bottomTaboos.map((w,i) =>
         `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
-      <image href="./techybara/peek out.png" x="420" y="280" width="90" height="70"/>
+      <image href="${peekOutImage}" x="420" y="280" width="90" height="70"/>
     </g>
   </g>
   ${showBleed ? `<rect x="0" y="0" width="580" height="890" fill="none" stroke="${bleedColor}" stroke-width="1" stroke-dasharray="6 4"/>` : ''}
