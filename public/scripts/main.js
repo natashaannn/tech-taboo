@@ -4,6 +4,7 @@ import { generateSVG } from "./lib/generateSVG.js";
 import { saveSVG, savePNGFromSVG, saveSVGsAsZip, savePNGsAsZip } from "./lib/exporters.js";
 import { setupSelector } from "./ui/selector.js";
 import { getCategoryColor, detectCategory, CATEGORIES, CATEGORY_COLORS } from "./lib/categories.js";
+import { preloadTechybaraImages } from "./lib/imageData.js";
 
 function setSVGOutput(html) {
   document.getElementById("output").innerHTML = html;
@@ -42,6 +43,12 @@ const colorOptions = {
 
 // Store current cards for printing (preserves category info)
 let currentCards = null;
+
+// Store preloaded image data URIs
+let techybaraImages = {
+  teacher: "./techybara/teacher.png",
+  peekOut: "./techybara/peek out.png"
+};
 
 function generate() {
   const rawLines = document.getElementById("input").value
@@ -86,6 +93,8 @@ function generate() {
     matchStrokeBackground: false,
     showBleed: false,
     category: firstPair.top.category,
+    teacherImage: techybaraImages.teacher,
+    peekOutImage: techybaraImages.peekOut,
   });
   const previewCard = `
     <div style="
@@ -109,6 +118,8 @@ function generate() {
       matchStrokeBackground: false,
       showBleed: false,
       category: top.category,
+      teacherImage: techybaraImages.teacher,
+      peekOutImage: techybaraImages.peekOut,
     });
     return `
       <div style="
@@ -334,6 +345,8 @@ function generateFromPairs(pairData) {
     matchStrokeBackground: false,
     showBleed: false,
     category: firstPair.top.category,
+    teacherImage: techybaraImages.teacher,
+    peekOutImage: techybaraImages.peekOut,
   });
   const previewCard = `
     <div style="
@@ -356,6 +369,8 @@ function generateFromPairs(pairData) {
       matchStrokeBackground: false,
       showBleed: false,
       category: top.category,
+      teacherImage: techybaraImages.teacher,
+      peekOutImage: techybaraImages.peekOut,
     });
     return `
       <div style="
@@ -519,6 +534,15 @@ function showColors() {
 }
 
 document.getElementById("btn-colors").addEventListener("click", showColors);
+
+// Preload techybara images as base64 data URIs for PNG export
+preloadTechybaraImages().then(images => {
+  techybaraImages = images;
+  console.log('Techybara images preloaded for PNG export');
+}).catch(err => {
+  console.warn('Failed to preload techybara images:', err);
+  // Continue with relative paths as fallback
+});
 
 // initial render
 renderLegend();

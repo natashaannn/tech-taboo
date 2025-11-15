@@ -1,6 +1,7 @@
 // public/scripts/print.js
 import { generateSVG } from './lib/generateSVG.js';
 import { getCategoryColor } from './lib/categories.js';
+import { preloadTechybaraImages } from './lib/imageData.js';
 
 function readPayload() {
   try {
@@ -12,7 +13,20 @@ function readPayload() {
   }
 }
 
-function render2x2() {
+async function render2x2() {
+  // Preload images first
+  let techybaraImages;
+  try {
+    techybaraImages = await preloadTechybaraImages();
+  } catch (err) {
+    console.warn('Failed to preload images:', err);
+    // Fallback to relative paths
+    techybaraImages = {
+      teacher: './techybara/teacher.png',
+      peekOut: './techybara/peek out.png'
+    };
+  }
+
   const payload = readPayload();
   const fallback = {
     cards: [
@@ -67,6 +81,8 @@ function render2x2() {
           strokeWidth: 10,
           dividerWidth: 2,
           category: card.top.category,
+          teacherImage: techybaraImages.teacher,
+          peekOutImage: techybaraImages.peekOut,
         });
         cell.innerHTML = svg;
       }
