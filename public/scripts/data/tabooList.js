@@ -58,7 +58,7 @@ generalTabooList = [
   { index: 54, word: "Edge Computing", taboo: ["Distributed", "Near", "Network", "Latency", "Fast"] },
   { index: 55, word: "Privacy", taboo: ["Security", "Data", "Information", "Access", "Control"] },
   { index: 56, word: "Website", taboo: ["Internet", "Google", "www", "Address", "URL"] },
-  { index: 57, word: "FAANG", taboo: ["Big", "Technology", "Company", "Software", "Stock"]}, //change this to nvidia
+  { index: 57, word: "FAANG", taboo: ["Big", "Technology", "Company", "Software", "Stock"]},
   { index: 58, word: "Silicon Valley", taboo: ["California", "USA", "Tech", "Industry", "Company"]},
   { index: 59, word: "Non-fungible Token (NFT)", taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"]},
   { index: 60, word: "Web3", taboo: ["Blockchain", "Distributed", "Decentralized", "Cryptocurrency", "Contract"]},
@@ -69,7 +69,7 @@ generalTabooList = [
   { index: 65, word: "Encryption", taboo: ["Security", "Data", "Information", "Access", "Decryption"]},
   { index: 66, word: "Gamification", taboo: ["Play", "Reward", "Video", "Challenge", "Score"]},
   { index: 67, word: "Open-source", taboo: ["Code", "Software", "Project", "GitHub", "Community"]},
-  { index: 68, word: "Sustainability", taboo: ["Environment", "Green", "Eco", "Climate", "Future"]},
+  { index: 68, word: "Cloud Storage", taboo: ["Google Drive", "Files", "Online", "Backup", "Save"]},
   { index: 69, word: "Wearable", taboo: ["Ring", "Tech", "Watch", "Health", "Fitness"]},
   { index: 70, word: "Pivot", taboo: ["Business", "Strategy", "Change", "Direction", "Rebrand"]},
   { index: 71, word: "Viral", taboo: ["Content", "Social", "Media", "Trend", "Share"]},
@@ -93,7 +93,7 @@ generalTabooList = [
   { index: 89, word: "JPEG", taboo: ["Image", "Format", "Compression", "PNG", "File"]},
   { index: 90, word: "PNG", taboo: ["Image", "Format", "Compression", "JPEG", "File"]},
   { index: 91, word: "GIF", taboo: ["Image", "Format", "Animation", "File", "Send"]},
-  { index: 92, word: "QWERTY", taboo: ["Keyboard", "Layout", "Typing", "Computer", "Device"]},
+  { index: 92, word: "Incognito Mode", taboo: ["Private", "Browser", "History", "Secret", "Anonymous"]},
   { index: 93, word: "Search Engine", taboo: ["Google", "Optimization", "Find", "Browser", "Result"]},
   { index: 94, word: "Search Engine Optimization (SEO)", taboo: ["Top", "Google", "Keywords", "Browser", "Website"]},
   { index: 95, word: "Spam", taboo: ["Email", "Message", "Scam", "Inbox", "Junk"]},
@@ -101,9 +101,9 @@ generalTabooList = [
   { index: 97, word: "Ethernet", taboo: ["Cable", "WAN", "LAN", "Router", "Device"]},
   { index: 98, word: "Windows", taboo: ["Operating System (OS)", "Linux", "Mac", "Computer", "Desktop"]},
   { index: 99, word: "MacOS", taboo: ["Operating System (OS)", "Linux", "Windows", "Apple", "Meta"]},
-  { index: 100, word: "Linux", taboo: ["Operating System (OS)", "Software", "Name of any OS", "Computer", "Desktop"]}, //change this
-  { index: 101, word: "Operating System (OS)", taboo: ["Software", "Name of any OS", "Computer", "Desktop", "Computer"]}, //change this bec too many OS alr
-  { index: 102, word: "Device", taboo: ["Hardware", "Software", "Computer", "Mobile", "Tablet"]}, //change this? doesnt help
+  { index: 100, word: "Command Line", taboo: ["Terminal", "Text", "Code", "Type", "Black Screen"]},
+  { index: 101, word: "Server", taboo: ["Client", "Host", "Cloud", "Data", "Backend"]},
+  { index: 102, word: "Touchscreen", taboo: ["Screen", "Finger", "Tap", "Swipe", "Display"]},
   { index: 103, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Replit", "AI", "Lovable"]}
 ].forEach(item => {
 item.category = "General"
@@ -224,7 +224,7 @@ softwareEngineeringTabooList = [
   { index: 69, word: "Pixel", taboo: ["Image", "CSS", "Display", "Graphics", "Width"] },
   { index: 70, word: "Production", taboo: ["Live", "Deploy", "Environment", "Users", "Release"] },
   { index: 71, word: "Progressive Web App (PWA)", taboo: ["Offline", "Install", "Service Worker", "Manifest", "Mobile"] },
-  { index: 72, word: "Props", taboo: ["React", "Component", "Data", "Pass", "Parent"] }, //too niche
+  { index: 72, word: "Full Stack", taboo: ["Frontend", "Backend", "Developer", "Both", "Complete"] },
   { index: 73, word: "Pull Request", taboo: ["Git", "Merge", "Branch", "Review", "Code"] },
   { index: 74, word: "Quantization", taboo: ["AI", "Model", "Compression", "Weights", "Size"] },
   { index: 75, word: "Tokenization", taboo: ["AI", "Text", "Split", "Model", "Word"] },
