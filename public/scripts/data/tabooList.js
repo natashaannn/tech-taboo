@@ -1,12 +1,12 @@
 // one deck has 54 cards; 2 cards are rule cards
 // 52 are taboo cards, front and back each has a pair of words == 52 * 2 * 2 = 208
 
-generalTabooList = [
+var generalTabooList = [
   { index: 1, word: "Artificial Intelligence (AI)", taboo: ["Replace", "Machine", "Model", "Language", "Chatbot"] },
   { index: 2, word: "Cloud Computing", taboo: ["Sky", "Server", "Network", "Storage", "Online"] },
   { index: 3, word: "Data", taboo: ["Base", "Warehouse", "Information", "Storage", "Analysis"] },
   { index: 4, word: "ChatGPT", taboo: ["OpenAI", "Chatbot", "LLM", "AI", "Text"] },
-  { index: 5, word: "Cryptocurrency", taboo: ["Bitcoin", "Solana", "Blockchain", "Money", "Decentralized Finance (DeFi)"] },
+  { index: 5, word: "Cryptocurrency", taboo: ["Bitcoin", "Finance", "Blockchain", "Money", "DeFi"] },
   { index: 6, word: "Cybersecurity", taboo: ["Protection", "Hacking", "Threat", "Network", "Firewall"] },
   { index: 7, word: "Data Science", taboo: ["Analysis", "Statistics", "Algorithms", "AI", "Model"] },
   { index: 8, word: "Big Data", taboo: ["Large", "Volume", "Analytics", "Velocity", "Insight"] },
@@ -38,15 +38,15 @@ generalTabooList = [
   { index: 34, word: "Product", taboo: ["Value", "Software", "Goods", "Customer", "Solution"] },
   { index: 35, word: "Product Management", taboo: ["Project", "Business", "Customer", "Communicate", "Strategy"] },
   { index: 36, word: "Chief Technology Officer (CTO)", taboo: ["Company", "Executive", "Lead", "Strategy", "Product"] },
-  { index: 37, word: "Chief Executive Officer (CEO)", taboo: ["Company", "Executive", "Business", "Strategy", "Product"] },
+  { index: 37, word: "Chief Executive Officer (CEO)", taboo: ["Company", "Founder", "Business", "Strategy", "Product"] },
   { index: 38, word: "Startup", taboo: ["Company", "Business", "Small", "Product", "New"] },
   { index: 39, word: "Financial Technology (FinTech)", taboo: ["Bank", "Money", "Investment", "Payment", "Transaction"] },
   { index: 40, word: "Browser", taboo: ["Internet", "Web", "Application", "Chrome", "Firefox"] },
   { index: 41, word: "Google", taboo: ["Search", "Chrome", "Internet", "Browser", "Overview"] },
-  { index: 42, word: "Facebook", taboo: ["Social Media", "Old", "Meta", "Post", "Mark Zuckerberg"] },
+  { index: 42, word: "Facebook", taboo: ["Social Media", "Instagram", "Meta", "Post", "Mark Zuckerberg"] },
   { index: 43, word: "Instagram", taboo: ["Social Media", "Story", "Meta", "Post", "Reel"] },
   { index: 44, word: "Twitter", taboo: ["Social Media", "Character", "X", "Elon Musk", "Post"] },
-  { index: 45, word: "Meta", taboo: ["Social", "Media", "Facebook", "Post", "Mark Zuckerberg"] },
+  { index: 45, word: "Meta", taboo: ["Social Media", "Instagram", "Facebook", "Post", "Mark Zuckerberg"] },
   { index: 46, word: "Algorithm", taboo: ["AI", "Machine", "Learning", "Model", "Data"] },
   { index: 47, word: "User Interface (UI)", taboo: ["Design", "Experience", "Interaction", "Visual", "Layout"] },
   { index: 48, word: "User Experience (UX)", taboo: ["Design", "Journey", "Interaction", "UI", "Layout"] },
@@ -105,11 +105,13 @@ generalTabooList = [
   { index: 101, word: "Server", taboo: ["Client", "Host", "Cloud", "Data", "Backend"]},
   { index: 102, word: "Touchscreen", taboo: ["Screen", "Finger", "Tap", "Swipe", "Display"]},
   { index: 103, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Replit", "AI", "Lovable"]}
-].forEach(item => {
-item.category = "General"
+]
+
+generalTabooList.forEach(item => {
+  item.category = "General"
 })
 
-aiTabooList = [
+const aiTabooList = [
   { index: 1, word: "Agent", taboo: ["AI", "Autonomous", "Task", "LLM", "Action"] },
   { index: 2, word: "Anthropic", taboo: ["AI", "Claude", "Company", "Safety", "LLM"] },
   { index: 3, word: "Chain-of-Thought", taboo: ["AI", "Reasoning", "Prompt", "LLM", "Step"] },
@@ -148,11 +150,13 @@ aiTabooList = [
   { index: 36, word: "Vector Database", taboo: ["Embedding", "AI", "Similarity", "Search", "Index"] },
   { index: 37, word: "Voice Assistant", taboo: ["Siri", "Speech", "Recognition", "Alexa", "Help"] },
   { index: 38, word: "Voice Cloning", taboo: ["AI", "Speech", "Synthesis", "Imitate", "Audio"] },
-].forEach(item => {
-item.category = "AI"
+]
+
+aiTabooList.forEach(item => {
+  item.category = "AI"
 })
 
-softwareEngineeringTabooList = [
+const softwareEngineeringTabooList = [
   { index: 1, word: "Agile Development", taboo: ["Iterative", "Flexible", "Adaptive", "Scrum", "Sprint"] },
   { index: 2, word: "Angular", taboo: ["JavaScript", "Framework", "Component", "UI", "Frontend"] },
   { index: 3, word: "Application Programming Interface (API)", taboo: ["Endpoint", "Request", "Response", "Data", "Exchange"] },
@@ -253,11 +257,13 @@ softwareEngineeringTabooList = [
   { index: 98, word: "Staging", taboo: ["Environment", "Deploy", "Test", "Production", "Pre"] },
   { index: 99, word: "State", taboo: ["React", "Component", "Data", "Change", "Update"] }, //too niche 
   { index: 100, word: "Tailwind", taboo: ["CSS", "Utility", "Framework", "Class", "Style"] }
-].forEach(item => {
-item.category = "Software Engineering"
+]
+
+softwareEngineeringTabooList.forEach(item => {
+  item.category = "Software Engineering"
 })
 
-dataTabooList = [
+const dataTabooList = [
   { index: 1, word: "Aggregation", taboo: ["Sum", "Count", "Group", "Average", "Total"] },
   { index: 2, word: "Batch Processing", taboo: ["Job", "Schedule", "Bulk", "Cron", "Nightly"] },
   { index: 3, word: "Business Intelligence", taboo: ["Dashboard", "Data", "Insights", "Analytics", "Reporting"] },
@@ -296,11 +302,13 @@ dataTabooList = [
   { index: 36, word: "Time Series", taboo: ["Temporal", "Timestamp", "Sequential", "Trend", "Historical"] },
   { index: 37, word: "Visualization", taboo: ["Graph", "Chart", "Insights", "Dashboard", "Storytelling"] },
   { index: 38, word: "Warehouse", taboo: ["Building", "Storage", "Repository", "Analytics", "Insights"] }
-].forEach(item => {
-item.category = "Data"
+]
+
+dataTabooList.forEach(item => {
+  item.category = "Data"
 })
 
-productManagementTabooList = [
+const productManagementTabooList = [
   { index: 1, word: "A/B Testing", taboo: ["Experiment", "Variant", "Conversion", "Split", "Test"] },
   { index: 2, word: "Acceptance Criteria", taboo: ["Requirements", "Story", "Definition", "Done", "Validate"] },
   { index: 3, word: "Backlog", taboo: ["Tasks", "Stories", "Queue", "Prioritize", "Jira"] },
@@ -335,8 +343,10 @@ productManagementTabooList = [
   { index: 32, word: "Value Proposition", taboo: ["Benefit", "Unique", "Offer", "Customer", "Why"] },
   { index: 33, word: "Velocity", taboo: ["Speed", "Sprint", "Points", "Capacity", "Team"] },
   { index: 34, word: "Wireframe", taboo: ["Mockup", "Design", "Sketch", "Layout", "Prototype"] }
-].forEach(item => {
-item.category = "Product Management"
+]
+
+productManagementTabooList.forEach(item => {
+  item.category = "Product Management"
 })
 
 export const tabooList = [...generalTabooList, ...aiTabooList, ...softwareEngineeringTabooList, ...dataTabooList, ...productManagementTabooList]
