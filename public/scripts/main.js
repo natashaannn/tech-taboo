@@ -79,7 +79,7 @@ function generate() {
     return;
   }
 
-  const aspectRatio = 580 / 890;
+  const aspectRatio = 610 / 910; // poker card size 57*87mm, design size including excess 2mm for buffer 61*91mm
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
@@ -332,7 +332,7 @@ function generateFromPairs(pairData) {
     return;
   }
 
-  const aspectRatio = 580 / 890;
+  const aspectRatio = 610 / 910;
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
@@ -420,7 +420,7 @@ document.getElementById("btn-save-svg").addEventListener("click", async () => {
 
 document.getElementById("btn-save-png").addEventListener("click", async () => {
   const { savePngsFromContainer } = await import('./lib/utils.js');
-  await savePngsFromContainer('#output', 'card.png', 'taboo-cards-png.zip', 580, 890);
+  await savePngsFromContainer('#output', 'card.png', 'taboo-cards-png.zip', 610, 910);
 });
 
 // Open print view (A4 2x2)

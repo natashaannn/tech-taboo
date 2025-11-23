@@ -170,10 +170,10 @@ async function renderPreview(cards) {
     effect: card.effect,
   }));
   const html = svgs.map(svg => {
-    const aspectRatio = 580 / 890;
+    const aspectRatio = 610 / 910;
     return `
       <div style="
-        width: min(90vw, 580px);
+        width: min(90vw, 610px);
         aspect-ratio: ${aspectRatio};
         transform-origin: center;
       ">
@@ -282,7 +282,7 @@ function setup() {
   });
   document.getElementById('btn-save-png').addEventListener('click', async () => {
     const { savePngsFromContainer } = await import('./lib/utils.js');
-    await savePngsFromContainer('#preview', 'system-card.png', 'system-cards-png.zip', 580, 890);
+    await savePngsFromContainer('#preview', 'system-card.png', 'system-cards-png.zip', 610, 910);
   });
 
   // Print (A4 2x2) with optional backing

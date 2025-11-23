@@ -1,5 +1,6 @@
 // one deck has 54 cards; 2 cards are rule cards
 // 52 are taboo cards, front and back each has a pair of words == 52 * 2 * 2 = 208
+// NOTE: Make sure all lists are even numbers to prevent duplication of last odd numbered word in generation
 
 var generalTabooList = [
   { index: 1, word: "Artificial Intelligence (AI)", taboo: ["Replace", "Machine", "Model", "Language", "Chatbot"] },
@@ -105,6 +106,7 @@ var generalTabooList = [
   { index: 101, word: "Server", taboo: ["Client", "Host", "Cloud", "Data", "Backend"]},
   { index: 102, word: "Touchscreen", taboo: ["Screen", "Finger", "Tap", "Swipe", "Display"]},
   { index: 103, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Replit", "AI", "Lovable"]},
+  { index: 104, word: "Product Designer", taboo: ["Figma", "Web", "Graphic", "Mockup", "Prototype"] }
 ]
 
 generalTabooList.forEach(item => {
@@ -255,7 +257,7 @@ const softwareEngineeringTabooList = [
   { index: 96, word: "Single Page Application", taboo: ["React", "Vue", "Angular", "Web", "Frontend"] },
   { index: 97, word: "Sprint", taboo: ["Scrum", "Agile", "Iteration", "Goal", "Backlog"] },
   { index: 98, word: "Staging", taboo: ["Environment", "Deploy", "Test", "Production", "Pre"] },
-  { index: 99, word: "Code Review", taboo: ["Pull Request", "Feedback", "Check", "Quality", "Approve"] }, //too niche 
+  { index: 99, word: "Code Review", taboo: ["Pull Request", "Feedback", "Check", "Quality", "Approve"] },
   { index: 100, word: "Tailwind", taboo: ["CSS", "Utility", "Framework", "Class", "Style"] }
 ]
 

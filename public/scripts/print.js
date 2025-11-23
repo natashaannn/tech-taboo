@@ -131,13 +131,13 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
   const stroke = strokeColor;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
   <defs>
     <linearGradient id="bgGradBack" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="${gradTop}"/>
       <stop offset="100%" stop-color="${gradBottom}"/>
     </linearGradient>
-    <pattern id="binaryPatternBack" width="580" height="80" patternUnits="userSpaceOnUse">
+    <pattern id="binaryPatternBack" width="610" height="80" patternUnits="userSpaceOnUse">
       <text x="0" y="35" font-family="sometype mono, monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
@@ -149,7 +149,7 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
     </pattern>
     <filter id="blurBack"><feGaussianBlur stdDeviation="0.8"/></filter>
   </defs>
-  <rect x="0" y="0" width="580" height="890" fill="${background}"/>
+  <rect x="0" y="0" width="610" height="910" fill="${background}"/>
   <g transform="translate(40,40)">
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#bgGradBack)"/>
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#binaryPatternBack)" filter="url(#blurBack)"/>
