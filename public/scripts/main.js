@@ -1,7 +1,6 @@
 // public/scripts/main.js
 import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
-import { saveSVG, savePNGFromSVG, saveSVGsAsZip, savePNGsAsZip } from "./lib/exporters.js";
 import { setupSelector } from "./ui/selector.js";
 import { getCategoryColor, detectCategory, CATEGORIES, CATEGORY_COLORS } from "./lib/categories.js";
 import { preloadTechybaraImages } from "./lib/imageData.js";

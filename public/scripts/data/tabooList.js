@@ -104,7 +104,7 @@ var generalTabooList = [
   { index: 100, word: "Command Line", taboo: ["Terminal", "Text", "Code", "Type", "Black Screen"]},
   { index: 101, word: "Server", taboo: ["Client", "Host", "Cloud", "Data", "Backend"]},
   { index: 102, word: "Touchscreen", taboo: ["Screen", "Finger", "Tap", "Swipe", "Display"]},
-  { index: 103, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Replit", "AI", "Lovable"]}
+  { index: 103, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Replit", "AI", "Lovable"]},
 ]
 
 generalTabooList.forEach(item => {

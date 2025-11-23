@@ -9,19 +9,19 @@ export const CATEGORIES = [
 
 // Default colors for each category
 export const CATEGORY_COLORS = {
-  "General": "#faf9f5",              // Cream
-  "AI": "#f97883",              // Primary Pink (darker)
-  "Data": "#7dbfba",           // Secondary Turquoise (darker)
-  "Software Engineering": "#e8c555", // Accent Cream (darker)
-  "Product Management": "#8b5a49", // Brown Dark
+  "General": "#7dbfba",             
+  "AI": "#faf9f5", 
+  "Data": "#f97883",
+  "Software Engineering": "#e8c555", 
+  "Product Management": "#8b5a49", 
 };
 
 // Text title colors for each category
 export const CATEGORY_TEXT_COLORS = {
-  "General": "#7d7c78",
+  "General": "#faf9f5",
   "Product Management": "#efe7e4",
   "Data": "#ebf5f6",
-  "AI": "#ffebed",
+  "AI": "7d7c78",
   "Software Engineering": "#fdf7e7",
 };
 
