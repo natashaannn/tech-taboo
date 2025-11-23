@@ -188,7 +188,7 @@ function fillInputRandomCard() {
   generate();
 }
 
-function fillInputAllCards() {
+function fillInputAllCardsInCategory() {
   // Show custom modal for category selection
   showCategoryModal((selectedCategory) => {
     if (!selectedCategory) return; // User cancelled
@@ -207,6 +207,67 @@ function fillInputAllCards() {
     });
     
     generateCardsFromCategories(byCategory, categoriesToGenerate);
+  });
+}
+
+function fillInputAllCardsinVersion() {
+  // Open version selection modal first
+  showVersionModal((selectedVersion) => {
+    if (!selectedVersion) return; // User cancelled
+
+    // Currently only one version is supported: Variety Pack Version
+    if (selectedVersion !== "VARIETY_PACK") return;
+
+    // Desired word counts per category for this version
+    const versionCounts = {
+      "General": 54,
+      "AI": 14,
+      "Software Engineering": 14,
+      "Data": 14,
+      "Product Management": 12,
+    };
+
+    // Group available words by category
+    const byCategory = {};
+    tabooList.forEach(item => {
+      const cat = item.category || detectCategory(item.word);
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(item);
+    });
+
+    const pairsByCategory = [];
+    const lines = [];
+
+    Object.keys(versionCounts).forEach(cat => {
+      const targetCount = versionCounts[cat];
+      const wordsInCat = byCategory[cat] ? [...byCategory[cat]] : [];
+      if (!targetCount || wordsInCat.length === 0) return;
+
+      // Ensure we do not exceed available words and keep an even number to avoid self-pairing
+      let take = Math.min(targetCount, wordsInCat.length);
+      if (take % 2 !== 0) take -= 1;
+      if (take < 2) return;
+
+      const selected = wordsInCat.slice(0, take);
+      for (let i = 0; i < selected.length; i += 2) {
+        const w1 = selected[i];
+        const w2 = selected[i + 1];
+        pairsByCategory.push([w1, w2]);
+        lines.push(`${w1.word} | ${w1.taboo.join(", ")}`);
+        lines.push(`${w2.word} | ${w2.taboo.join(", ")}`);
+      }
+    });
+
+    if (pairsByCategory.length === 0) {
+      return;
+    }
+
+    // Update textarea with the generated version
+    const inputEl = document.getElementById("input");
+    inputEl.value = lines.join("\n");
+
+    // Generate cards directly from the prepared pairs
+    generateFromPairs(pairsByCategory);
   });
 }
 
@@ -252,6 +313,32 @@ function showCategoryModal(callback) {
   document.getElementById('modalConfirm').onclick = confirm;
   document.getElementById('modalCancel').onclick = cancel;
   
+  // Close on background click
+  modal.onclick = (e) => {
+    if (e.target === modal) cancel();
+  };
+}
+
+function showVersionModal(callback) {
+  const modal = document.getElementById('versionModal');
+  const selectEl = document.getElementById('versionSelect');
+
+  modal.style.display = 'flex';
+
+  const confirm = () => {
+    const selectedValue = selectEl ? selectEl.value : null;
+    modal.style.display = 'none';
+    callback(selectedValue);
+  };
+
+  const cancel = () => {
+    modal.style.display = 'none';
+    callback(null);
+  };
+
+  document.getElementById('versionModalConfirm').onclick = confirm;
+  document.getElementById('versionModalCancel').onclick = cancel;
+
   // Close on background click
   modal.onclick = (e) => {
     if (e.target === modal) cancel();
@@ -402,7 +489,8 @@ function generateFromPairs(pairData) {
 // wire UI
 document.getElementById("btn-generate").addEventListener("click", generate);
 document.getElementById("btn-random").addEventListener("click", fillInputRandomCard);
-document.getElementById("btn-generate-all").addEventListener("click", fillInputAllCards);
+document.getElementById("btn-generate-category").addEventListener("click", fillInputAllCardsInCategory);
+document.getElementById("btn-generate-version").addEventListener("click", fillInputAllCardsinVersion);
 
 const { showWordSelector } = setupSelector({
   tabooList,
