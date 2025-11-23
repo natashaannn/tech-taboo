@@ -1,12 +1,12 @@
 <!--?xml version="1.0" encoding="UTF-8"?-->
-<svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
 
   <defs>
     <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#0A1F33"></stop>
       <stop offset="100%" stop-color="#17424A"></stop>
     </linearGradient>
-    <pattern id="binaryPattern" width="580" height="80" patternUnits="userSpaceOnUse">
+    <pattern id="binaryPattern" width="610" height="80" patternUnits="userSpaceOnUse">
       <text x="0" y="35" font-family="sometype mono, monospace" font-size="28" fill="rgba(200,220,255,0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
       </text>
@@ -18,7 +18,7 @@
   </defs>
 
   <!-- Bleed background -->
-  <rect x="0" y="0" width="580" height="890" fill="white"></rect>
+  <rect x="0" y="0" width="610" height="910" fill="white"></rect>
 
   <!-- Trim area -->
   <g transform="translate(30,30)">
@@ -43,6 +43,6 @@
   </g>
 
   <!-- Bleed marks -->
-  <rect x="0" y="0" width="580" height="890" fill="none" stroke="red" stroke-width="1" stroke-dasharray="6 4"></rect>
+  <rect x="0" y="0" width="610" height="910" fill="none" stroke="red" stroke-width="1" stroke-dasharray="6 4"></rect>
   <rect x="30" y="30" width="520" height="830" rx="40" ry="40" fill="none" stroke="blue" stroke-width="1" stroke-dasharray="6 4"></rect>
 </svg>

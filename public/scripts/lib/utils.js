@@ -3,7 +3,7 @@ import { saveSVG, saveSVGsAsZip, savePNGFromSVG, savePNGsAsZip } from './exporte
 
 // Save PNG(s) from a container that holds one or more <svg> nodes
 // Matches the behavior used in public/scripts/main.js
-export async function savePngsFromContainer(containerSelector, singleFilename = 'card.png', zipFilename = 'cards-png.zip', width = 580, height = 890) {
+export async function savePngsFromContainer(containerSelector, singleFilename = 'card.png', zipFilename = 'cards-png.zip', width = 610, height = 910) {
   const container = document.querySelector(containerSelector);
   if (!container) {
     alert('Nothing to export. Container not found.');

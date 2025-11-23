@@ -133,9 +133,9 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   const blurId = `blur_${uniqueId}`;
   
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="580" height="890" viewBox="0 0 580 890" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
   <defs>
-    <pattern id="${patternId}" width="580" height="80" patternUnits="userSpaceOnUse">
+    <pattern id="${patternId}" width="610" height="80" patternUnits="userSpaceOnUse">
       <text x="0" y="35" font-family="sometype mono, monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
@@ -147,8 +147,8 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     </pattern>
     <filter id="${blurId}"><feGaussianBlur stdDeviation="0.8"/></filter>
   </defs>
-  <rect x="0" y="0" width="580" height="890" fill="${background}"/>
-  <g transform="translate(40,40)">
+  <rect x="0" y="0" width="610" height="910" fill="${background}"/>
+  <g transform="translate(55,50)">
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="${baseColor}"/>
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#${patternId})" filter="url(#${blurId})"/>
     <rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}"/>
@@ -190,7 +190,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       <image href="${peekOutImage}" x="420" y="280" width="90" height="70"/>
     </g>
   </g>
-  ${showBleed ? `<rect x="0" y="0" width="580" height="890" fill="none" stroke="${bleedColor}" stroke-width="1" stroke-dasharray="6 4"/>` : ''}
-  <rect x="${trimInset}" y="${trimInset}" width="${580 - 2*trimInset}" height="${890 - 2*trimInset}" rx="40" ry="40" fill="none" stroke="${trimColor}" stroke-width="1" stroke-dasharray="6 4"/>
+  ${showBleed ? `<rect x="0" y="0" width="610" height="910" fill="none" stroke="${bleedColor}" stroke-width="1" stroke-dasharray="6 4"/>` : ''}
+  <rect x="${trimInset}" y="${trimInset}" width="${610 - 2*trimInset}" height="${910 - 2*trimInset}" rx="40" ry="40" fill="none" stroke="${trimColor}" stroke-width="1" stroke-dasharray="6 4"/>
 </svg>`;
 }

@@ -43,7 +43,7 @@ export async function saveSVGsAsZip(svgs, zipName = "taboo-cards-svg.zip") {
   URL.revokeObjectURL(url);
 }
 
-export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width = 580, height = 890) {
+export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width = 610, height = 910) {
   // svgs: array of { name: string, markup: string }
   const JSZip = await ensureJSZip();
   const zip = new JSZip();
@@ -98,7 +98,7 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
   URL.revokeObjectURL(url);
 }
 
-export function savePNGFromSVG(svgMarkup, filename = "taboo-card.png", width = 580, height = 890) {
+export function savePNGFromSVG(svgMarkup, filename = "taboo-card.png", width = 610, height = 910) {
   const img = new Image();
   const safe = String(svgMarkup).replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
   const svgBlob = new Blob([safe], { type: "image/svg+xml;charset=utf-8" });

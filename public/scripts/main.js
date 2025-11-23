@@ -1,7 +1,6 @@
 // public/scripts/main.js
 import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
-import { saveSVG, savePNGFromSVG, saveSVGsAsZip, savePNGsAsZip } from "./lib/exporters.js";
 import { setupSelector } from "./ui/selector.js";
 import { getCategoryColor, detectCategory, CATEGORIES, CATEGORY_COLORS } from "./lib/categories.js";
 import { preloadTechybaraImages } from "./lib/imageData.js";
@@ -80,7 +79,7 @@ function generate() {
     return;
   }
 
-  const aspectRatio = 580 / 890;
+  const aspectRatio = 610 / 910; // poker card size 57*87mm, design size including excess 2mm for buffer 61*91mm
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
@@ -333,7 +332,7 @@ function generateFromPairs(pairData) {
     return;
   }
 
-  const aspectRatio = 580 / 890;
+  const aspectRatio = 610 / 910;
 
   // Generate first card (preview - larger)
   const firstPair = pairs[0];
@@ -421,7 +420,7 @@ document.getElementById("btn-save-svg").addEventListener("click", async () => {
 
 document.getElementById("btn-save-png").addEventListener("click", async () => {
   const { savePngsFromContainer } = await import('./lib/utils.js');
-  await savePngsFromContainer('#output', 'card.png', 'taboo-cards-png.zip', 580, 890);
+  await savePngsFromContainer('#output', 'card.png', 'taboo-cards-png.zip', 610, 910);
 });
 
 // Open print view (A4 2x2)
@@ -486,6 +485,11 @@ function showColors() {
   const host = document.getElementById("colors");
   // Preset base color themes
   const themes = [
+    { name: "Cream", value: "#faf9f5" },
+    { name: "Strawberry", value: "#f97883" },
+    { name: "Tiffany Blue", value: "#7dbfba" },
+    { name: "Lemoncake", value: "#e8c555" },
+    { name: "Product Management", value: "#8b5a49" },
     { name: "Classic Teal", value: "#17424A" },
     { name: "Midnight Blue", value: "#0A1F33" },
     { name: "Indigo", value: "#3F51B5" },
