@@ -43,6 +43,23 @@
       </div>
     </div>
 
+    <!-- Version Selection Modal -->
+    <div id="versionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+      <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 20px;">Select Version</h2>
+        <div style="margin-bottom: 20px;">
+          <label for="versionSelect" style="font-weight: 500; display: block; margin-bottom: 8px;">Version</label>
+          <select id="versionSelect" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #ddd;">
+            <option value="VARIETY_PACK" selected>Variety Pack Version</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button id="versionModalCancel" style="padding: 10px 20px; background: #ddd; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+          <button id="versionModalConfirm" class="cta" style="padding: 10px 20px;">Generate</button>
+        </div>
+      </div>
+    </div>
+
     <div id="output"></div>
 
     <p>Enter pairs of lines (2 lines per card) like this:</p>
@@ -50,14 +67,15 @@
 WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5
 WordToGuess2 | taboo1, taboo2, taboo3, taboo4, taboo5
     </pre>
-    <p><small>💡 Click "Generate All Cards" to create cards for all words in the list at once</small></p>
+    <p><small>💡 Click "Bulk Generate By Category" to create cards for all words in the list at once</small></p>
     <textarea id="input">Cloud | Internet, Server, Storage, AWS, Azure
 Blockchain | Bitcoin, Ledger, Crypto, Token, Decentralized</textarea>
 
     <div style="margin: 8px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px;">
       <button class="cta" id="btn-generate" style="padding: 10px 15px;">✨ Generate Card</button>
       <button id="btn-random" style="padding: 10px 15px;">🎲 Random Card</button>
-      <button id="btn-generate-all" style="padding: 10px 15px;">🎰 Generate All Cards</button>
+      <button id="btn-generate-category" style="padding: 10px 15px;">🎰 Bulk Generate By Category</button>
+      <button id="btn-generate-version" style="padding: 10px 15px;">🎰 Bulk Generate By Version</button>
       <button id="btn-choose" style="padding: 10px 15px;">❔ Choose Words</button>
       <span id="selector"></span>
     </div>
