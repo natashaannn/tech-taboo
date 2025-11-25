@@ -1,9 +1,9 @@
-// one deck has 54 cards; 2 cards are rule cards
-// 52 are taboo cards, front and back each has a pair of words == 52 * 2 * 2 = 208
-// NOTE: Make sure all lists are even numbers to prevent duplication of last odd numbered word in generation\
-// V1 includes first N words of the following "General": 54, "AI": 14, "Software Engineering": 14, "Data": 14, "Product Management": 12,
+// one deck has 54 cards
+// NOTE: Make sure all lists are even numbers to prevent duplication of last odd numbered word in generation
+// Variety Pack includes first N words of the following "General": 66, "AI": 14, "Software Engineering": 14, "Product Management": 14,
 
 var generalTabooList = [
+  // start of variety pack
   { index: 1, word: "Artificial Intelligence (AI)", taboo: ["Replace", "Machine", "Model", "Language", "Chatbot"] },
   { index: 2, word: "Cloud Computing", taboo: ["Sky", "Server", "Network", "Storage", "Online"] },
   { index: 3, word: "Data", taboo: ["Base", "Warehouse", "Information", "Storage", "Analysis"] },
@@ -14,12 +14,12 @@ var generalTabooList = [
   { index: 8, word: "Big Data", taboo: ["Large", "Volume", "Analytics", "Velocity", "Insight"] },
   { index: 9, word: "Digital Transformation", taboo: ["Change", "Innovation", "Business", "Process", "Technology"] },
   { index: 10, word: "Development Operations (DevOps)", taboo: ["Software", "Lifecycle", "Pipeline", "CI/CD", "Infrastructure"] },
-  { index: 11, word: "Blockchain", taboo: ["Distributed", "Ledger", "Cryptocurrency", "Contract", "Bitcoin"] },
+  { index: 11, word: "Router", taboo: ["Wireless", "Connection", "Data", "Communication", "Data"]},
   { index: 12, word: "Internet of Things (IoT)", taboo: ["Devices", "Sensors", "Network", "Data", "Connectivity"] },
   { index: 13, word: "Machine Learning", taboo: ["AI", "Model", "Language", "Training", "ChatGPT"]},
   { index: 14, word: "5G Network", taboo: ["Fast", "Mobile", "1/2/3/4/x G", "Connectivity", "Data"] },
   { index: 15, word: "Chatbot", taboo: ["AI", "GPT", "Conversation", "Message", "Text"] },
-  { index: 16, word: "Quantum Computing", taboo: ["Quantum", "Bit", "Superposition", "Entanglement", "Gate"] },
+  { index: 16, word: "Search Engine Optimization (SEO)", taboo: ["Top", "Google", "Keywords", "Browser", "Website"]},
   { index: 17, word: "Augmented Reality (AR)", taboo: ["Virtual", "Overlay", "Digital", "Information", "Interactive"] },
   { index: 18, word: "Virtual Reality", taboo: ["Headset", "Simulation", "Immersive", "Experience", "Interactive"] },
   { index: 19, word: "Analytics", taboo: ["Data", "Insight", "Trend", "Forecast", "Model"] },
@@ -31,11 +31,11 @@ var generalTabooList = [
   { index: 25, word: "Internet", taboo: ["Web", "Network", "Data", "Google", "Browser"] },
   { index: 26, word: "Software-as-a-Service (SaaS)", taboo: ["Cloud", "Subscription", "Application", "Platform", "Online"] },
   { index: 27, word: "Web Application", taboo: ["Code", "Internet", "Browser", "Build", "Deploy"] },
-  { index: 28, word: "Mobile Application", taboo: ["Code", "Programming", "Phone", "Install", "Download"] },
+  { index: 28, word: "Firewall", taboo: ["Security", "Block", "Protect", "Network", "Safety"] },
   { index: 29, word: "Robotics", taboo: ["AI", "Machine", "Automated", "Autonomous", "System"] },
   { index: 30, word: "Agile", taboo: ["Scrum", "Sprint", "Backlog", "Standup", "Retrospective"] },
   { index: 31, word: "Disrupt", taboo: ["Innovation", "Change", "Revolution", "Breakthrough", "Revolution"] },
-  { index: 32, word: "Emerging Technology", taboo: ["AI", "Development", "New", "Disrupt", "Future"] },
+  { index: 32, word: "Facebook", taboo: ["Social Media", "Instagram", "Meta", "Post", "Mark Zuckerberg"]},
   { index: 33, word: "Innovation", taboo: ["Idea", "Product", "New", "Development", "Solution"] },
   { index: 34, word: "Product", taboo: ["Value", "Software", "Goods", "Customer", "Solution"] },
   { index: 35, word: "Product Management", taboo: ["Project", "Business", "Customer", "Communicate", "Strategy"] },
@@ -45,48 +45,49 @@ var generalTabooList = [
   { index: 39, word: "Financial Technology (FinTech)", taboo: ["Bank", "Money", "Investment", "Payment", "Transaction"] },
   { index: 40, word: "Browser", taboo: ["Internet", "Web", "Application", "Chrome", "Firefox"] },
   { index: 41, word: "Google", taboo: ["Search", "Chrome", "Internet", "Browser", "Overview"] },
-  { index: 42, word: "Facebook", taboo: ["Social Media", "Instagram", "Meta", "Post", "Mark Zuckerberg"] },
-  { index: 43, word: "Instagram", taboo: ["Social Media", "Story", "Meta", "Post", "Reel"] },
-  { index: 44, word: "Twitter", taboo: ["Social Media", "Character", "X", "Elon Musk", "Post"] },
-  { index: 45, word: "Meta", taboo: ["Social Media", "Instagram", "Facebook", "Post", "Mark Zuckerberg"] },
+  { index: 42, word: "Bluetooth", taboo: ["Wireless", "Connection", "Device", "Communication", "Radio"]},
+  { index: 43, word: "Privacy", taboo: ["Security", "Data", "Information", "Access", "Control"] },
+  { index: 44, word: "Android", taboo: ["Mobile", "Operating", "System", "Google", "Phone"]},
+  { index: 45, word: "Product Designer", taboo: ["Figma", "Web", "Graphic", "Mockup", "Prototype"] },
   { index: 46, word: "Algorithm", taboo: ["AI", "Machine", "Learning", "Model", "Data"] },
   { index: 47, word: "User Interface (UI)", taboo: ["Design", "Experience", "Interaction", "Visual", "Layout"] },
-  { index: 48, word: "User Experience (UX)", taboo: ["Design", "Journey", "Interaction", "UI", "Layout"] },
+  { index: 48, word: "Computer Science", taboo: ["Degree", "Study", "University", "Major", "Programming"]},
   { index: 49, word: "Key Performance Indicator (KPI)", taboo: ["Metric", "Measure", "Goal", "Target", "Performance"] },
   { index: 50, word: "Minimum Viable Product (MVP)", taboo: ["Launch", "Basic", "Core", "Features", "Prototype"] },
-  { index: 51, word: "Firewall", taboo: ["Security", "Block", "Protect", "Network", "Safety"] },
+  { index: 51, word: "Mobile Application", taboo: ["Code", "Programming", "Phone", "Install", "Download"]},
   { index: 52, word: "Virtual Private Network (VPN)", taboo: ["Netflix", "Country", "Internet", "Security", "Connectivity"] },
   { index: 53, word: "Phishing", taboo: ["Scam", "Email", "Hacking", "Security", "Fraud"] },
-  { index: 54, word: "Edge Computing", taboo: ["Distributed", "Near", "Network", "Latency", "Fast"] },
-  { index: 55, word: "Privacy", taboo: ["Security", "Data", "Information", "Access", "Control"] },
+  { index: 54, word: "WiFi", taboo: ["Wireless", "Connection", "Data", "Communication", "Router"]},
+  { index: 55, word: "Instagram", taboo: ["Social Media", "Story", "Meta", "Post", "Reel"] },
   { index: 56, word: "Website", taboo: ["Internet", "Google", "www", "Address", "URL"] },
   { index: 57, word: "FAANG", taboo: ["Big", "Technology", "Company", "Software", "Stock"]},
-  { index: 58, word: "Silicon Valley", taboo: ["California", "USA", "Tech", "Industry", "Company"]},
+  { index: 58, word: "Virus", taboo: ["Disease", "Infection", "Spread", "Hack", "Computer"]},
   { index: 59, word: "Non-fungible Token (NFT)", taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"]},
-  { index: 60, word: "Web3", taboo: ["Blockchain", "Distributed", "Decentralized", "Cryptocurrency", "Contract"]},
-  { index: 61, word: "Avatar", taboo: ["Virtual", "Character", "Metaverse", "Movie", "World"]},
+  { index: 60, word: "Incognito Mode", taboo: ["Private", "Browser", "History", "Secret", "Anonymous"]},
+  { index: 61, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Application", "AI", "Lovable"]},
   { index: 62, word: "Bitcoin", taboo: ["Cryptocurrency", "Solana", "Binance", "Asset", "Blockchain"]},
   { index: 63, word: "Digital Wallet", taboo: ["Payment", "Money", "Transaction", "Cryptocurrency", "Bitcoin"]},
-  { index: 64, word: "Decentralized", taboo: ["Blockchain", "Distributed", "Cloud", "Cryptocurrency", "Network"]},
-  { index: 65, word: "Encryption", taboo: ["Security", "Data", "Information", "Access", "Decryption"]},
-  { index: 66, word: "Gamification", taboo: ["Play", "Reward", "Video", "Challenge", "Score"]},
-  { index: 67, word: "Open-source", taboo: ["Code", "Software", "Project", "GitHub", "Community"]},
+  { index: 64, word: "User Experience (UX)", taboo: ["Design", "Journey", "Interaction", "UI", "Layout"]},
+  { index: 65, word: "iOS", taboo: ["Mobile", "Operating", "System", "Apple", "Phone"]},
+  { index: 66, word: "Open-source", taboo: ["Code", "Software", "Project", "GitHub", "Community"]},
+  // end of variety pack
+  { index: 67, word: "Twitter", taboo: ["Social Media", "Character", "X", "Elon Musk", "Post"]},
   { index: 68, word: "Cloud Storage", taboo: ["Google Drive", "Files", "Online", "Backup", "Save"]},
   { index: 69, word: "Wearable", taboo: ["Ring", "Tech", "Watch", "Health", "Fitness"]},
-  { index: 70, word: "Pivot", taboo: ["Business", "Strategy", "Change", "Direction", "Rebrand"]},
+  { index: 70, word: "Silicon Valley", taboo: ["California", "USA", "Tech", "Industry", "Company"]},
   { index: 71, word: "Viral", taboo: ["Content", "Social", "Media", "Trend", "Share"]},
   { index: 72, word: "Growth Hacker", taboo: ["Marketing", "Strategy", "Innovation", "Product", "Launch"]},
   { index: 73, word: "E-Commerce", taboo: ["Online", "Shopping", "Shoppee", "Lazada", "Retail"]},
   { index: 74, word: "Drone", taboo: ["Aircraft", "Fly", "DJI", "Robotics", "Food"]},
   { index: 75, word: "Automation", taboo: ["Robotics", "Process", "AI", "Machine", "Learning"]},
-  { index: 76, word: "Virus", taboo: ["Disease", "Infection", "Spread", "Hack", "Computer"]},
+  { index: 76, word: "Pivot", taboo: ["Business", "Strategy", "Change", "Direction", "Rebrand"]},
   { index: 77, word: "Database", taboo: ["Management", "Storage", "Information", "SQL", "Relational"]},
-  { index: 78, word: "Android", taboo: ["Mobile", "Operating", "System", "Google", "Phone"]},
-  { index: 79, word: "iOS", taboo: ["Mobile", "Operating", "System", "Apple", "Phone"]},
-  { index: 80, word: "Bluetooth", taboo: ["Wireless", "Connection", "Device", "Communication", "Radio"]},
-  { index: 81, word: "WiFi", taboo: ["Wireless", "Connection", "Data", "Communication", "Router"]},
-  { index: 82, word: "Router", taboo: ["Wireless", "Connection", "Data", "Communication", "Data"]},
-  { index: 83, word: "Computer Science", taboo: ["Degree", "Study", "Education", "Major", "Programming"]},
+  { index: 78, word: "Gamification", taboo: ["Play", "Reward", "Video", "Challenge", "Score"]},
+  { index: 79, word: "Encryption", taboo: ["Security", "Data", "Information", "Access", "Decryption"]},
+  { index: 80, word: "Emerging Technology", taboo: ["AI", "Development", "New", "Disrupt", "Future"]},
+  { index: 81, word: "Edge Computing", taboo: ["Distributed", "Near", "Network", "Latency", "Fast"]},
+  { index: 82, word: "Blockchain", taboo: ["Distributed", "Ledger", "Cryptocurrency", "Contract", "Bitcoin"]},
+  { index: 83, word: "Decentralized", taboo: ["Blockchain", "Distributed", "Cloud", "Cryptocurrency", "Network"]},
   { index: 84, word: "Programming", taboo: ["Language", "Code", "Software", "Development", "Computer"]},
   { index: 85, word: "Code", taboo: ["Language", "Program", "Software", "Development", "Computer"]},
   { index: 86, word: "Software", taboo: ["Program", "Development", "Computer", "Application", "Code"]},
@@ -95,9 +96,9 @@ var generalTabooList = [
   { index: 89, word: "JPEG", taboo: ["Image", "Format", "Compression", "PNG", "File"]},
   { index: 90, word: "PNG", taboo: ["Image", "Format", "Compression", "JPEG", "File"]},
   { index: 91, word: "GIF", taboo: ["Image", "Format", "Animation", "File", "Send"]},
-  { index: 92, word: "Incognito Mode", taboo: ["Private", "Browser", "History", "Secret", "Anonymous"]},
+  { index: 92, word: "Web3", taboo: ["Blockchain", "Distributed", "Decentralized", "Cryptocurrency", "Contract"]},
   { index: 93, word: "Search Engine", taboo: ["Google", "Optimization", "Find", "Browser", "Result"]},
-  { index: 94, word: "Search Engine Optimization (SEO)", taboo: ["Top", "Google", "Keywords", "Browser", "Website"]},
+  { index: 94, word: "Quantum Computing", taboo: ["Quantum", "Bit", "Superposition", "Entanglement", "Gate"]},
   { index: 95, word: "Spam", taboo: ["Email", "Message", "Scam", "Inbox", "Junk"]},
   { index: 96, word: "Local Area Network (LAN)", taboo: ["Cable", "WAN", "Ethernet", "Router", "Device"]},
   { index: 97, word: "Ethernet", taboo: ["Cable", "WAN", "LAN", "Router", "Device"]},
@@ -106,8 +107,8 @@ var generalTabooList = [
   { index: 100, word: "Command Line", taboo: ["Terminal", "Text", "Code", "Type", "Black Screen"]},
   { index: 101, word: "Server", taboo: ["Client", "Host", "Cloud", "Data", "Backend"]},
   { index: 102, word: "Touchscreen", taboo: ["Screen", "Finger", "Tap", "Swipe", "Display"]},
-  { index: 103, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Replit", "AI", "Lovable"]},
-  { index: 104, word: "Product Designer", taboo: ["Figma", "Web", "Graphic", "Mockup", "Prototype"] }
+  { index: 103, word: "Avatar", taboo: ["Virtual", "Character", "Metaverse", "Movie", "World"]},
+  { index: 104, word: "Meta", taboo: ["Social Media", "Instagram", "Facebook", "Post", "Mark Zuckerberg"]}
 ]
 
 generalTabooList.forEach(item => {
@@ -115,6 +116,7 @@ generalTabooList.forEach(item => {
 })
 
 const aiTabooList = [
+  // start of variety pack
   { index: 1, word: "Agent", taboo: ["AI", "Autonomous", "Task", "LLM", "Action"] },
   { index: 2, word: "Neural Network", taboo: ["Deep Learning", "Layer", "Neurons", "Weights", "Training"] },
   { index: 3, word: "Chain-of-Thought", taboo: ["AI", "Reasoning", "Prompt", "LLM", "Step"] },
@@ -129,6 +131,7 @@ const aiTabooList = [
   { index: 12, word: "Embedding", taboo: ["AI", "Vector", "Representation", "Model", "Similarity"] },
   { index: 13, word: "Fine-tuning", taboo: ["AI", "Model", "Training", "Weights", "Better"] },
   { index: 14, word: "Speech-to-Text", taboo: ["AI", "Transcription", "Audio", "Model", "Voice"] },
+  // end of variety pack
   { index: 15, word: "GPT-4", taboo: ["OpenAI", "Model", "LLM", "AI", "Text"] },
   { index: 16, word: "Claude", taboo: ["Anthropic", "AI", "Chatbot", "LLM", "Text"]},
   { index: 17, word: "HuggingFace", taboo: ["AI", "Models", "Transformers", "Library", "Community"] },
@@ -160,6 +163,7 @@ aiTabooList.forEach(item => {
 })
 
 const softwareEngineeringTabooList = [
+  // start of variety pack
   { index: 1, word: "Docker", taboo: ["Container", "Virtualization", "Image", "Deploy", "Platform"] },
   { index: 2, word: "Angular", taboo: ["JavaScript", "Framework", "Component", "UI", "Frontend"] },
   { index: 3, word: "Application Programming Interface (API)", taboo: ["Endpoint", "Request", "Response", "Data", "Exchange"] },
@@ -174,6 +178,7 @@ const softwareEngineeringTabooList = [
   { index: 12, word: "Continuous Integration", taboo: ["Deploy", "Pipeline", "Automation", "Jenkins", "Build"] },
   { index: 13, word: "Vulnerability", taboo: ["Weakness", "Exploit", "Security", "Threat", "Risk"] },
   { index: 14, word: "WebSocket", taboo: ["Connection", "Real-time", "Socket", "Message", "Protocol"] },
+  // end of variety pack
   { index: 15, word: "Git", taboo: ["Version", "Control", "Repository", "Branch", "Commit"] },
   { index: 16, word: "Compiler", taboo: ["Code", "Translate", "Language", "Program", "Binary"] },
   { index: 17, word: "Compliance", taboo: ["Regulation", "Law", "Policy", "Adherence", "Rules"] },
@@ -267,6 +272,7 @@ softwareEngineeringTabooList.forEach(item => {
 })
 
 const dataTabooList = [
+  // start of variety pack
   { index: 1, word: "Aggregation", taboo: ["Sum", "Count", "Group", "Average", "Total"] },
   { index: 2, word: "Batch Processing", taboo: ["Job", "Schedule", "Bulk", "Cron", "Nightly"] },
   { index: 3, word: "Business Intelligence", taboo: ["Dashboard", "Data", "Insights", "Analytics", "Reporting"] },
@@ -281,6 +287,7 @@ const dataTabooList = [
   { index: 12, word: "Database Management", taboo: ["Admin", "Storage", "Organization", "System", "Control"] },
   { index: 13, word: "Denormalization", taboo: ["Database", "Performance", "Redundancy", "Join", "Speed"] },
   { index: 14, word: "Elasticsearch", taboo: ["Search", "Engine", "Index", "Query", "Document"] },
+  // end of variety pack
   { index: 15, word: "Extract Transform Load (ETL)", taboo: ["Pipeline", "Process", "Workflow", "Migration", "Integration"] },
   { index: 16, word: "Foreign Key", taboo: ["Database", "Relation", "Reference", "Link", "Join"] },
   { index: 17, word: "Data Governance", taboo: ["Rules", "Compliance", "Policy", "Oversight", "Quality"] },

@@ -220,11 +220,10 @@ function fillInputAllCardsinVersion() {
 
     // Desired word counts per category for this version
     const versionCounts = {
-      "General": 54,
+      "General": 66,
       "AI": 14,
       "Software Engineering": 14,
-      "Data": 14,
-      "Product Management": 12,
+      "Product Management": 14,
     };
 
     // Group available words by category
