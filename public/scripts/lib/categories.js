@@ -10,8 +10,8 @@ export const CATEGORIES = [
 // Default colors for each category
 export const CATEGORY_COLORS = {
   "General": "#7dbfba",             
-  "AI": "#faf9f5", 
-  "Data": "#f97883",
+  "AI": "#f97883", 
+  "Data": "#faf9f5",
   "Software Engineering": "#e8c555", 
   "Product Management": "#8b5a49", 
 };
@@ -20,8 +20,8 @@ export const CATEGORY_COLORS = {
 export const CATEGORY_TEXT_COLORS = {
   "General": "#faf9f5",
   "Product Management": "#efe7e4",
-  "Data": "#ebf5f6",
-  "AI": "7d7c78",
+  "Data": "#7d7c78",
+  "AI": "#ebf5f6",
   "Software Engineering": "#fdf7e7",
 };
 

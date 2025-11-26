@@ -1,6 +1,6 @@
 // one deck has 54 cards
 // NOTE: Make sure all lists are even numbers to prevent duplication of last odd numbered word in generation
-// Variety Pack includes first N words of the following "General": 66, "AI": 14, "Software Engineering": 14, "Product Management": 14,
+// Variety Pack includes first N words of the following "General": 60, "AI": 16, "Software Engineering": 16, "Product Management": 16,
 
 var generalTabooList = [
   // start of variety pack
@@ -62,15 +62,15 @@ var generalTabooList = [
   { index: 56, word: "Website", taboo: ["Internet", "Google", "www", "Address", "URL"] },
   { index: 57, word: "FAANG", taboo: ["Big", "Technology", "Company", "Software", "Stock"]},
   { index: 58, word: "Virus", taboo: ["Disease", "Infection", "Spread", "Hack", "Computer"]},
-  { index: 59, word: "Non-fungible Token (NFT)", taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"]},
+  { index: 59, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Application", "AI", "Lovable"]},
   { index: 60, word: "Incognito Mode", taboo: ["Private", "Browser", "History", "Secret", "Anonymous"]},
-  { index: 61, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Application", "AI", "Lovable"]},
+    // end of variety pack
+  { index: 61, word: "Non-fungible Token (NFT)", taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"]},
   { index: 62, word: "Bitcoin", taboo: ["Cryptocurrency", "Solana", "Binance", "Asset", "Blockchain"]},
   { index: 63, word: "Digital Wallet", taboo: ["Payment", "Money", "Transaction", "Cryptocurrency", "Bitcoin"]},
   { index: 64, word: "User Experience (UX)", taboo: ["Design", "Journey", "Interaction", "UI", "Layout"]},
   { index: 65, word: "iOS", taboo: ["Mobile", "Operating", "System", "Apple", "Phone"]},
   { index: 66, word: "Open-source", taboo: ["Code", "Software", "Project", "GitHub", "Community"]},
-  // end of variety pack
   { index: 67, word: "Twitter", taboo: ["Social Media", "Character", "X", "Elon Musk", "Post"]},
   { index: 68, word: "Cloud Storage", taboo: ["Google Drive", "Files", "Online", "Backup", "Save"]},
   { index: 69, word: "Wearable", taboo: ["Ring", "Tech", "Watch", "Health", "Fitness"]},
@@ -131,9 +131,9 @@ const aiTabooList = [
   { index: 12, word: "Embedding", taboo: ["AI", "Vector", "Representation", "Model", "Similarity"] },
   { index: 13, word: "Fine-tuning", taboo: ["AI", "Model", "Training", "Weights", "Better"] },
   { index: 14, word: "Speech-to-Text", taboo: ["AI", "Transcription", "Audio", "Model", "Voice"] },
-  // end of variety pack
   { index: 15, word: "GPT-4", taboo: ["OpenAI", "Model", "LLM", "AI", "Text"] },
-  { index: 16, word: "Claude", taboo: ["Anthropic", "AI", "Chatbot", "LLM", "Text"]},
+  { index: 16, word: "Retrieval Augmented Generation (RAG)", taboo: ["Document", "AI", "Search", "Context", "LLM"]},
+    // end of variety pack
   { index: 17, word: "HuggingFace", taboo: ["AI", "Models", "Transformers", "Library", "Community"] },
   { index: 18, word: "Inference", taboo: ["Prediction", "Model", "Output", "Runtime", "Deploy"] },
   { index: 19, word: "Diffusers", taboo: ["AI", "Image", "Library", "Stable", "HuggingFace"] },
@@ -145,7 +145,7 @@ const aiTabooList = [
   { index: 25, word: "Anthropic", taboo: ["AI", "Claude", "Company", "Safety", "LLM"] },
   { index: 26, word: "Edge AI", taboo: ["Device", "Inference", "Local", "Model", "IoT"] },
   { index: 27, word: "Prompt Injection", taboo: ["AI", "Attack", "Security", "Vulnerability", "Exploit"] },
-  { index: 28, word: "Retrieval Augmented Generation (RAG)", taboo: ["Document", "AI", "Search", "Context", "LLM"] },
+  { index: 28, word: "Claude", taboo: ["Anthropic", "AI", "Chatbot", "LLM", "Text"]},
   { index: 29, word: "Self-Attention", taboo: ["AI", "Transformer", "Weights", "Focus", "Model"] },
   { index: 30, word: "Small Language Model", taboo: ["Llama", "Compact", "Phi", "AI", "Efficient"] },
   { index: 31, word: "Gemini", taboo: ["Google", "AI", "Model", "LLM", "Chatbot"] },
@@ -169,18 +169,18 @@ const softwareEngineeringTabooList = [
   { index: 3, word: "Application Programming Interface (API)", taboo: ["Endpoint", "Request", "Response", "Data", "Exchange"] },
   { index: 4, word: "Application Security", taboo: ["Hack", "Firewall", "Certificates", "Deployment", "Safe"] },
   { index: 5, word: "Authorization", taboo: ["Access", "Control", "Permission", "Secure", "Verify"] },
-  { index: 6, word: "Bandwidth", taboo: ["Speed", "Internet", "Connection", "Data", "Transfer"] },
+  { index: 6, word: "Unit Test", taboo: ["Code", "Function", "Automated", "Pass", "Jest"] },
   { index: 7, word: "Bootstrap", taboo: ["CSS", "Framework", "Grid", "Responsive", "Web"] },
   { index: 8, word: "Branch", taboo: ["Git", "Repository", "Merge", "Commit", "Code"] },
   { index: 9, word: "Cache", taboo: ["Memory", "Store", "Fast", "Access", "Redis"] },
   { index: 10, word: "Cascading Style Sheets (CSS)", taboo: ["Design", "Layout", "Format", "HTML", "Selector"] },
   { index: 11, word: "Certificate", taboo: ["Secure", "Authority", "Verify", "Identity", "Trusted"] },
-  { index: 12, word: "Continuous Integration", taboo: ["Deploy", "Pipeline", "Automation", "Jenkins", "Build"] },
+  { index: 12, word: "Continuous Integration (CI)", taboo: ["Deploy", "Pipeline", "Automation", "Jenkins", "Build"] },
   { index: 13, word: "Vulnerability", taboo: ["Weakness", "Exploit", "Security", "Threat", "Risk"] },
   { index: 14, word: "WebSocket", taboo: ["Connection", "Real-time", "Socket", "Message", "Protocol"] },
-  // end of variety pack
   { index: 15, word: "Git", taboo: ["Version", "Control", "Repository", "Branch", "Commit"] },
   { index: 16, word: "Compiler", taboo: ["Code", "Translate", "Language", "Program", "Binary"] },
+    // end of variety pack
   { index: 17, word: "Compliance", taboo: ["Regulation", "Law", "Policy", "Adherence", "Rules"] },
   { index: 18, word: "Containerization", taboo: ["Docker", "Virtualization", "Deployment", "Isolation", "Lightweight"] },
   { index: 19, word: "Context", taboo: ["React", "State", "Provider", "Consumer", "Component"] },
@@ -193,7 +193,7 @@ const softwareEngineeringTabooList = [
   { index: 26, word: "Agile Development", taboo: ["Iterative", "Flexible", "Adaptive", "Scrum", "Sprint"] },
   { index: 27, word: "Domain Name System (DNS)", taboo: ["Resolve", "Lookup", "Server", "IP", "Route53"] },
   { index: 28, word: "Dynamic Programming", taboo: ["Algorithm", "Optimization", "Memoization", "Recursive", "Subproblem"] },
-  { index: 29, word: "Unit Test", taboo: ["Code", "Function", "Automated", "Pass", "Jest"] },
+  { index: 29, word: "Bandwidth", taboo: ["Speed", "Internet", "Connection", "Data", "Transfer"]},
   { index: 30, word: "Encryption Key", taboo: ["Secure", "Code", "Cipher", "Decrypt", "Unlock"] },
   { index: 31, word: "Endpoint Security", taboo: ["Device", "Protection", "Threat", "Detection", "Antivirus"] },
   { index: 32, word: "Ethics", taboo: ["Morality", "Bias", "Fairness", "Model", "Society"] },
@@ -272,7 +272,6 @@ softwareEngineeringTabooList.forEach(item => {
 })
 
 const dataTabooList = [
-  // start of variety pack
   { index: 1, word: "Aggregation", taboo: ["Sum", "Count", "Group", "Average", "Total"] },
   { index: 2, word: "Batch Processing", taboo: ["Job", "Schedule", "Bulk", "Cron", "Nightly"] },
   { index: 3, word: "Business Intelligence", taboo: ["Dashboard", "Data", "Insights", "Analytics", "Reporting"] },
@@ -287,7 +286,6 @@ const dataTabooList = [
   { index: 12, word: "Database Management", taboo: ["Admin", "Storage", "Organization", "System", "Control"] },
   { index: 13, word: "Denormalization", taboo: ["Database", "Performance", "Redundancy", "Join", "Speed"] },
   { index: 14, word: "Elasticsearch", taboo: ["Search", "Engine", "Index", "Query", "Document"] },
-  // end of variety pack
   { index: 15, word: "Extract Transform Load (ETL)", taboo: ["Pipeline", "Process", "Workflow", "Migration", "Integration"] },
   { index: 16, word: "Foreign Key", taboo: ["Database", "Relation", "Reference", "Link", "Join"] },
   { index: 17, word: "Data Governance", taboo: ["Rules", "Compliance", "Policy", "Oversight", "Quality"] },
@@ -319,6 +317,7 @@ dataTabooList.forEach(item => {
 })
 
 const productManagementTabooList = [
+  // start of variety pack
   { index: 1, word: "A/B Testing", taboo: ["Experiment", "Variant", "Conversion", "Split", "Test"] },
   { index: 2, word: "Acceptance Criteria", taboo: ["Requirements", "Story", "Definition", "Done", "Validate"] },
   { index: 3, word: "Backlog", taboo: ["Tasks", "Stories", "Queue", "Prioritize", "Jira"] },
@@ -329,22 +328,23 @@ const productManagementTabooList = [
   { index: 8, word: "Customer Journey", taboo: ["Experience", "Touchpoint", "Path", "User", "Map"] },
   { index: 9, word: "Daily Standup", taboo: ["Meeting", "Scrum", "Update", "Sync", "15 Minutes"] },
   { index: 10, word: "Epic", taboo: ["Story", "Large", "Feature", "Jira", "Initiative"] },
-  { index: 11, word: "Feature Flag", taboo: ["Toggle", "Release", "Enable", "Control", "Rollout"] },
-  { index: 12, word: "Go-to-Market Strategy", taboo: ["Launch", "Plan", "Sales", "Marketing", "Release"] },
+  { index: 11, word: "Technical Debt", taboo: ["Code", "Refactor", "Shortcuts", "Maintenance", "Quality"] },
+  { index: 12, word: "Retrospective", taboo: ["Meeting", "Review", "Sprint", "Improve", "Reflect"]},
   { index: 13, word: "Impact", taboo: ["Effect", "Result", "Outcome", "Influence", "Change"] },
   { index: 14, word: "Iteration", taboo: ["Cycle", "Sprint", "Repeat", "Improve", "Version"] },
-  { index: 15, word: "North Star Metric", taboo: ["Goal", "KPI", "Success", "Measure", "Focus"] },
+  { index: 15, word: "Roadmap", taboo: ["Plan", "Timeline", "Features", "Strategy", "Vision"]},
   { index: 16, word: "Persona", taboo: ["User", "Profile", "Archetype", "Customer", "Segment"] },
+  // end of variety pack
   { index: 17, word: "Product Document Review (PDR)", taboo: ["Specification", "Approval", "Requirements", "Design", "Meeting"] },
   { index: 18, word: "Product Market Fit", taboo: ["Demand", "Match", "Customers", "Value", "Success"] },
   { index: 19, word: "Product Sense", taboo: ["Intuition", "Judgment", "Vision", "Understanding", "Instinct"] },
   { index: 20, word: "Product-Led Growth", taboo: ["Strategy", "Acquisition", "Viral", "Self-Service", "Freemium"] },
   { index: 21, word: "Return on Investment (ROI)", taboo: ["Interest", "Cost", "Profit", "Value", "Benefit"] },
-  { index: 22, word: "Retrospective", taboo: ["Meeting", "Review", "Sprint", "Improve", "Reflect"] },
-  { index: 23, word: "Roadmap", taboo: ["Plan", "Timeline", "Features", "Strategy", "Vision"] },
+  { index: 22, word: "Go-to-Market Strategy", taboo: ["Launch", "Plan", "Sales", "Marketing", "Release"] },
+  { index: 23, word: "North Star Metric", taboo: ["Goal", "KPI", "Success", "Measure", "Focus"] },
   { index: 24, word: "Stakeholder", taboo: ["Interested", "Party", "Investor", "Influence", "Owner"] },
   { index: 25, word: "Backlog Grooming", taboo: ["Refinement", "Stories", "Prioritize", "Estimate", "Clean"] },
-  { index: 26, word: "Technical Debt", taboo: ["Code", "Refactor", "Shortcuts", "Maintenance", "Quality"] },
+  { index: 26, word: "Feature Flag", taboo: ["Toggle", "Release", "Enable", "Control", "Rollout"]},
   { index: 27, word: "Use Case", taboo: ["Scenario", "User", "Story", "Example", "Application"] },
   { index: 28, word: "User Acquisition", taboo: ["Growth", "Customers", "Marketing", "Onboarding", "Sign-up"] },
   { index: 29, word: "User Flow", taboo: ["Path", "Steps", "Navigation", "Interaction", "Diagram"] },
