@@ -42,6 +42,7 @@ const colorOptions = {
 
 // Store current cards for printing (preserves category info)
 let currentCards = null;
+let currentCardIndex = 0;
 
 // Store preloaded image data URIs
 let techybaraImages = {
@@ -76,76 +77,14 @@ function generate() {
   }
   if (pairs.length === 0) {
     setSVGOutput("");
+    currentCards = null;
     return;
   }
 
-  const aspectRatio = 610 / 910; // poker card size 57*87mm, design size including excess 2mm for buffer 61*91mm
-
-  // Generate first card (preview - larger)
-  const firstPair = pairs[0];
-  // Use custom color if user has selected one, otherwise use category color
-  const firstCardColor = colorOptions.useCustomColor ? colorOptions.baseColor : getCategoryColor(firstPair.top.category);
-  const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
-    baseColor: firstCardColor,
-    background: colorOptions.whiteBackground ? "#ffffff" : firstCardColor,
-    strokeColor: firstCardColor,
-    matchStrokeBackground: false,
-    showBleed: false,
-    category: firstPair.top.category,
-    teacherImage: techybaraImages.teacher,
-    peekOutImage: techybaraImages.peekOut,
-  });
-  const previewCard = `
-    <div style="
-      width: min(90vw, 400px);
-      aspect-ratio: ${aspectRatio};
-      transform-origin: center;
-      margin: 0 auto 20px;
-    ">
-      ${previewSVG}
-    </div>
-  `;
-
-  // Generate remaining cards (smaller grid)
-  const gridCards = pairs.slice(1).map(({top, bottom}) => {
-    // Use category-based color from the top word of each card
-    const cardColor = getCategoryColor(top.category);
-    const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
-      baseColor: cardColor,
-      background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
-      strokeColor: cardColor,
-      matchStrokeBackground: false,
-      showBleed: false,
-      category: top.category,
-      teacherImage: techybaraImages.teacher,
-      peekOutImage: techybaraImages.peekOut,
-    });
-    return `
-      <div style="
-        width: 150px;
-        aspect-ratio: ${aspectRatio};
-        transform-origin: center;
-        flex-shrink: 0;
-      ">
-        ${svg}
-      </div>
-    `;
-  }).join('');
-
-  const gridStyle = `
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    justify-content:flex-start;
-    align-items:flex-start;
-  `;
-
-  setSVGOutput(`
-    <div style="text-align: center;">
-      ${previewCard}
-    </div>
-    <div style="${gridStyle}">${gridCards}</div>
-  `);
+  // Store cards globally and reset index, then render as single-card carousel
+  currentCards = pairs;
+  currentCardIndex = 0;
+  renderCardCarousel();
 }
 
 function fillInputFromList(index1, index2) {
@@ -410,79 +349,130 @@ function generateFromPairs(pairData) {
     }
   }));
 
-  // Store cards globally for printing
+  // Store cards globally for printing and carousel navigation
   currentCards = pairs;
+  currentCardIndex = 0;
 
   if (pairs.length === 0) {
     setSVGOutput("");
     return;
   }
 
-  const aspectRatio = 610 / 910;
+  renderCardCarousel();
+}
 
-  // Generate first card (preview - larger)
-  const firstPair = pairs[0];
-  const firstCardColor = getCategoryColor(firstPair.top.category);
-  const previewSVG = generateSVG(firstPair.top.word, firstPair.top.taboos, firstPair.bottom.word, firstPair.bottom.taboos, {
-    baseColor: firstCardColor,
-    background: colorOptions.whiteBackground ? "#ffffff" : firstCardColor,
-    strokeColor: firstCardColor,
+function renderCardCarousel() {
+  if (!currentCards || currentCards.length === 0) {
+    setSVGOutput("");
+    return;
+  }
+
+  if (currentCardIndex < 0) currentCardIndex = 0;
+  if (currentCardIndex >= currentCards.length) currentCardIndex = currentCards.length - 1;
+
+  const aspectRatio = 610 / 910;
+  const pair = currentCards[currentCardIndex];
+  const cardColor = getCategoryColor(pair.top.category);
+  const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
+    baseColor: cardColor,
+    background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+    strokeColor: cardColor,
     matchStrokeBackground: false,
     showBleed: false,
-    category: firstPair.top.category,
+    category: pair.top.category,
     teacherImage: techybaraImages.teacher,
     peekOutImage: techybaraImages.peekOut,
   });
-  const previewCard = `
-    <div style="
-      width: min(90vw, 400px);
-      aspect-ratio: ${aspectRatio};
-      transform-origin: center;
-      margin: 0 auto 20px;
-    ">
-      ${previewSVG}
-    </div>
-  `;
 
-  // Generate remaining cards (smaller grid)
-  const gridCards = pairs.slice(1).map(({top, bottom}) => {
-    const cardColor = getCategoryColor(top.category);
-    const svg = generateSVG(top.word, top.taboos, bottom.word, bottom.taboos, {
-      baseColor: cardColor,
-      background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
-      strokeColor: cardColor,
-      matchStrokeBackground: false,
-      showBleed: false,
-      category: top.category,
-      teacherImage: techybaraImages.teacher,
-      peekOutImage: techybaraImages.peekOut,
-    });
-    return `
-      <div style="
-        width: 150px;
+  const hasMultiple = currentCards.length > 1;
+
+  const html = `
+    <div id="card-carousel" style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    ">
+      <div id="card-swipe-area" style="
+        width: min(90vw, 400px);
         aspect-ratio: ${aspectRatio};
         transform-origin: center;
-        flex-shrink: 0;
+        margin: 0 auto 12px;
+        touch-action: pan-y;
       ">
         ${svg}
       </div>
-    `;
-  }).join("");
-
-  const gridContainer = pairs.length > 1 ? `
-    <div style="
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding: 10px 0;
-      justify-content: center;
-      flex-wrap: wrap;
-    ">
-      ${gridCards}
+      ${hasMultiple ? `
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:4px;">
+        <button id="card-prev" type="button" style="padding:6px 10px;">◀</button>
+        <span style="font-size: 14px;">${currentCardIndex + 1} / ${currentCards.length}</span>
+        <button id="card-next" type="button" style="padding:6px 10px;">▶</button>
+      </div>
+      ` : ""}
     </div>
-  ` : "";
+  `;
 
-  setSVGOutput(previewCard + gridContainer);
+  setSVGOutput(html);
+  attachCardNavigationHandlers();
+}
+
+function attachCardNavigationHandlers() {
+  const container = document.getElementById("output");
+  if (!container || !currentCards || currentCards.length <= 1) return;
+
+  const prevBtn = container.querySelector("#card-prev");
+  const nextBtn = container.querySelector("#card-next");
+  const swipeArea = container.querySelector("#card-swipe-area");
+
+  const goPrev = () => {
+    if (!currentCards || currentCards.length === 0) return;
+    currentCardIndex = (currentCardIndex - 1 + currentCards.length) % currentCards.length;
+    renderCardCarousel();
+  };
+
+  const goNext = () => {
+    if (!currentCards || currentCards.length === 0) return;
+    currentCardIndex = (currentCardIndex + 1) % currentCards.length;
+    renderCardCarousel();
+  };
+
+  if (prevBtn) prevBtn.onclick = goPrev;
+  if (nextBtn) nextBtn.onclick = goNext;
+
+  if (swipeArea) {
+    let touchStartX = null;
+    let touchStartY = null;
+
+    swipeArea.ontouchstart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    swipeArea.ontouchend = (e) => {
+      if (touchStartX === null || touchStartY === null) return;
+      const touchEndX = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : touchStartX;
+      const touchEndY = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientY : touchStartY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+
+      const threshold = 40;
+
+      if (absDx > threshold && absDx > absDy) {
+        if (dx < 0) {
+          goNext();
+        } else {
+          goPrev();
+        }
+      }
+
+      touchStartX = null;
+      touchStartY = null;
+    };
+  }
 }
 
 // wire UI
