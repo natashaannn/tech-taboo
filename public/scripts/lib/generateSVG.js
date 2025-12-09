@@ -6,13 +6,9 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     baseColor = "#17424A",           // used to derive gradient
     background = "#17424A",          // canvas background
     strokeColor = "#17424A",         // card border stroke
-    matchStrokeBackground = false,    // if true, stroke = background
-    showBleed = false,                // bleed guides visibility
-    bleedColor = "red",              // bleed guides color
-    trimColor = "grey",              // trim guides color
+    matchStrokeBackground = false,    // if true, stroke = background           // trim guides color
     strokeWidth = 14,                 // outer card border width
     dividerWidth = 3,                 // middle divider line width
-    trimInset = 30,                   // distance of trim guide from the page edge (was 40)
     category = null,                  // category for determining text color
     teacherImage = "./techybara/teacher.png",  // teacher image (can be data URI or path)
     peekOutImage = "./techybara/peek out.png", // peek out image (can be data URI or path)
@@ -137,11 +133,11 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   <defs>
     <pattern id="${patternId}" width="610" height="80" patternUnits="userSpaceOnUse">
       <text x="0" y="35" font-family="sometype mono, monospace"
-            font-size="28" fill="rgba(200,220,255,0.18)">
+            font-size="28" fill="rgba(255, 255, 255, 0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
       </text>
       <text x="0" y="70" font-family="sometype mono, monospace"
-            font-size="28" fill="rgba(200,220,255,0.18)">
+            font-size="28" fill="rgba(255, 255, 255, 0.18)">
         1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
       </text>
     </pattern>
@@ -190,7 +186,5 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
       <image href="${peekOutImage}" x="420" y="280" width="90" height="70"/>
     </g>
   </g>
-  ${showBleed ? `<rect x="0" y="0" width="610" height="910" fill="none" stroke="${bleedColor}" stroke-width="1" stroke-dasharray="6 4"/>` : ''}
-  <rect x="${trimInset}" y="${trimInset}" width="${610 - 2*trimInset}" height="${910 - 2*trimInset}" rx="40" ry="40" fill="none" stroke="${trimColor}" stroke-width="1" stroke-dasharray="6 4"/>
 </svg>`;
 }
