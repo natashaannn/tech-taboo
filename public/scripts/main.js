@@ -491,11 +491,51 @@ document.getElementById("btn-choose").addEventListener("click", showWordSelector
 document.getElementById("input").addEventListener("tt-input-updated", generate);
 
 document.getElementById("btn-save-svg").addEventListener("click", async () => {
+  if (currentCards && currentCards.length > 1) {
+    const { saveSVGsAsZip } = await import('./lib/exporters.js');
+    const items = currentCards.map((pair, i) => {
+      const cardColor = getCategoryColor(pair.top.category);
+      const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
+        baseColor: cardColor,
+        background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+        strokeColor: cardColor,
+        matchStrokeBackground: false,
+        showBleed: false,
+        category: pair.top.category,
+        teacherImage: techybaraImages.teacher,
+        peekOutImage: techybaraImages.peekOut,
+      });
+      return { name: `card-${i + 1}.svg`, markup: svg };
+    });
+    await saveSVGsAsZip(items, 'taboo-cards-svg.zip');
+    return;
+  }
+
   const { saveSvgsFromContainer } = await import('./lib/utils.js');
   await saveSvgsFromContainer('#output', 'card.svg', 'taboo-cards-svg.zip');
 });
 
 document.getElementById("btn-save-png").addEventListener("click", async () => {
+  if (currentCards && currentCards.length > 1) {
+    const { savePNGsAsZip } = await import('./lib/exporters.js');
+    const items = currentCards.map((pair, i) => {
+      const cardColor = getCategoryColor(pair.top.category);
+      const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
+        baseColor: cardColor,
+        background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+        strokeColor: cardColor,
+        matchStrokeBackground: false,
+        showBleed: false,
+        category: pair.top.category,
+        teacherImage: techybaraImages.teacher,
+        peekOutImage: techybaraImages.peekOut,
+      });
+      return { name: `card-${i + 1}.svg`, markup: svg };
+    });
+    await savePNGsAsZip(items, 'taboo-cards-png.zip', 610, 910);
+    return;
+  }
+
   const { savePngsFromContainer } = await import('./lib/utils.js');
   await savePngsFromContainer('#output', 'card.png', 'taboo-cards-png.zip', 610, 910);
 });
