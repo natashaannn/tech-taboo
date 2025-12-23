@@ -61,12 +61,14 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
       const url = URL.createObjectURL(svgBlob);
       img.onload = function () {
         const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+        const scale = 300 / 96; // scale to approximate 300 DPI from default 96 DPI
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
         const ctx = canvas.getContext("2d");
+        ctx.scale(scale, scale);
         ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob((blob) => {
           URL.revokeObjectURL(url);
           if (blob) resolve(blob); else reject(new Error("toBlob failed"));
@@ -105,12 +107,14 @@ export function savePNGFromSVG(svgMarkup, filename = "taboo-card.png", width = 6
   const url = URL.createObjectURL(svgBlob);
   img.onload = function () {
     const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    const scale = 300 / 96; // scale to approximate 300 DPI from default 96 DPI
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
     const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
     ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(img, 0, 0, width, height);
     canvas.toBlob(function (blob) {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);

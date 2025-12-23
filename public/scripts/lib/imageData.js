@@ -14,8 +14,22 @@ export async function getImageDataURI(path) {
 
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = 'anonymous';
     
+    // Resolve path against current origin so it works in both app and print views
+    let src = path;
+    try {
+      if (typeof window !== 'undefined' && window.location) {
+        // If already absolute (http, https, data), keep as-is
+        if (/^data:/.test(path) || /^https?:\/\//.test(path)) {
+          src = path;
+        } else {
+          src = new URL(path, window.location.origin || window.location.href).href;
+        }
+      }
+    } catch (_) {
+      src = path;
+    }
+
     img.onload = () => {
       try {
         const canvas = document.createElement('canvas');
@@ -35,7 +49,7 @@ export async function getImageDataURI(path) {
       reject(new Error(`Failed to load image: ${path}`));
     };
     
-    img.src = path;
+    img.src = src;
   });
 }
 
