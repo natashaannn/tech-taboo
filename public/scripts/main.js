@@ -50,6 +50,80 @@ let techybaraImages = {
   peekOut: "./techybara/peek out.png"
 };
 
+let exportBusy = false;
+
+function setExportBusy(busy, label) {
+  exportBusy = !!busy;
+  const btnSvg = document.getElementById('btn-save-svg');
+  const btnPng = document.getElementById('btn-save-png');
+  if (btnSvg) btnSvg.disabled = exportBusy;
+  if (btnPng) btnPng.disabled = exportBusy;
+
+  let overlay = document.getElementById('export-loader');
+  if (!exportBusy) {
+    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    const style = document.getElementById('export-loader-style');
+    if (style && style.parentNode) style.parentNode.removeChild(style);
+    return;
+  }
+
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'export-loader';
+    overlay.style.position = 'fixed';
+    overlay.style.inset = '0';
+    overlay.style.background = 'rgba(0,0,0,0.45)';
+    overlay.style.zIndex = '9999';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.padding = '24px';
+
+    const box = document.createElement('div');
+    box.style.background = '#ffffff';
+    box.style.borderRadius = '12px';
+    box.style.padding = '18px 20px';
+    box.style.maxWidth = '520px';
+    box.style.width = 'min(520px, 92vw)';
+    box.style.boxShadow = '0 10px 30px rgba(0,0,0,0.25)';
+    box.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+
+    const title = document.createElement('div');
+    title.id = 'export-loader-title';
+    title.style.fontWeight = '700';
+    title.style.marginBottom = '10px';
+    title.style.fontSize = '16px';
+    title.textContent = 'Exporting…';
+
+    const barWrap = document.createElement('div');
+    barWrap.style.height = '10px';
+    barWrap.style.background = '#e5e7eb';
+    barWrap.style.borderRadius = '999px';
+    barWrap.style.overflow = 'hidden';
+
+    const bar = document.createElement('div');
+    bar.style.height = '100%';
+    bar.style.width = '40%';
+    bar.style.background = '#17424A';
+    bar.style.borderRadius = '999px';
+    bar.style.animation = 'exportLoaderMove 1.05s ease-in-out infinite';
+
+    const style = document.createElement('style');
+    style.id = 'export-loader-style';
+    style.textContent = `@keyframes exportLoaderMove { 0% { transform: translateX(-60%); } 50% { transform: translateX(110%); } 100% { transform: translateX(-60%); } }`;
+
+    barWrap.appendChild(bar);
+    box.appendChild(title);
+    box.appendChild(barWrap);
+    overlay.appendChild(box);
+    document.head.appendChild(style);
+    document.body.appendChild(overlay);
+  }
+
+  const t = document.getElementById('export-loader-title');
+  if (t) t.textContent = String(label || 'Exporting…');
+}
+
 function generate() {
   const rawLines = document.getElementById("input").value
     .split("\n")
@@ -492,22 +566,28 @@ document.getElementById("input").addEventListener("tt-input-updated", generate);
 
 document.getElementById("btn-save-svg").addEventListener("click", async () => {
   if (currentCards && currentCards.length > 1) {
+    if (exportBusy) return;
+    setExportBusy(true, 'Exporting SVG zip…');
     const { saveSVGsAsZip } = await import('./lib/exporters.js');
-    const items = currentCards.map((pair, i) => {
-      const cardColor = getCategoryColor(pair.top.category);
-      const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
-        baseColor: cardColor,
-        background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
-        strokeColor: cardColor,
-        matchStrokeBackground: false,
-        showBleed: false,
-        category: pair.top.category,
-        teacherImage: techybaraImages.teacher,
-        peekOutImage: techybaraImages.peekOut,
+    try {
+      const items = currentCards.map((pair, i) => {
+        const cardColor = getCategoryColor(pair.top.category);
+        const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
+          baseColor: cardColor,
+          background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+          strokeColor: cardColor,
+          matchStrokeBackground: false,
+          showBleed: false,
+          category: pair.top.category,
+          teacherImage: techybaraImages.teacher,
+          peekOutImage: techybaraImages.peekOut,
+        });
+        return { name: `card-${i + 1}.svg`, markup: svg };
       });
-      return { name: `card-${i + 1}.svg`, markup: svg };
-    });
-    await saveSVGsAsZip(items, 'taboo-cards-svg.zip');
+      await saveSVGsAsZip(items, 'taboo-cards-svg.zip');
+    } finally {
+      setExportBusy(false);
+    }
     return;
   }
 
@@ -517,22 +597,28 @@ document.getElementById("btn-save-svg").addEventListener("click", async () => {
 
 document.getElementById("btn-save-png").addEventListener("click", async () => {
   if (currentCards && currentCards.length > 1) {
+    if (exportBusy) return;
+    setExportBusy(true, 'Exporting PNG zip…');
     const { savePNGsAsZip } = await import('./lib/exporters.js');
-    const items = currentCards.map((pair, i) => {
-      const cardColor = getCategoryColor(pair.top.category);
-      const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
-        baseColor: cardColor,
-        background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
-        strokeColor: cardColor,
-        matchStrokeBackground: false,
-        showBleed: false,
-        category: pair.top.category,
-        teacherImage: techybaraImages.teacher,
-        peekOutImage: techybaraImages.peekOut,
+    try {
+      const items = currentCards.map((pair, i) => {
+        const cardColor = getCategoryColor(pair.top.category);
+        const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
+          baseColor: cardColor,
+          background: colorOptions.whiteBackground ? "#ffffff" : cardColor,
+          strokeColor: cardColor,
+          matchStrokeBackground: false,
+          showBleed: false,
+          category: pair.top.category,
+          teacherImage: techybaraImages.teacher,
+          peekOutImage: techybaraImages.peekOut,
+        });
+        return { name: `card-${i + 1}.svg`, markup: svg };
       });
-      return { name: `card-${i + 1}.svg`, markup: svg };
-    });
-    await savePNGsAsZip(items, 'taboo-cards-png.zip', 610, 910);
+      await savePNGsAsZip(items, 'taboo-cards-png.zip', 610, 910);
+    } finally {
+      setExportBusy(false);
+    }
     return;
   }
 
