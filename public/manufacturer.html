@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tech Taboo - Manufacturer Download</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; margin: 0; }
+    .container { max-width: 980px; margin: auto; }
+    .card { background: white; border-radius: 12px; padding: 16px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .row > * { flex: 1; min-width: 220px; }
+    button { background-color: white; padding: 10px 16px; font-size: 16px; border-radius: 12px; cursor: pointer; border: 1px solid #ddd; }
+    button.cta { background-color: #0A1F33; color: white; border: none; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    select { padding: 10px 12px; font-size: 16px; border-radius: 12px; border: 1px solid #ccc; background-color: white; cursor: pointer; }
+    .muted { color: #556; font-size: 14px; }
+    code { background: #f0f0f0; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <object type="image/svg+xml" data="./favicon.svg">Your browser does not support SVG</object>
+      <span id="title">Manufacturer Download</span>
+    </h1>
+
+    <div class="card" style="margin-bottom:12px;">
+      <div class="row" style="align-items:flex-end;">
+        <div>
+          <div class="muted" id="subtitle"></div>
+          <div style="margin-top:8px;" class="row">
+            <div>
+              <label id="langLabel" for="lang">Language / 语言</label><br/>
+              <select id="lang">
+                <option value="en" selected>English</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <button class="cta" id="btn-download">Download All Cards (PNG ZIP)</button>
+          <div class="muted" id="status" style="margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <hr style="border:none; border-top:1px solid #eee; margin:14px 0;" />
+
+      <div class="row">
+        <div>
+          <div style="font-weight:700; margin-bottom:6px;" id="packagingTitle">Packaging Designs</div>
+          <div class="muted" id="packagingDesc"></div>
+        </div>
+        <div style="text-align:right;">
+          <button id="btn-download-packaging">Download Packaging Designs (ZIP)</button>
+        </div>
+      </div>
+
+      <div id="instructions" class="muted"></div>
+      <div class="muted" style="margin-top:10px;">
+        <a href="./index.html" id="backLink">⤺ Back</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="packInfo" class="muted"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./scripts/manufacturer.js"></script>
+</body>
+</html>
