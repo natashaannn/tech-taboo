@@ -1,0 +1,8 @@
+Upload packaging design files into this folder and list them in packaging/manifest.json.
+
+Example manifest.json:
+[
+  "box/front.pdf",
+  "box/back.pdf",
+  "insert/instructions.png"
+]

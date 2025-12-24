@@ -1,6 +1,72 @@
 // public/scripts/lib/exporters.js
-export function saveSVG(svgMarkup, filename = "taboo-card.svg") {
-  const blob = new Blob([svgMarkup], { type: "image/svg+xml" });
+async function blobToDataURL(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Failed to read blob'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function inlineSvgImages(svgMarkup) {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(String(svgMarkup), 'image/svg+xml');
+    const images = Array.from(doc.querySelectorAll('image'));
+
+    for (const img of images) {
+      const rawHref = img.getAttribute('href') || img.getAttribute('xlink:href') || '';
+      const href = String(rawHref).trim();
+      if (!href || href.startsWith('data:')) continue;
+
+      let absolute;
+      try {
+        absolute = new URL(href, window.location.href).href;
+      } catch (_) {
+        continue;
+      }
+
+      let res;
+      try {
+        res = await fetch(absolute, { cache: 'force-cache' });
+      } catch (_) {
+        continue;
+      }
+      if (!res || !res.ok) continue;
+
+      let blob;
+      try {
+        blob = await res.blob();
+      } catch (_) {
+        continue;
+      }
+
+      let dataUrl;
+      try {
+        dataUrl = await blobToDataURL(blob);
+      } catch (_) {
+        continue;
+      }
+
+      if (!dataUrl || !dataUrl.startsWith('data:')) continue;
+      img.setAttribute('href', dataUrl);
+      img.removeAttribute('xlink:href');
+    }
+
+    return new XMLSerializer().serializeToString(doc.documentElement);
+  } catch (_) {
+    return String(svgMarkup);
+  }
+}
+
+export async function saveSVG(svgMarkup, filename = "taboo-card.svg") {
+  let markup = String(svgMarkup);
+  try {
+    markup = await inlineSvgImages(markup);
+  } catch (_) {
+    markup = String(svgMarkup);
+  }
+  const blob = new Blob([markup], { type: "image/svg+xml" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -28,10 +94,17 @@ export async function saveSVGsAsZip(svgs, zipName = "taboo-cards-svg.zip") {
   // svgs: array of { name: string, markup: string }
   const JSZip = await ensureJSZip();
   const zip = new JSZip();
-  svgs.forEach(({ name, markup }, i) => {
+  for (let i = 0; i < svgs.length; i++) {
+    const { name, markup } = svgs[i];
     const filename = name || `card-${i + 1}.svg`;
-    zip.file(filename, markup);
-  });
+    let inlined = String(markup);
+    try {
+      inlined = await inlineSvgImages(inlined);
+    } catch (_) {
+      inlined = String(markup);
+    }
+    zip.file(filename, inlined);
+  }
   const blob = await zip.generateAsync({ type: "blob" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -61,12 +134,14 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
       const url = URL.createObjectURL(svgBlob);
       img.onload = function () {
         const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+        const scale = 300 / 96; // scale to approximate 300 DPI from default 96 DPI
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
         const ctx = canvas.getContext("2d");
+        ctx.scale(scale, scale);
         ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob((blob) => {
           URL.revokeObjectURL(url);
           if (blob) resolve(blob); else reject(new Error("toBlob failed"));
@@ -83,7 +158,13 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
   for (let i = 0; i < svgs.length; i++) {
     const { name, markup } = svgs[i];
     const filename = (name || `card-${i + 1}.png`).replace(/\.svg$/i, ".png");
-    const blob = await svgToPngBlob(markup);
+    let inlined = String(markup);
+    try {
+      inlined = await inlineSvgImages(inlined);
+    } catch (_) {
+      inlined = String(markup);
+    }
+    const blob = await svgToPngBlob(inlined);
     zip.file(filename, blob);
   }
 
@@ -99,32 +180,42 @@ export async function savePNGsAsZip(svgs, zipName = "taboo-cards-png.zip", width
 }
 
 export function savePNGFromSVG(svgMarkup, filename = "taboo-card.png", width = 610, height = 910) {
-  const img = new Image();
-  const safe = String(svgMarkup).replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
-  const svgBlob = new Blob([safe], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(svgBlob);
-  img.onload = function () {
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-    canvas.toBlob(function (blob) {
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+  (async () => {
+    const img = new Image();
+    let markup = String(svgMarkup);
+    try {
+      markup = await inlineSvgImages(markup);
+    } catch (_) {
+      markup = String(svgMarkup);
+    }
+    const safe = String(markup).replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '');
+    const svgBlob = new Blob([safe], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      const scale = 300 / 96; // scale to approximate 300 DPI from default 96 DPI
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(function (blob) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, "image/png");
       URL.revokeObjectURL(url);
-    }, "image/png");
-    URL.revokeObjectURL(url);
-  };
-  img.onerror = function () {
-    alert("PNG export failed. Try a different browser.");
-    URL.revokeObjectURL(url);
-  };
-  img.src = url;
+    };
+    img.onerror = function () {
+      alert("PNG export failed. Try a different browser.");
+      URL.revokeObjectURL(url);
+    };
+    img.src = url;
+  })();
 }

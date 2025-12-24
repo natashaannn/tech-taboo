@@ -12,7 +12,7 @@ export const CATEGORY_COLORS = {
   "General": "#7dbfba",             
   "AI": "#f97883", 
   "Data": "#faf9f5",
-  "Software Engineering": "#e8c555", 
+  "Software Engineering": "#faca62ff", 
   "Product Management": "#8b5a49", 
 };
 
@@ -20,9 +20,9 @@ export const CATEGORY_COLORS = {
 export const CATEGORY_TEXT_COLORS = {
   "General": "#faf9f5",
   "Product Management": "#efe7e4",
-  "Data": "#7d7c78",
+  "Data": "#38362fff",
   "AI": "#ebf5f6",
-  "Software Engineering": "#fdf7e7",
+  "Software Engineering": "#faf9f5",
 };
 
 export const CATEGORY_KEYWORDS = {

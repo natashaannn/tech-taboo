@@ -29,7 +29,7 @@ export async function saveSvgsFromContainer(containerSelector, singleFilename = 
   const svgs = Array.from(container.querySelectorAll('svg'));
   if (svgs.length <= 1) {
     const svgMarkup = svgs.length === 1 ? svgs[0].outerHTML : container.innerHTML;
-    saveSVG(svgMarkup, singleFilename);
+    await saveSVG(svgMarkup, singleFilename);
   } else {
     const items = svgs.map((el, i) => ({ name: `card-${i + 1}.svg`, markup: el.outerHTML }));
     await saveSVGsAsZip(items, zipFilename);
