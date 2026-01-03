@@ -359,4 +359,61 @@ productManagementTabooList.forEach(item => {
   item.category = "Product Management"
 })
 
-export const tabooList = [...generalTabooList, ...aiTabooList, ...softwareEngineeringTabooList, ...dataTabooList, ...productManagementTabooList]
+const dsaTabooList = [
+  { index: 1, word: "Array", taboo: ["List", "Index", "Element", "Collection", "Sequence"] },
+  { index: 2, word: "Linked List", taboo: ["Node", "Pointer", "Chain", "Next", "Head"] },
+  { index: 3, word: "Stack", taboo: ["Push", "Pop", "LIFO", "Top", "Pile"] },
+  { index: 4, word: "Queue", taboo: ["Enqueue", "Dequeue", "FIFO", "Line", "Front"] },
+  { index: 5, word: "Hash Table", taboo: ["Map", "Dictionary", "Key", "Value", "Bucket"] },
+  { index: 6, word: "Binary Tree", taboo: ["Node", "Root", "Left", "Right", "Child"] },
+  { index: 7, word: "Graph", taboo: ["Vertex", "Edge", "Node", "Network", "Connection"] },
+  { index: 8, word: "Heap", taboo: ["Priority", "Binary", "Parent", "Child", "Min"] },
+  { index: 9, word: "Trie", taboo: ["Prefix", "Tree", "String", "Search", "Dictionary"] },
+  { index: 10, word: "Binary Search", taboo: ["Sorted", "Divide", "Half", "Middle", "Compare"] },
+  { index: 11, word: "Bubble Sort", taboo: ["Swap", "Adjacent", "Compare", "Iterate", "Simple"] },
+  { index: 12, word: "Merge Sort", taboo: ["Divide", "Conquer", "Combine", "Recursive", "Split"] },
+  { index: 13, word: "Quick Sort", taboo: ["Pivot", "Partition", "Divide", "Conquer", "Fast"] },
+  { index: 14, word: "Insertion Sort", taboo: ["Shift", "Place", "Sorted", "Compare", "Simple"] },
+  { index: 15, word: "Selection Sort", taboo: ["Minimum", "Swap", "Find", "Unsorted", "Simple"] },
+  { index: 16, word: "Breadth-First Search (BFS)", taboo: ["Queue", "Level", "Graph", "Traverse", "Neighbors"] },
+  { index: 17, word: "Depth-First Search (DFS)", taboo: ["Stack", "Recursive", "Graph", "Traverse", "Backtrack"] },
+  { index: 18, word: "Dijkstra's Algorithm", taboo: ["Shortest", "Path", "Graph", "Weight", "Distance"] },
+  { index: 19, word: "Dynamic Programming", taboo: ["Memoization", "Optimal", "Subproblem", "Table", "Recursive"] },
+  { index: 20, word: "Greedy Algorithm", taboo: ["Local", "Optimal", "Choice", "Best", "Heuristic"] },
+  { index: 21, word: "Backtracking", taboo: ["Recursive", "Try", "Undo", "Solution", "Explore"] },
+  { index: 22, word: "Divide and Conquer", taboo: ["Split", "Recursive", "Combine", "Subproblem", "Merge"] },
+  { index: 23, word: "Recursion", taboo: ["Function", "Call", "Itself", "Base", "Stack"] },
+  { index: 24, word: "Big O Notation", taboo: ["Complexity", "Time", "Space", "Asymptotic", "Performance"] },
+  { index: 25, word: "Pointer", taboo: ["Memory", "Address", "Reference", "Variable", "Location"] },
+  { index: 26, word: "Doubly Linked List", taboo: ["Node", "Previous", "Next", "Chain", "Bidirectional"] },
+  { index: 27, word: "Circular Queue", taboo: ["Ring", "Buffer", "Wrap", "FIFO", "Front"] },
+  { index: 28, word: "Priority Queue", taboo: ["Heap", "Order", "Importance", "Dequeue", "Highest"] },
+  { index: 29, word: "AVL Tree", taboo: ["Balanced", "Binary", "Height", "Rotation", "Self"] },
+  { index: 30, word: "Red-Black Tree", taboo: ["Balanced", "Binary", "Color", "Property", "Self"] },
+  { index: 31, word: "B-Tree", taboo: ["Balanced", "Multi", "Database", "Disk", "Keys"] },
+  { index: 32, word: "Segment Tree", taboo: ["Range", "Query", "Interval", "Update", "Binary"] },
+  { index: 33, word: "Fenwick Tree", taboo: ["Binary", "Indexed", "Prefix", "Sum", "Update"] },
+  { index: 34, word: "Disjoint Set", taboo: ["Union", "Find", "Connected", "Component", "Merge"] },
+  { index: 35, word: "Topological Sort", taboo: ["DAG", "Order", "Graph", "Dependencies", "Linear"] },
+  { index: 36, word: "Minimum Spanning Tree", taboo: ["Graph", "Kruskal", "Prim", "Edge", "Weight"] },
+  { index: 37, word: "Bellman-Ford Algorithm", taboo: ["Shortest", "Path", "Negative", "Weight", "Graph"] },
+  { index: 38, word: "Floyd-Warshall Algorithm", taboo: ["Shortest", "Path", "All", "Pairs", "Graph"] },
+  { index: 39, word: "Knapsack Problem", taboo: ["Dynamic", "Optimal", "Weight", "Value", "Capacity"] },
+  { index: 40, word: "Traveling Salesman Problem", taboo: ["Shortest", "Route", "Visit", "Cities", "NP"] },
+  { index: 41, word: "Two Pointers", taboo: ["Technique", "Array", "Left", "Right", "Move"] },
+  { index: 42, word: "Sliding Window", taboo: ["Technique", "Subarray", "Range", "Move", "Optimize"] },
+  { index: 43, word: "Kadane's Algorithm", taboo: ["Maximum", "Subarray", "Sum", "Dynamic", "Contiguous"] },
+  { index: 44, word: "Binary Search Tree (BST)", taboo: ["Ordered", "Left", "Right", "Search", "Insert"] },
+  { index: 45, word: "Hashing", taboo: ["Function", "Key", "Table", "Collision", "Map"] },
+  { index: 46, word: "Collision Resolution", taboo: ["Chaining", "Probing", "Hash", "Bucket", "Conflict"] },
+  { index: 47, word: "Radix Sort", taboo: ["Digit", "Counting", "Non-comparison", "Linear", "Bucket"] },
+  { index: 48, word: "Counting Sort", taboo: ["Frequency", "Range", "Non-comparison", "Linear", "Integer"] },
+  { index: 49, word: "Bucket Sort", taboo: ["Distribute", "Range", "Bins", "Scatter", "Gather"] },
+  { index: 50, word: "Heap Sort", taboo: ["Binary", "Heapify", "Priority", "Extract", "Max"] }
+]
+
+dsaTabooList.forEach(item => {
+  item.category = "Data Structures & Algorithms"
+})
+
+export const tabooList = [...generalTabooList, ...aiTabooList, ...softwareEngineeringTabooList, ...dataTabooList, ...productManagementTabooList, ...dsaTabooList]

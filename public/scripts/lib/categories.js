@@ -5,6 +5,7 @@ export const CATEGORIES = [
   "Data",
   "AI",
   "Product Management",
+  "Data Structures & Algorithms",
 ];
 
 // Default colors for each category
@@ -12,8 +13,9 @@ export const CATEGORY_COLORS = {
   "General": "#7dbfba",             
   "AI": "#f97883", 
   "Data": "#faf9f5",
-  "Software Engineering": "#faca62ff", 
-  "Product Management": "#8b5a49", 
+  "Software Engineering": "#e8c555", 
+  "Product Management": "#8b5a49",
+  "Data Structures & Algorithms": "#CE93D8", 
 };
 
 // Text title colors for each category
@@ -22,7 +24,8 @@ export const CATEGORY_TEXT_COLORS = {
   "Product Management": "#efe7e4",
   "Data": "#38362fff",
   "AI": "#ebf5f6",
-  "Software Engineering": "#faf9f5",
+  "Software Engineering": "#fdf7e7",
+  "Data Structures & Algorithms": "#f3e5f5",
 };
 
 export const CATEGORY_KEYWORDS = {
@@ -38,11 +41,15 @@ export const CATEGORY_KEYWORDS = {
   "Product Management": [
     "product","roadmap","backlog","epic","user story","persona","mvp","minimum viable product","kpi","okr","agile","scrum","sprint","standup","retrospective","iteration","velocity","story points","acceptance criteria","use case","user journey","customer journey","stakeholder","product sense","product market fit","product-led","churn","retention","a/b testing","beta","wireframe","prototype","go-to-market","gtm","pivot","value proposition","north star","user research","user acquisition","pdr","product document review","impact","roi","return on investment","rate of interest","technical debt","grooming","refinement",
   ],
+  "Data Structures & Algorithms": [
+    "array","linked list","stack","queue","hash","tree","graph","heap","trie","sort","search","bfs","dfs","dijkstra","dynamic programming","greedy","backtracking","divide and conquer","recursion","big o","pointer","avl","red-black","b-tree","segment tree","fenwick","disjoint","topological","spanning tree","bellman","floyd","knapsack","traveling salesman","two pointers","sliding window","kadane","bst","collision","radix","counting sort","bucket sort","heap sort","merge sort","quick sort","bubble sort","insertion sort","selection sort","binary search",
+  ],
 };
 
 export function detectCategory(word) {
   const w = word.toLowerCase();
   if (CATEGORY_KEYWORDS.AI.some((k) => w.includes(k))) return "AI";
+  if (CATEGORY_KEYWORDS["Data Structures & Algorithms"].some((k) => w.includes(k))) return "Data Structures & Algorithms";
   if (CATEGORY_KEYWORDS.Data.some((k) => w.includes(k))) return "Data";
   if (CATEGORY_KEYWORDS["Product Management"].some((k) => w.includes(k))) return "Product Management";
   return "Software Engineering";
