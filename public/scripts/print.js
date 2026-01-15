@@ -120,6 +120,9 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
     }
   }
 
+  const monospaceNormalSrc = resolveFontSrc('/fonts/monospace/Monospace.ttf');
+  const monospaceBoldSrc = resolveFontSrc('/fonts/monospace/MonospaceBold.ttf');
+  const monospaceObliqueSrc = resolveFontSrc('/fonts/monospace/MonospaceOblique.ttf');
   const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
   const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
 
@@ -150,6 +153,24 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
   <defs>
     <style><![CDATA[
       @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceNormalSrc}') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceBoldSrc}') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceObliqueSrc}') format('truetype');
+        font-weight: 400;
+        font-style: italic;
+      }
+      @font-face {
         font-family: 'Sometype Mono';
         src: url('${sometypeMonoNormalSrc}') format('truetype');
         font-weight: 100 900;
@@ -167,11 +188,11 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
       <stop offset="100%" stop-color="${gradBottom}"/>
     </linearGradient>
     <pattern id="binaryPatternBack" width="610" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="Sometype Mono, monospace"
+      <text x="0" y="35" font-family="Monospace, 'Sometype Mono', monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
       </text>
-      <text x="0" y="70" font-family="Sometype Mono, monospace"
+      <text x="0" y="70" font-family="Monospace, 'Sometype Mono', monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
       </text>
@@ -186,12 +207,12 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
 
     <!-- Centered branding on both halves for symmetry when flipping -->
     <g id="brand-top">
-      <text x="250" y="240" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
-      <text x="250" y="290" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
+      <text x="250" y="240" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
+      <text x="250" y="290" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
     </g>
     <g id="brand-bottom" transform="translate(500,810) rotate(180)">
-      <text x="250" y="240" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
-      <text x="250" y="290" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
+      <text x="250" y="240" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
+      <text x="250" y="290" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
     </g>
   </g>
 </svg>`;

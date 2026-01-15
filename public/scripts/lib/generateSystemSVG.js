@@ -42,7 +42,10 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     return value;
   }
 
-  const fontFamily = '"Sometype Mono", monospace';
+  const fontFamily = 'Monospace, "Sometype Mono", monospace';
+  const monospaceNormalSrc = resolveFontSrc('/fonts/monospace/Monospace.ttf');
+  const monospaceBoldSrc = resolveFontSrc('/fonts/monospace/MonospaceBold.ttf');
+  const monospaceObliqueSrc = resolveFontSrc('/fonts/monospace/MonospaceOblique.ttf');
   const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
   const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
 
@@ -143,7 +146,7 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
   }
 
   const descLines = wrapLines(rawDescTrim, descMaxLines);
-  const descTextSvg = `<text x="${descArea.x}" y="${descArea.y}" font-family="Sometype Mono, monospace" font-size="20" fill="${baseColor}">`
+  const descTextSvg = `<text x="${descArea.x}" y="${descArea.y}" font-family="Monospace, 'Sometype Mono', monospace" font-size="20" fill="${baseColor}">`
     + descLines.map((ln,i)=>`<tspan x="${descArea.x}" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('')
     + `</text>`;
 
@@ -152,8 +155,8 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     const effectLabelY = descArea.y + (Math.max(1, descLines.length) * lineHeight) + 10;
     const effectLines = wrapLines(rawEffectTrim, 2);
     effectTextSvg = `
-      <text x="${descArea.x}" y="${effectLabelY}" font-family="Sometype Mono, monospace" font-size="20" fill="${baseColor}" font-weight="bold">Effect:</text>
-      <text x="${descArea.x}" y="${effectLabelY + lineHeight}" font-family="Sometype Mono, monospace" font-size="20" fill="${baseColor}">`
+      <text x="${descArea.x}" y="${effectLabelY}" font-family="Monospace, 'Sometype Mono', monospace" font-size="20" fill="${baseColor}" font-weight="bold">Effect:</text>
+      <text x="${descArea.x}" y="${effectLabelY + lineHeight}" font-family="Monospace, 'Sometype Mono', monospace" font-size="20" fill="${baseColor}">`
       + effectLines.map((ln,i)=>`<tspan x="${descArea.x}" dy="${i===0?0:lineHeight}">${ln.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</tspan>`).join('')
       + `</text>`;
   }
@@ -167,7 +170,7 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     const fontSize = Math.round(200 * scale);
     const cx = x + w / 2;
     const cy = y + h / 2 + fontSize * 0.35; // adjust baseline
-    return `<text x="${cx}" y="${cy}" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="${fontSize}" fill="${color}">${txt}</text>`;
+    return `<text x="${cx}" y="${cy}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="${fontSize}" fill="${color}">${txt}</text>`;
   }
 
   let graphicMarkup = '';
@@ -202,6 +205,24 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
   <defs>
     <style><![CDATA[
       @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceNormalSrc}') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceBoldSrc}') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceObliqueSrc}') format('truetype');
+        font-weight: 400;
+        font-style: italic;
+      }
+      @font-face {
         font-family: 'Sometype Mono';
         src: url('${sometypeMonoNormalSrc}') format('truetype');
         font-weight: 100 900;
@@ -219,8 +240,8 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
       <stop offset="100%" stop-color="${gradBottom}" stop-opacity="0.35"/>
     </linearGradient>`}
     ${rasterSafe ? '' : `<pattern id="binaryPatternSys" width="610" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="Sometype Mono, monospace" font-size="28" fill="url(#binaryGradSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
-      <text x="0" y="70" font-family="Sometype Mono, monospace" font-size="28" fill="url(#binaryGradSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
+      <text x="0" y="35" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="url(#binaryGradSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
+      <text x="0" y="70" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="url(#binaryGradSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
     </pattern>`}
     ${rasterSafe ? '' : '<filter id="blurSys"><feGaussianBlur stdDeviation="0.8"/></filter>'}
   </defs>
@@ -231,12 +252,12 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     ${rasterSafe ? '' : `<rect x="0" y="0" width="500" height="810" rx="40" ry="40" fill="url(#binaryPatternSys)" ${rasterSafe ? '' : 'filter="url(#blurSys)"'}/>`}
 
     <!-- Title Word -->
-    <text id="titleWordText" x="250" y="110" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="${titleFontSize}" fill="${baseColor}" font-weight="bold">${titleWord || ''}</text>
+    <text id="titleWordText" x="250" y="110" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="${titleFontSize}" fill="${baseColor}" font-weight="bold">${titleWord || ''}</text>
 
     <!-- Icon Area (1/3 height ~ 270px) -->
     <g id="icon-area">
       <rect x="100" y="140" width="300" height="270" rx="20" ry="20" fill="none" stroke="${baseColor}" stroke-width="2" stroke-dasharray="8 6"/>
-      ${graphicMarkup || `<text x="250" y="285" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="18" fill="${baseColor}">Icon/Emoji area (optional)</text>`}
+      ${graphicMarkup || `<text x="250" y="285" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="18" fill="${baseColor}">Icon/Emoji area (optional)</text>`}
 
     <!-- Description Area (free text) -->
     <g id="description" transform="translate(0,0)">
@@ -248,7 +269,7 @@ export function generateSystemSVG(titleWord, descriptionText, category, options 
     <!-- Category Badge -->
     <g id="badge">
       <rect x="150" y="705" width="200" height="44" rx="22" ry="22" fill="${baseColor}" opacity="0.9"/>
-      <text x="250" y="734" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="18" fill="white">${safeCat}</text>
+      <text x="250" y="734" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="18" fill="white">${safeCat}</text>
     </g>
   </g>
   ${showBleed ? `<rect x="0" y="0" width="610" height="910" fill="none" stroke="${bleedColor}" stroke-width="1" stroke-dasharray="6 4"/>` : ''}
