@@ -108,6 +108,21 @@ setTimeout(() => window.print(), 500);
 
 // Generate branded back SVG matching front size and style
 function generateBackSVG({ baseColor = '#17424A', background = '#17424A', strokeColor = '#17424A' } = {}) {
+  function resolveFontSrc(src) {
+    const value = (src && String(src).trim()) || '';
+    if (!value) return '';
+    if (value.startsWith('data:') || /^https?:\/\//.test(value)) return value;
+    try {
+      if (value.startsWith('/')) return new URL(value, window.location.origin).href;
+      return new URL(value, window.location.href).href;
+    } catch (_) {
+      return value;
+    }
+  }
+
+  const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
+  const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
+
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
   function hexToRgb(hex) {
     const m = hex.replace('#','');
@@ -133,16 +148,30 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
   <defs>
+    <style><![CDATA[
+      @font-face {
+        font-family: 'Sometype Mono';
+        src: url('${sometypeMonoNormalSrc}') format('truetype');
+        font-weight: 100 900;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Sometype Mono';
+        src: url('${sometypeMonoItalicSrc}') format('truetype');
+        font-weight: 100 900;
+        font-style: italic;
+      }
+    ]]></style>
     <linearGradient id="bgGradBack" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="${gradTop}"/>
       <stop offset="100%" stop-color="${gradBottom}"/>
     </linearGradient>
     <pattern id="binaryPatternBack" width="610" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="sometype mono, monospace"
+      <text x="0" y="35" font-family="Sometype Mono, monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
       </text>
-      <text x="0" y="70" font-family="sometype mono, monospace"
+      <text x="0" y="70" font-family="Sometype Mono, monospace"
             font-size="28" fill="rgba(200,220,255,0.18)">
         1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
       </text>
@@ -157,12 +186,12 @@ function generateBackSVG({ baseColor = '#17424A', background = '#17424A', stroke
 
     <!-- Centered branding on both halves for symmetry when flipping -->
     <g id="brand-top">
-      <text x="250" y="240" text-anchor="middle" font-family="sometype mono, monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
-      <text x="250" y="290" text-anchor="middle" font-family="sometype mono, monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
+      <text x="250" y="240" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
+      <text x="250" y="290" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
     </g>
     <g id="brand-bottom" transform="translate(500,810) rotate(180)">
-      <text x="250" y="240" text-anchor="middle" font-family="sometype mono, monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
-      <text x="250" y="290" text-anchor="middle" font-family="sometype mono, monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
+      <text x="250" y="240" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="72" fill="white" font-weight="bold">ragTech</text>
+      <text x="250" y="290" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="28" fill="white" opacity="0.9">tech taboo</text>
     </g>
   </g>
 </svg>`;
