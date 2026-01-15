@@ -21,14 +21,14 @@ WordToGuess1 | taboo1, taboo2, taboo3, taboo4, taboo5 WordToGuess2 | taboo1, tab
 
 ## Example
 
-Below is an example of a generated card ([`card-example.svg`](card-example.svg)):
+Below is an example of a generated card:
 
-![Example Taboo Card](card-example.svg)
+![Example Taboo Card](card.png)
 
 ## Files
 
 - [`tech-taboo-generator.html`](tech-taboo-generator.html): Main web app for generating cards.
-- [`card-example.svg`](card-example.svg): Example output card.
+- [`card.png`](card.png): Example output card.
 - [`README.md`](README.md): Project documentation.
 
 ## Development

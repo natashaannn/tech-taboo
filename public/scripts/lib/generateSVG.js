@@ -42,6 +42,25 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   const teacherImageHref = resolveImageSrc(teacherImage, './techybara/teacher.png');
   const peekOutImageHref = resolveImageSrc(peekOutImage, './techybara/peek out.png');
 
+  function resolveFontSrc(src) {
+    const value = (src && String(src).trim()) || '';
+    if (!value) return '';
+    if (value.startsWith('data:') || /^https?:\/\//.test(value)) return value;
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+      try {
+        if (value.startsWith('/')) return new URL(value, window.location.origin).href;
+        return new URL(value, window.location.href).href;
+      } catch (_) {
+        return value;
+      }
+    }
+    return value;
+  }
+
+  const fontFamily = '"Sometype Mono", monospace';
+  const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
+  const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
+
   // helpers to adjust hex colors a bit lighter/darker
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
   function hexToRgb(hex) {
@@ -69,7 +88,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     try {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      ctx.font = `bold ${baseSize}px sometype mono, monospace`;
+      ctx.font = `bold ${baseSize}px ${fontFamily}`;
       const w = ctx.measureText(text).width;
       
       // First, check for special break points like parentheses
@@ -91,7 +110,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
           
           // Try 44px first, then 40px if needed
           for (const fontSize of [44, 40]) {
-            ctx.font = `bold ${fontSize}px sometype mono, monospace`;
+            ctx.font = `bold ${fontSize}px ${fontFamily}`;
             const w1 = ctx.measureText(line1).width;
             const w2 = ctx.measureText(line2).width;
             
@@ -110,7 +129,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
         
         // Try 44px first, then 40px if needed
         for (const fontSize of [44, 40]) {
-          ctx.font = `bold ${fontSize}px sometype mono, monospace`;
+          ctx.font = `bold ${fontSize}px ${fontFamily}`;
           const w1 = ctx.measureText(line1).width;
           const w2 = ctx.measureText(line2).width;
           
@@ -121,7 +140,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
         
         // If even at 40px it doesn't fit, try smaller sizes
         for (let fontSize = 38; fontSize >= 32; fontSize -= 2) {
-          ctx.font = `bold ${fontSize}px sometype mono, monospace`;
+          ctx.font = `bold ${fontSize}px ${fontFamily}`;
           const w1 = ctx.measureText(line1).width;
           const w2 = ctx.measureText(line2).width;
           
@@ -156,12 +175,26 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
   <defs>
+    <style><![CDATA[
+      @font-face {
+        font-family: 'Sometype Mono';
+        src: url('${sometypeMonoNormalSrc}') format('truetype');
+        font-weight: 100 900;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Sometype Mono';
+        src: url('${sometypeMonoItalicSrc}') format('truetype');
+        font-weight: 100 900;
+        font-style: italic;
+      }
+    ]]></style>
     <pattern id="${patternId}" width="610" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="sometype mono, monospace"
+      <text x="0" y="35" font-family="Sometype Mono, monospace"
             font-size="28" fill="rgba(255, 255, 255, 0.18)">
         0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001
       </text>
-      <text x="0" y="70" font-family="sometype mono, monospace"
+      <text x="0" y="70" font-family="Sometype Mono, monospace"
             font-size="28" fill="rgba(255, 255, 255, 0.18)">
         1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010
       </text>
@@ -177,36 +210,36 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     <g id="top-half">
       ${topTextInfo.lines.length === 1 
         ? `<text id="topWordText" x="250" y="90" text-anchor="middle"
-              font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
+              font-family="Sometype Mono, monospace" font-size="${topTextInfo.fontSize}"
               fill="${textColor}" font-weight="bold">${topTextInfo.lines[0]}</text>`
         : `<text id="topWordText" x="250" y="65" text-anchor="middle"
-              font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
+              font-family="Sometype Mono, monospace" font-size="${topTextInfo.fontSize}"
               fill="${textColor}" font-weight="bold">${topTextInfo.lines[0]}</text>
            <text x="250" y="110" text-anchor="middle"
-              font-family="sometype mono, monospace" font-size="${topTextInfo.fontSize}"
+              font-family="Sometype Mono, monospace" font-size="${topTextInfo.fontSize}"
               fill="${textColor}" font-weight="bold">${topTextInfo.lines[1]}</text>`
       }
       <rect x="50" y="140" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.85"/>
       ${topTaboos.map((w,i) =>
-        `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
+        `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"Sometype Mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
       <image href="${teacherImageHref}" x="400" y="320" width="80" height="80"/>
     </g>
     <g id="bottom-half" transform="translate(500,810) rotate(180)">
       ${bottomTextInfo.lines.length === 1 
         ? `<text id="bottomWordText" x="250" y="90" text-anchor="middle"
-              font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
+              font-family="Sometype Mono, monospace" font-size="${bottomTextInfo.fontSize}"
               fill="${textColor}" font-weight="bold">${bottomTextInfo.lines[0]}</text>`
         : `<text id="bottomWordText" x="250" y="65" text-anchor="middle"
-              font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
+              font-family="Sometype Mono, monospace" font-size="${bottomTextInfo.fontSize}"
               fill="${textColor}" font-weight="bold">${bottomTextInfo.lines[0]}</text>
            <text x="250" y="110" text-anchor="middle"
-              font-family="sometype mono, monospace" font-size="${bottomTextInfo.fontSize}"
+              font-family="Sometype Mono, monospace" font-size="${bottomTextInfo.fontSize}"
               fill="${textColor}" font-weight="bold">${bottomTextInfo.lines[1]}</text>`
       }
       <rect x="50" y="140" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.85"/>
       ${bottomTaboos.map((w,i) =>
-        `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"sometype mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
+        `<text x=\"250\" y=\"${190+i*40}\" text-anchor=\"middle\" font-family=\"Sometype Mono, monospace\" font-size=\"28\" fill=\"#062E35\">${w}</text>`
       ).join("")}
       <image href="${peekOutImageHref}" x="420" y="280" width="90" height="70"/>
     </g>

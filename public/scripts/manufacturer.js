@@ -16,11 +16,13 @@ const I18N = {
     title: "Manufacturer Download",
     subtitle: "For our card manufacturer: download the complete Variety Pack as a PNG zip.",
     download: "Download All Cards (PNG ZIP)",
+    referenceTitle: "Reference Preview",
+    referenceCaption: "Reference image (card.png). Please confirm fonts and layout match exactly.",
     packagingTitle: "Packaging Designs",
     packagingDesc: "Download the packaging design files as a zip.",
     packagingDownload: "Download Packaging Designs (ZIP)",
     back: "⤺ Back to Tech Taboo",
-    instructions: (count) => `Steps:\n1) Click “Download All Cards (PNG ZIP)”\n2) Wait until the download prompt appears (do not click multiple times)\n3) Unzip the file to get ${count} PNG images\n\nNotes:\n- This exports the Variety Pack selection used by the main app\n- Output resolution is high, so export may take a while`,
+    instructions: (count) => `Steps:\n1) Click “Download All Cards (PNG ZIP)”\n2) Wait until the download prompt appears (do not click multiple times)\n3) Unzip the file to get ${count} PNG images\n\nNotes:\n- This exports the Variety Pack selection used by the main app\n- Output resolution is high, so export may take a while\n- Please verify the downloaded designs (including the font) match the reference image: card.png`,
     packInfo: (count) => `Variety Pack contents: ${count} cards. Categories and counts: General ${VARIETY_PACK_COUNTS["General"]}, AI ${VARIETY_PACK_COUNTS["AI"]}, Software Engineering ${VARIETY_PACK_COUNTS["Software Engineering"]}, Product Management ${VARIETY_PACK_COUNTS["Product Management"]}.`,
     statusReady: "Ready.",
     statusWorking: (done, total) => `Exporting… ${done}/${total}`,
@@ -31,11 +33,13 @@ const I18N = {
     title: "工厂下载页面",
     subtitle: "给卡牌生产工厂使用：一键下载“Variety Pack”全部卡牌（PNG 压缩包）。",
     download: "下载全部卡牌（PNG ZIP）",
+    referenceTitle: "参考预览",
+    referenceCaption: "参考图片（card.png）。请确认字体与版式完全一致。",
     packagingTitle: "包装设计文件",
     packagingDesc: "将包装设计文件打包下载（ZIP）。",
     packagingDownload: "下载包装设计文件（ZIP）",
     back: "⤺ 返回 Tech Taboo",
-    instructions: (count) => `操作步骤：\n1）点击“下载全部卡牌（PNG ZIP）”\n2）等待浏览器弹出下载（请勿重复点击）\n3）解压后会得到 ${count} 张 PNG 图片\n\n注意：\n- 导出内容与主页面的 Variety Pack 版本一致\n- 图片分辨率较高，导出需要一些时间`,
+    instructions: (count) => `操作步骤：\n1）点击“下载全部卡牌（PNG ZIP）”\n2）等待浏览器弹出下载（请勿重复点击）\n3）解压后会得到 ${count} 张 PNG 图片\n\n注意：\n- 导出内容与主页面的 Variety Pack 版本一致\n- 图片分辨率较高，导出需要一些时间\n- 请核对下载的设计稿（包含字体）与参考图片一致：card.png`,
     packInfo: (count) => `Variety Pack 共 ${count} 张卡牌。分类数量：通用 ${VARIETY_PACK_COUNTS["General"]}，AI ${VARIETY_PACK_COUNTS["AI"]}，软件工程 ${VARIETY_PACK_COUNTS["Software Engineering"]}，产品管理 ${VARIETY_PACK_COUNTS["Product Management"]}。`,
     statusReady: "已就绪。",
     statusWorking: (done, total) => `正在导出… ${done}/${total}`,
@@ -161,6 +165,10 @@ function setText(lang, totalCards) {
   document.getElementById('title').textContent = t.title;
   document.getElementById('subtitle').textContent = t.subtitle;
   document.getElementById('btn-download').textContent = t.download;
+  const referenceTitle = document.getElementById('referenceTitle');
+  if (referenceTitle) referenceTitle.textContent = t.referenceTitle || '';
+  const referenceCaption = document.getElementById('referenceCaption');
+  if (referenceCaption) referenceCaption.textContent = t.referenceCaption || '';
   document.getElementById('packagingTitle').textContent = t.packagingTitle;
   document.getElementById('packagingDesc').textContent = t.packagingDesc;
   document.getElementById('btn-download-packaging').textContent = t.packagingDownload;

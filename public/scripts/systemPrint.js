@@ -13,6 +13,21 @@ function readPayload() {
 }
 
 function generateBackSVG({ baseColor = '#17424A', background = '#062E35', strokeColor = '#17424A' } = {}) {
+  function resolveFontSrc(src) {
+    const value = (src && String(src).trim()) || '';
+    if (!value) return '';
+    if (value.startsWith('data:') || /^https?:\/\//.test(value)) return value;
+    try {
+      if (value.startsWith('/')) return new URL(value, window.location.origin).href;
+      return new URL(value, window.location.href).href;
+    } catch (_) {
+      return value;
+    }
+  }
+
+  const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
+  const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
+
   // Match system card: white background with binary gradient overlay driven by baseColor
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
   function hexToRgb(hex) {
@@ -40,13 +55,27 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
   <defs>
+    <style><![CDATA[
+      @font-face {
+        font-family: 'Sometype Mono';
+        src: url('${sometypeMonoNormalSrc}') format('truetype');
+        font-weight: 100 900;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Sometype Mono';
+        src: url('${sometypeMonoItalicSrc}') format('truetype');
+        font-weight: 100 900;
+        font-style: italic;
+      }
+    ]]></style>
     <linearGradient id="binaryGradBackSys" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="${gradTop}" stop-opacity="0.35"/>
       <stop offset="100%" stop-color="${gradBottom}" stop-opacity="0.35"/>
     </linearGradient>
     <pattern id="binaryPatternBackSys" width="610" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="sometype mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
-      <text x="0" y="70" font-family="sometype mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
+      <text x="0" y="35" font-family="Sometype Mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
+      <text x="0" y="70" font-family="Sometype Mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
     </pattern>
     <filter id="blurBackSys"><feGaussianBlur stdDeviation="0.8"/></filter>
   </defs>
@@ -58,8 +87,8 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
 
     <!-- Centered branding for System Design backing -->
     <g id="brand-center">
-      <text x="250" y="340" text-anchor="middle" font-family="sometype mono, monospace" font-size="72" fill="#0A1F33" font-weight="bold">ragTech</text>
-      <text x="250" y="388" text-anchor="middle" font-family="sometype mono, monospace" font-size="28" fill="#0A1F33" opacity="0.9">tech stack</text>
+      <text x="250" y="340" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="72" fill="#0A1F33" font-weight="bold">ragTech</text>
+      <text x="250" y="388" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="28" fill="#0A1F33" opacity="0.9">tech stack</text>
     </g>
   </g>
 </svg>`;
