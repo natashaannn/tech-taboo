@@ -25,6 +25,9 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
     }
   }
 
+  const monospaceNormalSrc = resolveFontSrc('/fonts/monospace/Monospace.ttf');
+  const monospaceBoldSrc = resolveFontSrc('/fonts/monospace/MonospaceBold.ttf');
+  const monospaceObliqueSrc = resolveFontSrc('/fonts/monospace/MonospaceOblique.ttf');
   const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
   const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
 
@@ -57,6 +60,24 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
   <defs>
     <style><![CDATA[
       @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceNormalSrc}') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceBoldSrc}') format('truetype');
+        font-weight: 700;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${monospaceObliqueSrc}') format('truetype');
+        font-weight: 400;
+        font-style: italic;
+      }
+      @font-face {
         font-family: 'Sometype Mono';
         src: url('${sometypeMonoNormalSrc}') format('truetype');
         font-weight: 100 900;
@@ -74,8 +95,8 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
       <stop offset="100%" stop-color="${gradBottom}" stop-opacity="0.35"/>
     </linearGradient>
     <pattern id="binaryPatternBackSys" width="610" height="80" patternUnits="userSpaceOnUse">
-      <text x="0" y="35" font-family="Sometype Mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
-      <text x="0" y="70" font-family="Sometype Mono, monospace" font-size="28" fill="url(#binaryGradBackSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
+      <text x="0" y="35" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="url(#binaryGradBackSys)">0101010011101010001110101001010100111010100011101010010101001110101000111010100101010011101010001110101001</text>
+      <text x="0" y="70" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="url(#binaryGradBackSys)">1010100111010100011101010010101001110101000111010100101010011101010001110101001010100111010100011101010010</text>
     </pattern>
     <filter id="blurBackSys"><feGaussianBlur stdDeviation="0.8"/></filter>
   </defs>
@@ -87,8 +108,8 @@ function generateBackSVG({ baseColor = '#17424A', background = '#062E35', stroke
 
     <!-- Centered branding for System Design backing -->
     <g id="brand-center">
-      <text x="250" y="340" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="72" fill="#0A1F33" font-weight="bold">ragTech</text>
-      <text x="250" y="388" text-anchor="middle" font-family="Sometype Mono, monospace" font-size="28" fill="#0A1F33" opacity="0.9">tech stack</text>
+      <text x="250" y="340" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="72" fill="#0A1F33" font-weight="bold">ragTech</text>
+      <text x="250" y="388" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="#0A1F33" opacity="0.9">tech stack</text>
     </g>
   </g>
 </svg>`;
