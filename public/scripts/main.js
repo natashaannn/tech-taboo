@@ -228,16 +228,25 @@ function fillInputAllCardsinVersion() {
   showVersionModal((selectedVersion) => {
     if (!selectedVersion) return; // User cancelled
 
-    // Currently only one version is supported: Variety Pack Version
-    if (selectedVersion !== "VARIETY_PACK") return;
-
-    // Desired word counts per category for this version (multiples of 4)
-    const versionCounts = {
-      "General": 60,
-      "AI": 16,
-      "Software Engineering": 16,
-      "Product Management": 16,
-    };
+    // Define version configurations
+    let versionCounts = {};
+    
+    if (selectedVersion === "VARIETY_PACK") {
+      // Variety Pack Version (multiples of 4)
+      versionCounts = {
+        "General": 60,
+        "AI": 16,
+        "Software Engineering": 16,
+        "Product Management": 16,
+      };
+    } else if (selectedVersion === "DSA_EXTENSION") {
+      // DSA Extension Pack - all 52 words
+      versionCounts = {
+        "Data Structures & Algorithms": 52,
+      };
+    } else {
+      return; // Unknown version
+    }
 
     // Group available words by category
     const byCategory = {};
