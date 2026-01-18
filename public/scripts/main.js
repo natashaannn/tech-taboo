@@ -240,7 +240,7 @@ function fillInputAllCardsinVersion() {
         "Product Management": 16,
       };
     } else if (selectedVersion === "DSA_EXTENSION") {
-      // DSA Extension Pack - all 50 words
+      // DSA Extension Pack - all 52 words
       versionCounts = {
         "Data Structures & Algorithms": 50,
       };
