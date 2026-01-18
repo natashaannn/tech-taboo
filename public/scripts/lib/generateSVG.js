@@ -169,6 +169,27 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   const topTextInfo = splitAndSizeText(topWord);
   const bottomTextInfo = splitAndSizeText(bottomWord);
   
+  // Calculate font size for taboo words to prevent overflow
+  function getTabooFontSize(text, maxWidth = 380) {
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const baseFontSize = 28;
+      ctx.font = `${baseFontSize}px sometype mono, monospace`;
+      const w = ctx.measureText(text).width;
+      
+      if (w <= maxWidth) {
+        return baseFontSize;
+      }
+      
+      // Scale down to fit
+      const ratio = maxWidth / w;
+      return Math.max(20, Math.floor(baseFontSize * ratio));
+    } catch (_) {
+      return 28;
+    }
+  }
+  
   // Generate unique IDs for this SVG to avoid conflicts when multiple SVGs are on the same page
   const uniqueId = `svg_${Math.random().toString(36).substr(2, 9)}`;
   const gradId = `bgGrad_${uniqueId}`;
