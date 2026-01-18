@@ -410,8 +410,8 @@ const dsaTabooList = [
   { index: 48, word: "Counting Sort", taboo: ["Frequency", "Range", "Compare", "Linear", "Integer"] },
   { index: 49, word: "Bucket Sort", taboo: ["Distribute", "Range", "Bins", "Scatter", "Gather"] },
   { index: 50, word: "Heap Sort", taboo: ["Binary", "Min", "Priority", "Extract", "Max"] },
-  { index: 51, word: "Trie", taboo: ["Prefix", "Tree", "String", "Dictionary", "Autocomplete"] },
-  { index: 52, word: "Bloom Filter", taboo: ["Probabilistic", "Hash", "Recommend", "Positive", "Filter"] }
+  { index: 51, word: "Bloom Filter", taboo: ["Probabilistic", "Hash", "Recommend", "Positive", "Filter"] },
+  { index: 52, word: "Bit Manipulation", taboo: ["Binary", "One", "AND", "OR", "XOR"] }
 ]
 
 dsaTabooList.forEach(item => {
