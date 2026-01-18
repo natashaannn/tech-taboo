@@ -242,7 +242,7 @@ function fillInputAllCardsinVersion() {
     } else if (selectedVersion === "DSA_EXTENSION") {
       // DSA Extension Pack - all 52 words
       versionCounts = {
-        "Data Structures & Algorithms": 50,
+        "Data Structures & Algorithms": 52,
       };
     } else {
       return; // Unknown version
