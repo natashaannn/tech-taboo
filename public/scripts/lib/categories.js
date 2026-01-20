@@ -6,6 +6,7 @@ export const CATEGORIES = [
   "AI",
   "Product Management",
   "Data Structures & Algorithms",
+  "System Design",
 ];
 
 // Default colors for each category
@@ -15,7 +16,8 @@ export const CATEGORY_COLORS = {
   "Data": "#faf9f5",
   "Software Engineering": "#e8c555", 
   "Product Management": "#8b5a49",
-  "Data Structures & Algorithms": "#CE93D8", 
+  "Data Structures & Algorithms": "#CE93D8",
+  "System Design": "#64B5F6", 
 };
 
 // Text title colors for each category
@@ -26,6 +28,7 @@ export const CATEGORY_TEXT_COLORS = {
   "AI": "#ebf5f6",
   "Software Engineering": "#fdf7e7",
   "Data Structures & Algorithms": "#f3e5f5",
+  "System Design": "#e3f2fd",
 };
 
 export const CATEGORY_KEYWORDS = {
@@ -44,12 +47,16 @@ export const CATEGORY_KEYWORDS = {
   "Data Structures & Algorithms": [
     "array","linked list","stack","queue","hash","tree","graph","heap","trie","sort","search","bfs","dfs","dijkstra","dynamic programming","greedy","backtracking","divide and conquer","recursion","big o","pointer","avl","red-black","b-tree","segment tree","fenwick","disjoint","topological","spanning tree","bellman","floyd","knapsack","traveling salesman","two pointers","sliding window","kadane","bst","collision","radix","counting sort","bucket sort","heap sort","merge sort","quick sort","bubble sort","insertion sort","selection sort","binary search",
   ],
+  "System Design": [
+    "load balancer","microservices","scalability","scaling","horizontal","vertical","caching","sharding","cdn","content delivery","message queue","api gateway","rate limiting","consistent hashing","cap theorem","eventual consistency","replication","proxy","reverse proxy","service discovery","circuit breaker","idempotency","indexing","distributed lock","event sourcing","saga","two-phase commit","write-ahead log","gossip protocol","quorum","leader election","heartbeat","back pressure","bulkhead","sidecar","partitioning","replica","write-through","write-back","sticky session","stateless","stateful","latency","throughput","fault tolerance","high availability","single point of failure","connection pool","denormalization","normalization","ttl","time to live","webhook","polling","long polling",
+  ],
 };
 
 export function detectCategory(word) {
   const w = word.toLowerCase();
   if (CATEGORY_KEYWORDS.AI.some((k) => w.includes(k))) return "AI";
   if (CATEGORY_KEYWORDS["Data Structures & Algorithms"].some((k) => w.includes(k))) return "Data Structures & Algorithms";
+  if (CATEGORY_KEYWORDS["System Design"].some((k) => w.includes(k))) return "System Design";
   if (CATEGORY_KEYWORDS.Data.some((k) => w.includes(k))) return "Data";
   if (CATEGORY_KEYWORDS["Product Management"].some((k) => w.includes(k))) return "Product Management";
   return "Software Engineering";

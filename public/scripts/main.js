@@ -243,6 +243,7 @@ function fillInputAllCardsinVersion() {
       // DSA Extension Pack - all 52 words
       versionCounts = {
         "Data Structures & Algorithms": 52,
+        "System Design": 52,
       };
     } else {
       return; // Unknown version
