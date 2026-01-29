@@ -57,7 +57,7 @@ var generalTabooList = [
   { index: 51, word: "Mobile Application", taboo: ["Code", "Programming", "Phone", "Install", "Download"]},
   { index: 52, word: "Virtual Private Network (VPN)", taboo: ["Netflix", "Country", "Internet", "Security", "Connectivity"] },
   { index: 53, word: "Phishing", taboo: ["Scam", "Email", "Hacking", "Security", "Fraud"] },
-  { index: 54, word: "WiFi", taboo: ["Wireless", "Connection", "Data", "Communication", "Router"]},
+  { index: 54, word: "WiFi", taboo: ["Internet", "Connection", "Data", "Communication", "Router"]},
   { index: 55, word: "Instagram", taboo: ["Social Media", "Story", "Meta", "Post", "Reel"] },
   { index: 56, word: "Website", taboo: ["Internet", "Google", "www", "Address", "URL"] },
   { index: 57, word: "FAANG", taboo: ["Big", "Technology", "Company", "Software", "Stock"]},
@@ -418,4 +418,63 @@ dsaTabooList.forEach(item => {
   item.category = "Data Structures & Algorithms"
 })
 
-export const tabooList = [...generalTabooList, ...aiTabooList, ...softwareEngineeringTabooList, ...dataTabooList, ...productManagementTabooList, ...dsaTabooList]
+const systemDesignTabooList = [
+  { index: 1, word: "Load Balancer", taboo: ["Traffic", "Distribute", "Server", "Request", "Round Robin"] },
+  { index: 2, word: "Microservices", taboo: ["Architecture", "Service", "Distributed", "API", "Monolith"] },
+  { index: 3, word: "Scalability", taboo: ["Growth", "Horizontal", "Vertical", "Performance", "Capacity"] },
+  { index: 4, word: "Caching", taboo: ["Redis", "Memory", "Fast", "Database", "Performance"] },
+  { index: 5, word: "Database Sharding", taboo: ["Partition", "Horizontal", "Split", "Distributed", "Scale"] },
+  { index: 6, word: "Content Delivery Network (CDN)", taboo: ["Cache", "Edge", "Fast", "Distributed", "Static"] },
+  { index: 7, word: "Message Queue", taboo: ["Kafka", "RabbitMQ", "Async", "Publish", "Subscribe"] },
+  { index: 8, word: "API Gateway", taboo: ["Route", "Entry", "Request", "Proxy", "Endpoint"] },
+  { index: 9, word: "Rate Limiting", taboo: ["API", "Request", "Quota", "Restrict", "Control"] },
+  { index: 10, word: "Consistent Hashing", taboo: ["Ring", "Node", "Distribute", "Algorithm", "Scale"] },
+  { index: 11, word: "CAP Theorem", taboo: ["Brewer", "Trade-off", "Distributed", "Database", "Network"] },
+  { index: 12, word: "Eventual Consistency", taboo: ["Distributed", "Sync", "Time", "Replicas", "Converge"] },
+  { index: 13, word: "Database Replication", taboo: ["Copy", "Master", "Slave", "Sync", "Backup"] },
+  { index: 14, word: "Horizontal Scaling", taboo: ["Add", "Server", "Instance", "Distributed", "Out"] },
+  { index: 15, word: "Vertical Scaling", taboo: ["CPU", "RAM", "Upgrade", "Hardware", "Up"] },
+  { index: 16, word: "Reverse Proxy", taboo: ["Nginx", "Forward", "Server", "Request", "Backend"] },
+  { index: 17, word: "Service Discovery", taboo: ["Registry", "Find", "Locate", "Microservices", "Consul"] },
+  { index: 18, word: "Circuit Breaker", taboo: ["Fail", "Timeout", "Retry", "Pattern", "Fallback"] },
+  { index: 19, word: "Idempotency", taboo: ["Same", "Result", "Retry", "Request", "Safe"] },
+  { index: 20, word: "Database Indexing", taboo: ["Fast", "Query", "Search", "Performance", "B-Tree"] },
+  { index: 21, word: "Distributed Lock", taboo: ["Mutex", "Coordination", "Sync", "Redis", "ZooKeeper"] },
+  { index: 22, word: "Event Sourcing", taboo: ["Log", "History", "State", "Events", "Replay"] },
+  { index: 23, word: "Proxy Server", taboo: ["Gateway", "Nginx", "Request", "Intermediate", "Between"] },
+  { index: 24, word: "Saga Pattern", taboo: ["Transaction", "Distributed", "Microservices", "Rollback", "Orchestration"] },
+  { index: 25, word: "Two-Phase Commit", taboo: ["Transaction", "Distributed", "Prepare", "Commit", "Coordinator"] },
+  { index: 26, word: "Write-Ahead Log", taboo: ["Durability", "Crash", "Recovery", "Database", "Commit"] },
+  { index: 27, word: "Gossip Protocol", taboo: ["Spread", "Rumor", "Distributed", "Node", "Communication"] },
+  { index: 28, word: "Quorum", taboo: ["Majority", "Vote", "Consensus", "Replicas", "Agreement"] },
+  { index: 29, word: "Leader Election", taboo: ["Raft", "Paxos", "Consensus", "Distributed", "Coordinator"] },
+  { index: 30, word: "Heartbeat", taboo: ["Alive", "Ping", "Health", "Monitor", "Check"] },
+  { index: 31, word: "Back Pressure", taboo: ["Flow", "Control", "Slow", "Consumer", "Queue"] },
+  { index: 32, word: "Bulkhead Pattern", taboo: ["Isolation", "Failure", "Resource", "Partition", "Resilience"] },
+  { index: 33, word: "Sidecar Pattern", taboo: ["Container", "Proxy", "Kubernetes", "Service", "Mesh"] },
+  { index: 34, word: "Database Partitioning", taboo: ["Shard", "Split", "Horizontal", "Vertical", "Range"] },
+  { index: 35, word: "Read Replica", taboo: ["Database", "Copy", "Master", "Query", "Scale"] },
+  { index: 36, word: "Write-Through Cache", taboo: ["Update", "Database", "Sync", "Consistency", "Store"] },
+  { index: 37, word: "Write-Back Cache", taboo: ["Lazy", "Async", "Database", "Performance", "Delay"] },
+  { index: 38, word: "Sticky Session", taboo: ["Affinity", "User", "Server", "State", "Cookie"] },
+  { index: 39, word: "Stateless", taboo: ["Storage", "Memory", "Server", "Session", "Scalable"] },
+  { index: 40, word: "Stateful", taboo: ["Remember", "Session", "Memory", "Server", "Sticky"] },
+  { index: 41, word: "Latency", taboo: ["Delay", "Time", "Response", "Slow", "Fast"] },
+  { index: 42, word: "Throughput", taboo: ["Rate", "Request", "Second", "Capacity", "Volume"] },
+  { index: 43, word: "Fault Tolerance", taboo: ["Resilience", "Failure", "Recovery", "Redundancy", "Availability"] },
+  { index: 44, word: "High Availability", taboo: ["Uptime", "Redundancy", "Failure", "99.9%", "Reliable"] },
+  { index: 45, word: "Single Point of Failure", taboo: ["Bottleneck", "Risk", "Redundancy", "Availability", "Critical"] },
+  { index: 46, word: "Database Connection Pool", taboo: ["Reuse", "Limit", "Connections", "Performance", "Resource"] },
+  { index: 47, word: "Denormalization", taboo: ["Redundancy", "Performance", "Join", "Read", "Optimize"] },
+  { index: 48, word: "Normalization", taboo: ["Redundancy", "Tables", "Relations", "Form", "Optimize"] },
+  { index: 49, word: "Time to Live (TTL)", taboo: ["Expire", "Cache", "Duration", "Timeout", "Delete"] },
+  { index: 50, word: "Webhook", taboo: ["Callback", "HTTP", "Event", "Notify", "Push"] },
+  { index: 51, word: "Polling", taboo: ["Check", "Request", "Interval", "Update", "Repeatedly"] },
+  { index: 52, word: "Long Polling", taboo: ["Wait", "Request", "Connection", "Update", "Hold"] }
+]
+
+systemDesignTabooList.forEach(item => {
+  item.category = "System Design"
+})
+
+export const tabooList = [...generalTabooList, ...aiTabooList, ...softwareEngineeringTabooList, ...dataTabooList, ...productManagementTabooList, ...dsaTabooList, ...systemDesignTabooList]
