@@ -57,7 +57,7 @@ var generalTabooList = [
   { index: 51, word: "Mobile Application", taboo: ["Code", "Programming", "Phone", "Install", "Download"]},
   { index: 52, word: "Virtual Private Network (VPN)", taboo: ["Netflix", "Country", "Internet", "Security", "Connectivity"] },
   { index: 53, word: "Phishing", taboo: ["Scam", "Email", "Hacking", "Security", "Fraud"] },
-  { index: 54, word: "WiFi", taboo: ["Wireless", "Connection", "Data", "Communication", "Router"]},
+  { index: 54, word: "WiFi", taboo: ["Internet", "Connection", "Data", "Communication", "Router"]},
   { index: 55, word: "Instagram", taboo: ["Social Media", "Story", "Meta", "Post", "Reel"] },
   { index: 56, word: "Website", taboo: ["Internet", "Google", "www", "Address", "URL"] },
   { index: 57, word: "FAANG", taboo: ["Big", "Technology", "Company", "Software", "Stock"]},
