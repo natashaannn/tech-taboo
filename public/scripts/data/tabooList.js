@@ -427,7 +427,7 @@ const systemDesignTabooList = [
   { index: 6, word: "Content Delivery Network (CDN)", taboo: ["Cache", "Edge", "Fast", "Distributed", "Static"] },
   { index: 7, word: "Message Queue", taboo: ["Kafka", "RabbitMQ", "Async", "Publish", "Subscribe"] },
   { index: 8, word: "API Gateway", taboo: ["Route", "Entry", "Request", "Proxy", "Endpoint"] },
-  { index: 9, word: "Rate Limiting", taboo: ["Throttle", "Request", "Quota", "Restrict", "Control"] },
+  { index: 9, word: "Rate Limiting", taboo: ["API", "Request", "Quota", "Restrict", "Control"] },
   { index: 10, word: "Consistent Hashing", taboo: ["Ring", "Node", "Distribute", "Algorithm", "Scale"] },
   { index: 11, word: "CAP Theorem", taboo: ["Brewer", "Trade-off", "Distributed", "Database", "Network"] },
   { index: 12, word: "Eventual Consistency", taboo: ["Distributed", "Sync", "Time", "Replicas", "Converge"] },
