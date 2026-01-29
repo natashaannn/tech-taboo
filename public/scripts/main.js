@@ -239,7 +239,7 @@ function fillInputAllCardsinVersion() {
         "Software Engineering": 16,
         "Product Management": 16,
       };
-    } else if (selectedVersion === "DSA_EXTENSION") {
+    } else if (selectedVersion === "SOFTWARE_INTERVIEW_EXTENSION") {
       // DSA Extension Pack - all 52 words
       versionCounts = {
         "Data Structures & Algorithms": 52,

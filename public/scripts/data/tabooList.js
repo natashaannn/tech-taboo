@@ -457,7 +457,7 @@ const systemDesignTabooList = [
   { index: 36, word: "Write-Through Cache", taboo: ["Update", "Database", "Sync", "Consistency", "Store"] },
   { index: 37, word: "Write-Back Cache", taboo: ["Lazy", "Async", "Database", "Performance", "Delay"] },
   { index: 38, word: "Sticky Session", taboo: ["Affinity", "User", "Server", "State", "Cookie"] },
-  { index: 39, word: "Stateless", taboo: ["No", "Memory", "Server", "Session", "Scalable"] },
+  { index: 39, word: "Stateless", taboo: ["Storage", "Memory", "Server", "Session", "Scalable"] },
   { index: 40, word: "Stateful", taboo: ["Remember", "Session", "Memory", "Server", "Sticky"] },
   { index: 41, word: "Latency", taboo: ["Delay", "Time", "Response", "Slow", "Fast"] },
   { index: 42, word: "Throughput", taboo: ["Rate", "Request", "Second", "Capacity", "Volume"] },
