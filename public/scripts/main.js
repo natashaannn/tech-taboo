@@ -761,6 +761,11 @@ preloadTechybaraImages().then(images => {
   // Continue with relative paths as fallback
 });
 
+// Book button handler
+document.getElementById("btn-book").addEventListener("click", () => {
+  window.location.href = './book.html';
+});
+
 // initial render
 renderLegend();
 generate();
