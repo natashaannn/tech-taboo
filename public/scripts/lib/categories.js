@@ -7,6 +7,11 @@ export const CATEGORIES = [
   "Product Management",
   "Data Structures & Algorithms",
   "System Design",
+  "Game Development",
+  "DevOps",
+  "Cybersecurity",
+  "UX Design",
+  "Responsible Tech",
 ];
 
 // Default colors for each category
@@ -17,7 +22,12 @@ export const CATEGORY_COLORS = {
   "Software Engineering": "#e8c555", 
   "Product Management": "#8b5a49",
   "Data Structures & Algorithms": "#CE93D8",
-  "System Design": "#64B5F6", 
+  "System Design": "#64B5F6",
+  "Game Development": "#B39DDB",
+  "DevOps": "#FFAB91",
+  "Cybersecurity": "#EF9A9A",
+  "UX Design": "#F48FB1",
+  "Responsible Tech": "#A5D6A7",
 };
 
 // Text title colors for each category
@@ -29,6 +39,11 @@ export const CATEGORY_TEXT_COLORS = {
   "Software Engineering": "#fdf7e7",
   "Data Structures & Algorithms": "#f3e5f5",
   "System Design": "#e3f2fd",
+  "Game Development": "#ede7f6",
+  "DevOps": "#fbe9e7",
+  "Cybersecurity": "#ffebee",
+  "UX Design": "#fce4ec",
+  "Responsible Tech": "#e8f5e9",
 };
 
 export const CATEGORY_KEYWORDS = {
