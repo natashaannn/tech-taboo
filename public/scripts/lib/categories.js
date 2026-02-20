@@ -15,35 +15,37 @@ export const CATEGORIES = [
 ];
 
 // Default colors for each category
+// Checked for WCAG AA Large Text Contrast on https://webaim.org/resources/contrastchecker/
+// Used VSCode theme colors
 export const CATEGORY_COLORS = {
-  "General": "#7dbfba",             
-  "AI": "#f97883", 
-  "Data": "#faf9f5",
-  "Software Engineering": "#e8c555", 
-  "Product Management": "#8b5a49",
-  "Data Structures & Algorithms": "#CE93D8",
-  "System Design": "#64B5F6",
-  "Game Development": "#B39DDB",
-  "DevOps": "#FFAB91",
-  "Cybersecurity": "#EF9A9A",
-  "UX Design": "#F48FB1",
-  "Responsible Tech": "#A5D6A7",
+  "General": "#DCECF0", // Noctis Hibernicus       
+  "AI": "#FAFAFA", // Atom One Light
+  "Data": "#562C2B", // Noctis Bordo
+  "Product Management": "#FDF8ED", // Noctis Lux
+  "Software Engineering": "#282A36", // Darcula
+  "Data Structures & Algorithms": "#DFDDF1", // Noctis Lilac
+  "System Design": "#0B2942", // Night Owl
+  "Game Development": "#FFC7D0", // Pink Lemonade
+  "DevOps": "#012B37", // Vue Theme
+  "Cybersecurity": "#B6C7CA", // Noctis Sereno
+  "UX Design": "#FEF9EC", // Solarized Light
+  "Responsible Tech": "#B0D0B8", // Earthbound
 };
 
 // Text title colors for each category
 export const CATEGORY_TEXT_COLORS = {
-  "General": "#faf9f5",
-  "Product Management": "#efe7e4",
-  "Data": "#38362fff",
-  "AI": "#ebf5f6",
-  "Software Engineering": "#fdf7e7",
-  "Data Structures & Algorithms": "#f3e5f5",
-  "System Design": "#e3f2fd",
-  "Game Development": "#ede7f6",
-  "DevOps": "#fbe9e7",
-  "Cybersecurity": "#ffebee",
-  "UX Design": "#fce4ec",
-  "Responsible Tech": "#e8f5e9",
+  "General": "#23555F", // Noctis Hibernicus
+  "AI": "#383A42", // Atom One Light
+  "Data": "#C9BEC2", // Noctis Bordo
+  "Product Management": "#23555F", // Noctis Lux
+  "Software Engineering": "#F8F8F2", // Darcula
+  "Data Structures & Algorithms": "#1C1372", // Noctis Lilac
+  "System Design": "#669CF2", // Night Owl
+  "Game Development": "#816E7D", // Pink Lemonade
+  "DevOps": "#9BD3D8", // Vue Theme
+  "Cybersecurity": "#132D31", // Noctis Sereno
+  "UX Design": "#2AA198", // Solarized Light
+  "Responsible Tech": "#3D482D", // Earthbound
 };
 
 export const CATEGORY_KEYWORDS = {
