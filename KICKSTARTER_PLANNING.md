@@ -43,10 +43,9 @@
 | Supplier | Travel Single (Black Core + Box) | Double Bundle (Black Core + Double Box) | Notes |
 |----------|----------------------------------|------------------------------------------|-------|
 | **Supplier A (Tmall)** | ¥65 (S$12.05) | ¥135 (S$25.10) | Cards: ¥30 + ¥5 backs<br>Rigid box: ¥20 (single) / ¥50 (double)<br>Book: ¥10 / ¥15<br>[Tmall Link](https://detail.tmall.com/item.htm?id=813663813055) |
-| **Supplier B (Taobao)** | ¥35.5 (S$6.60) | ¥59.8 (S$11.10) | All-inclusive pricing with rigid box<br>[Taobao Link](https://item.taobao.com/item.htm?id=798828005058) |
+| **Supplier B (Taobao)** | ¥40.5 + ¥20 | ¥40.5 + ¥50 | [Taobao Link](https://item.taobao.com/item.htm?id=798828005058) |
 | **Supplier C (Taobao)** | ¥145.8 + box + book | ¥291.6 + box + book | Per-card pricing: ¥2.70/card<br>54 cards = ¥145.8, 108 cards = ¥291.6<br>(Packaging & book not included)<br>[Taobao Link](https://item.taobao.com/item.htm?id=758366076036) |
 | **Supplier D (Tmall)** | ¥35 (S$6.50) | ¥60 (S$11.10) | With tin box packaging<br>(Book not included)<br>[Tmall Link](https://detail.tmall.com/item.htm?id=787408625633) |
-| 
 | **Best Price** | **Supplier D: ¥35** (tin box)<br>**Supplier B: ¥35.5** (rigid box) | **Supplier B: ¥59.8**<br>**Supplier D: ¥60** | Supplier D & B nearly identical pricing;<br>Supplier D uses tin box vs rigid box |
 
 **Considerations:**
