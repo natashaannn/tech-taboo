@@ -48,6 +48,22 @@ export const CATEGORY_TEXT_COLORS = {
   "Responsible Tech": "#3D482D", // Earthbound
 };
 
+// VSCode editor theme names that inspired each category palette
+export const CATEGORY_THEME_NAMES = {
+  "General": "Noctis Hibernicus",
+  "AI": "Atom One Light",
+  "Data": "Noctis Bordo",
+  "Product Management": "Noctis Lux",
+  "Software Engineering": "Darcula",
+  "Data Structures & Algorithms": "Noctis Lilac",
+  "System Design": "Night Owl",
+  "Game Development": "Pink Lemonade",
+  "DevOps": "Vue Theme",
+  "Cybersecurity": "Noctis Sereno",
+  "UX Design": "Solarized Light",
+  "Responsible Tech": "Earthbound",
+};
+
 export const CATEGORY_KEYWORDS = {
   AI: [
     "ai","ml","machine learning","deep learning","neural","transformer","llm","gpt","chatgpt","dall-e","midjourney","anthropic","claude","gemini","slm","llama","fine-tuning","retrieval","vector","embedding","tokenization","vision","computer vision","voice","speech","text-to-speech","speech-to-text","multimodal","sam","rlhf","synthetic","diffusion","stable diffusion","diffusers","prompt","prompt engineering","alignment","hallucination","moderation","ethics","regulation","autonomous","agent","federated","few-shot","zero-shot","one-shot",

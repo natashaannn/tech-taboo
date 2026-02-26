@@ -261,19 +261,24 @@
 
   <script type="module">
     import { tabooList } from './scripts/data/tabooList.js';
+    import { DEFAULT_VERSION_ID, getVersionCounts, getVersionLabel } from './scripts/lib/versions.js';
 
-    // Variety pack definition
-    const varietyPackIndices = {
-      'General': 60,
-      'AI': 16,
-      'Software Engineering': 16,
-      'Product Management': 16
-    };
+    // Shared version definition
+    const varietyPackIndices = getVersionCounts(DEFAULT_VERSION_ID) || {};
+    const varietyPackLabel = getVersionLabel(DEFAULT_VERSION_ID) || 'Variety Pack';
 
     const varietyPackTerms = tabooList.filter(term => {
       const limit = varietyPackIndices[term.category];
       return limit && term.index <= limit;
     });
+
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+      const varietyOption = categoryFilter.querySelector('option[value="variety"]');
+      if (varietyOption) {
+        varietyOption.textContent = `${varietyPackLabel} Only (${varietyPackTerms.length} terms)`;
+      }
+    }
 
     function generateBook(terms) {
       const container = document.getElementById('bookContainer');

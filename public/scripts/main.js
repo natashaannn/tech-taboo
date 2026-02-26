@@ -4,6 +4,7 @@ import { generateSVG } from "./lib/generateSVG.js";
 import { setupSelector } from "./ui/selector.js";
 import { getCategoryColor, detectCategory, CATEGORIES, CATEGORY_COLORS } from "./lib/categories.js";
 import { preloadTechybaraImages } from "./lib/imageData.js";
+import { DEFAULT_VERSION_ID, VERSION_DEFINITIONS, getVersionCounts } from "./lib/versions.js";
 
 function setSVGOutput(html) {
   document.getElementById("output").innerHTML = html;
@@ -229,25 +230,8 @@ function fillInputAllCardsinVersion() {
     if (!selectedVersion) return; // User cancelled
 
     // Define version configurations
-    let versionCounts = {};
-    
-    if (selectedVersion === "VARIETY_PACK") {
-      // Variety Pack Version (multiples of 4)
-      versionCounts = {
-        "General": 60,
-        "AI": 16,
-        "Software Engineering": 16,
-        "Product Management": 16,
-      };
-    } else if (selectedVersion === "SOFTWARE_INTERVIEW_EXTENSION") {
-      // DSA Extension Pack - all 52 words
-      versionCounts = {
-        "Data Structures & Algorithms": 52,
-        "System Design": 52,
-      };
-    } else {
-      return; // Unknown version
-    }
+    const versionCounts = getVersionCounts(selectedVersion);
+    if (!versionCounts) return;
 
     // Group available words by category
     const byCategory = {};
@@ -365,6 +349,14 @@ function showVersionModal(callback) {
   modal.onclick = (e) => {
     if (e.target === modal) cancel();
   };
+}
+
+function populateVersionSelectOptions() {
+  const selectEl = document.getElementById('versionSelect');
+  if (!selectEl) return;
+  selectEl.innerHTML = VERSION_DEFINITIONS.map((v) => (
+    `<option value="${v.id}" ${v.id === DEFAULT_VERSION_ID ? "selected" : ""}>${v.label}</option>`
+  )).join("");
 }
 
 function generateCardsFromCategories(byCategory, selectedCategories) {
@@ -767,5 +759,6 @@ document.getElementById("btn-book").addEventListener("click", () => {
 });
 
 // initial render
+populateVersionSelectOptions();
 renderLegend();
 generate();
