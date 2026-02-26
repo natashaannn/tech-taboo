@@ -38,10 +38,14 @@
                 <option value="zh">中文</option>
               </select>
             </div>
+            <div>
+              <label id="versionLabel" for="versionSelect">Edition / 版本</label><br/>
+              <select id="versionSelect"></select>
+            </div>
           </div>
         </div>
         <div style="text-align:right;">
-          <button class="cta" id="btn-download">Download All Cards (PNG ZIP)</button>
+          <button class="cta" id="btn-download-cards">Download Cards (PNG ZIP)</button>
           <div class="muted" id="status" style="margin-top:8px;"></div>
         </div>
       </div>
@@ -53,8 +57,9 @@
           <div style="font-weight:700; margin-bottom:6px;" id="packagingTitle">Packaging Designs</div>
           <div class="muted" id="packagingDesc"></div>
         </div>
-        <div style="text-align:right;">
-          <button id="btn-download-packaging">Download Packaging Designs (ZIP)</button>
+        <div style="text-align:right; display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end;">
+          <button id="btn-download-packaging-whole">Download Packaging (Whole ZIP)</button>
+          <button id="btn-download-packaging-panels">Download Packaging (Panels ZIP)</button>
         </div>
       </div>
 
@@ -70,9 +75,9 @@
         />
       </div>
 
-      <div id="instructions" class="muted"></div>
+      <div id="instructions" class="muted" style="white-space:pre-line; margin-top:12px;"></div>
       <div class="muted" style="margin-top:10px;">
-        <a href="./index.html" id="backLink">⤺ Back</a>
+        <a href="./index.html" id="backLink">↩ Back</a>
       </div>
     </div>
 

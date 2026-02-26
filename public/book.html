@@ -230,23 +230,8 @@
     </div>
     
     <div style="margin-bottom: 15px;">
-      <label>Filter by category: </label>
-      <select id="categoryFilter">
-        <option value="variety">Variety Pack Only (216 terms)</option>
-        <option value="all">All Categories (750 terms)</option>
-        <option value="General">General</option>
-        <option value="AI">AI</option>
-        <option value="Software Engineering">Software Engineering</option>
-        <option value="Data">Data</option>
-        <option value="Product Management">Product Management</option>
-        <option value="Data Structures & Algorithms">DSA</option>
-        <option value="System Design">System Design</option>
-        <option value="Game Development">Game Development</option>
-        <option value="DevOps">DevOps</option>
-        <option value="Cybersecurity">Cybersecurity</option>
-        <option value="UX Design">UX Design</option>
-        <option value="Responsible Tech">Responsible Tech</option>
-      </select>
+      <label>Filter by version: </label>
+      <select id="versionFilter"></select>
     </div>
     
     <div>
@@ -261,23 +246,32 @@
 
   <script type="module">
     import { tabooList } from './scripts/data/tabooList.js';
-    import { DEFAULT_VERSION_ID, getVersionCounts, getVersionLabel } from './scripts/lib/versions.js';
+    import { DEFAULT_VERSION_ID, VERSION_DEFINITIONS, getVersionCounts, getVersionLabel } from './scripts/lib/versions.js';
 
-    // Shared version definition
-    const varietyPackIndices = getVersionCounts(DEFAULT_VERSION_ID) || {};
-    const varietyPackLabel = getVersionLabel(DEFAULT_VERSION_ID) || 'Variety Pack';
+    function getTermsForVersion(versionId) {
+      const counts = getVersionCounts(versionId) || {};
+      return tabooList.filter((term) => {
+        const limit = counts[term.category];
+        return !!limit && term.index <= limit;
+      });
+    }
 
-    const varietyPackTerms = tabooList.filter(term => {
-      const limit = varietyPackIndices[term.category];
-      return limit && term.index <= limit;
-    });
+    function getVersionTermCount(versionId) {
+      return getTermsForVersion(versionId).length;
+    }
 
-    const categoryFilter = document.getElementById('categoryFilter');
-    if (categoryFilter) {
-      const varietyOption = categoryFilter.querySelector('option[value="variety"]');
-      if (varietyOption) {
-        varietyOption.textContent = `${varietyPackLabel} Only (${varietyPackTerms.length} terms)`;
-      }
+    function renderVersionOptions() {
+      const select = document.getElementById('versionFilter');
+      if (!select) return;
+      const options = [
+        `<option value="all">All Terms (${tabooList.length} terms)</option>`,
+        ...VERSION_DEFINITIONS.map((version) => {
+          const count = getVersionTermCount(version.id);
+          return `<option value="${version.id}">${version.label} (${count} terms)</option>`;
+        }),
+      ];
+      select.innerHTML = options.join('');
+      select.value = DEFAULT_VERSION_ID;
     }
 
     function generateBook(terms) {
@@ -402,17 +396,20 @@
     }
     
     function updateBook() {
-      const filter = document.getElementById('categoryFilter').value;
-      
+      const filter = document.getElementById('versionFilter').value;
+
       let terms;
       if (filter === 'all') {
         terms = tabooList;
-      } else if (filter === 'variety') {
-        terms = varietyPackTerms;
       } else {
-        terms = tabooList.filter(t => t.category === filter);
+        terms = getTermsForVersion(filter);
       }
-      
+
+      const selectedLabel = filter === 'all'
+        ? 'All Terms'
+        : (getVersionLabel(filter) || filter);
+      document.title = `Techie Taboo - Companion Book (${selectedLabel})`;
+
       generateBook(terms);
     }
     
@@ -421,7 +418,8 @@
     }
     
     // Event listeners
-    document.getElementById('categoryFilter').addEventListener('change', updateBook);
+    renderVersionOptions();
+    document.getElementById('versionFilter').addEventListener('change', updateBook);
     
     // Initial render
     updateBook();
