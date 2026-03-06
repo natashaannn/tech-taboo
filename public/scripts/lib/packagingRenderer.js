@@ -246,13 +246,11 @@ export async function createPackagingSvg({
   const topEditionName = editionLabel;
   const categoryColor = CATEGORY_COLORS[primaryCategory] || "#DCECF0";
   const categoryTextColor = CATEGORY_TEXT_COLORS[primaryCategory] || "#23555F";
-  const uniqueThemeNames = Array.from(new Set(
-    activeCategories.map((cat) => CATEGORY_THEME_NAMES[cat]).filter(Boolean),
-  ));
-  const themeNamesText = uniqueThemeNames.join(", ");
   const background = "#fff3c2";
   const techieColor = "#9f7e5f";
   const tabooColor = "#8dbbb6";
+  const badgeBgColor = selectionKey === "VARIETY_PACK" ? "#93bcb8" : categoryTextColor;
+  const badgeTextColor = selectionKey === "VARIETY_PACK" ? "#0A1F33" : categoryColor;
   const defaultDescription = selectedVersion ? selectedVersion.description : CATEGORY_DESCRIPTIONS[primaryCategory];
   const desc = (description || defaultDescription || "").toUpperCase();
 
@@ -269,8 +267,8 @@ export async function createPackagingSvg({
 
   const descriptionLines = wrapWords(desc, 30, 3);
   const longSideCategoryLines = wrapWords(editionName, 8, 4);
-  const topPaletteLines = wrapWords(`Card palette inspired by VSCode themes: ${themeNamesText}`, 56, 3);
   const sideDescriptionText = (description || defaultDescription || "").trim();
+  const longSideDescriptionLines = wrapWords(sideDescriptionText, 40, 3);
   const samples = buildCategorySamples(activeCategories, {
     onePerCategory: selectionKey === "VARIETY_PACK",
     singleCategoryCount: primaryCategory === "Responsible Tech" ? 4 : 6,
@@ -296,16 +294,11 @@ export async function createPackagingSvg({
   const topPillWidth = Math.max(16, (topEditionName.length * 1.8) + 8);
   const topPillX = topX + ((PACKAGING_PANEL_MM.lidTop.width - topPillWidth) / 2);
   const topPillTextX = topPillX + (topPillWidth / 2);
-  const palettePillWidth = 62;
-  const palettePillX = topX + ((PACKAGING_PANEL_MM.lidTop.width - palettePillWidth) / 2);
-  const palettePillHeight = 2.8 + (topPaletteLines.length * 2.6);
   const shortPillCenterX = topX + 49;
   const shortPillBaseWidth = Math.max(16, (topEditionName.length * 1.45) + 6);
   const shortPillWidth = Math.max(8, shortPillBaseWidth / 2);
   const shortPillX = shortPillCenterX - (shortPillWidth / 2);
   const shortPillHeight = 3.05;
-  const shortDescPillWidth = 58;
-  const shortDescPillX = topX + ((PACKAGING_PANEL_MM.shortSide.height - shortDescPillWidth) / 2);
 
   const panelAttrs = includeBorders ? 'class="panel-stroke"' : 'stroke="none"';
 
@@ -357,8 +350,8 @@ export async function createPackagingSvg({
   <image href="./ragtech-logo-rectangle.png" x="${topX + 2}" y="${topY + 2}" width="16" height="6" preserveAspectRatio="xMidYMid meet" />
   <text x="${topX + 34}" y="${topY + 6.9}" text-anchor="middle" fill="${techieColor}" font-size="2.5" class="gaegu">Great for parties and events!</text>
   <g transform="rotate(25 ${topX + 55} ${topY + 6.9})">
-    <rect x="${topX + 50}" y="${topY + 4}" width="15.5" height="5.8" rx="2.9" fill="${categoryTextColor}" />
-    <text x="${topX + 57.5}" y="${topY + 7.7}" text-anchor="middle" fill="${categoryColor}" font-size="2.2" font-weight="800" class="mono">2&gt; players</text>
+    <rect x="${topX + 50}" y="${topY + 4}" width="15.5" height="5.8" rx="2.9" fill="${badgeBgColor}" />
+    <text x="${topX + 57.5}" y="${topY + 7.7}" text-anchor="middle" fill="${badgeTextColor}" font-size="2.2" font-weight="800" class="mono">2+ players</text>
   </g>
 
   <g filter="url(#titleLift)">
@@ -376,10 +369,7 @@ export async function createPackagingSvg({
   <g clip-path="url(#lidTopAndLongSidesClip)">
     ${sampleCardsMarkup.join("")}
   </g>
-  <rect x="${palettePillX}" y="${topY + 87.2}" width="${palettePillWidth}" height="${palettePillHeight}" rx="2.1" fill="rgba(255,255,255,0.82)" />
-  <g fill="${techieColor}" font-size="1.95" text-anchor="middle" class="gaegu">
-    ${topPaletteLines.map((line, idx) => `<text x="${palettePillX + (palettePillWidth / 2)}" y="${topY + 89.4 + (idx * 2.45)}">${line}</text>`).join("")}
-  </g>
+
 
   <g class="gaegu" transform="rotate(180 ${topX + (PACKAGING_PANEL_MM.shortSide.height / 2)} ${topSideY + (PACKAGING_PANEL_MM.shortSide.width / 2)})">
     <image href="./ragtech-logo-rectangle.png" x="${topX + 2}" y="${topSideY + 1}" width="14" height="5.3" preserveAspectRatio="xMidYMid meet" />
@@ -388,8 +378,6 @@ export async function createPackagingSvg({
     <image href="./techybara/techybaras-playing-card-game.png" x="${topX + 38}" y="${topSideY + 0.4}" width="21" height="21" preserveAspectRatio="xMidYMid meet" />
     <rect x="${shortPillX}" y="${topSideY + 20.0}" width="${shortPillWidth}" height="${shortPillHeight}" rx="${shortPillHeight / 2}" fill="${categoryColor}" />
     <text x="${shortPillCenterX}" y="${topSideY + 22.1}" text-anchor="middle" fill="${categoryTextColor}" font-size="1.25" font-weight="800" class="mono">${topEditionName}</text>
-    <rect x="${shortDescPillX}" y="${topSideY + 25.0}" width="${shortDescPillWidth}" height="3.6" rx="1.8" fill="rgba(255,255,255,0.82)" />
-    <text x="${topX + (PACKAGING_PANEL_MM.shortSide.height / 2)}" y="${topSideY + 27.3}" text-anchor="middle" fill="${techieColor}" font-size="1.25" textLength="${shortDescPillWidth - 3}" lengthAdjust="spacingAndGlyphs" class="gaegu">${sideDescriptionText}</text>
   </g>
 
   <g class="gaegu">
@@ -399,8 +387,6 @@ export async function createPackagingSvg({
     <image href="./techybara/techybaras-playing-card-game.png" x="${topX + 38}" y="${bottomSideY + 0.4}" width="21" height="21" preserveAspectRatio="xMidYMid meet" />
     <rect x="${shortPillX}" y="${bottomSideY + 20.0}" width="${shortPillWidth}" height="${shortPillHeight}" rx="${shortPillHeight / 2}" fill="${categoryColor}" />
     <text x="${shortPillCenterX}" y="${bottomSideY + 22.1}" text-anchor="middle" fill="${categoryTextColor}" font-size="1.25" font-weight="800" class="mono">${topEditionName}</text>
-    <rect x="${shortDescPillX}" y="${bottomSideY + 25.0}" width="${shortDescPillWidth}" height="3.6" rx="1.8" fill="rgba(255,255,255,0.82)" />
-    <text x="${topX + (PACKAGING_PANEL_MM.shortSide.height / 2)}" y="${bottomSideY + 27.3}" text-anchor="middle" fill="${techieColor}" font-size="1.25" textLength="${shortDescPillWidth - 3}" lengthAdjust="spacingAndGlyphs" class="gaegu">${sideDescriptionText}</text>
   </g>
 
   <g clip-path="url(#leftLongSideClip)">
@@ -411,18 +397,18 @@ export async function createPackagingSvg({
   </g>
 
   <g clip-path="url(#leftLongSideClip)" class="gaegu" fill="${techieColor}">
-    ${longSideCategoryLines.map((line, idx) => `<text x="${leftLongCenterX + 5}" y="${longSideLabelCenterY + ((idx - ((longSideCategoryLines.length - 1) / 2)) * 4.3)}" font-size="4.3" text-anchor="middle" transform="rotate(90 ${leftLongCenterX} ${longSideLabelCenterY})">${line}</text>`).join("")}
-    <g transform="rotate(90 ${leftX + 1.8} ${longSideDescCenterY})">
-      <rect x="${leftX - 8}" y="${longSideDescCenterY - 5.6}" width="59.2" height="5.2" rx="2.6" fill="rgba(255,255,255,0.82)" />
-      <text x="${leftX + 20.8}" y="${longSideDescCenterY - 2.6}" text-anchor="middle" font-size="2.0" textLength="56.2" lengthAdjust="spacingAndGlyphs">${sideDescriptionText}</text>
+    ${longSideCategoryLines.map((line, idx) => `<text x="${leftLongCenterX + 5}" y="${longSideLabelCenterY + ((idx - ((longSideCategoryLines.length - 1) / 2)) * 4.3) - 5}" font-size="4.3" text-anchor="middle" transform="rotate(90 ${leftLongCenterX} ${longSideLabelCenterY})">${line}</text>`).join("")}
+    <g transform="rotate(90 ${leftX + 4} ${longSideDescCenterY + 3})">
+      <rect x="${leftX - 8}" y="${longSideDescCenterY - 6.5}" width="59.2" height="${longSideDescriptionLines.length * 2.8 + 2}" rx="${(longSideDescriptionLines.length * 2.8 + 2) / 2}" fill="rgba(255,255,255,0.82)" />
+      ${longSideDescriptionLines.map((line, idx) => `<text x="${leftX + 20.8}" y="${longSideDescCenterY - 5.2 + (idx * 2.8) + 2.2}" text-anchor="middle" font-size="2.2" class="gaegu">${line}</text>`).join("")}
     </g>
   </g>
 
   <g clip-path="url(#rightLongSideClip)" class="gaegu" fill="${techieColor}">
-    ${longSideCategoryLines.map((line, idx) => `<text x="${rightLongCenterX - 5}" y="${longSideLabelCenterY + ((idx - ((longSideCategoryLines.length - 1) / 2)) * 4.3)}" font-size="4.3" text-anchor="middle" transform="rotate(-90 ${rightLongCenterX} ${longSideLabelCenterY})">${line}</text>`).join("")}
-    <g transform="rotate(-90 ${rightX + (PACKAGING_PANEL_MM.longSide.height - 1.8)} ${longSideDescCenterY})">
-      <rect x="${rightX + (PACKAGING_PANEL_MM.longSide.height - 51.4)}" y="${longSideDescCenterY - 5.6}" width="59.2" height="5.2" rx="2.6" fill="rgba(255,255,255,0.82)" />
-      <text x="${rightX + (PACKAGING_PANEL_MM.longSide.height - 20.8)}" y="${longSideDescCenterY - 2.6}" text-anchor="middle" font-size="2.0" textLength="56.2" lengthAdjust="spacingAndGlyphs">${sideDescriptionText}</text>
+    ${longSideCategoryLines.map((line, idx) => `<text x="${rightLongCenterX - 5}" y="${longSideLabelCenterY + ((idx - ((longSideCategoryLines.length - 1) / 2)) * 4.3) - 5}" font-size="4.3" text-anchor="middle" transform="rotate(-90 ${rightLongCenterX} ${longSideLabelCenterY})">${line}</text>`).join("")}
+    <g transform="rotate(-90 ${rightX + (PACKAGING_PANEL_MM.longSide.height - 4)} ${longSideDescCenterY + 3})">
+      <rect x="${rightX + (PACKAGING_PANEL_MM.longSide.height - 51.4)}" y="${longSideDescCenterY - 6.5}" width="59.2" height="${longSideDescriptionLines.length * 2.8 + 2}" rx="${(longSideDescriptionLines.length * 2.8 + 2) / 2}" fill="rgba(255,255,255,0.82)" />
+      ${longSideDescriptionLines.map((line, idx) => `<text x="${rightX + (PACKAGING_PANEL_MM.longSide.height - 20.8)}" y="${longSideDescCenterY - 5.2 + (idx * 2.8) + 2.2}" text-anchor="middle" font-size="2.2" class="gaegu">${line}</text>`).join("")}
     </g>
   </g>
 </svg>`;

@@ -16,13 +16,13 @@ export const CATEGORIES = [
 
 // Default colors for each category
 // Checked for WCAG AA Large Text Contrast on https://webaim.org/resources/contrastchecker/
-// Used VSCode theme colors
+// Variety pack uses accessible vibrant colors; others use VSCode theme colors
 export const CATEGORY_COLORS = {
-  "General": "#DCECF0", // Noctis Hibernicus       
-  "AI": "#FAFAFA", // Atom One Light
+  "General": "#93bcb8", // Tiffany Blue 
+  "AI": "#e08185", // Strawberry Pink
   "Data": "#562C2B", // Noctis Bordo
-  "Product Management": "#FDF8ED", // Noctis Lux
-  "Software Engineering": "#282A36", // Darcula
+  "Product Management": "#815c4c", // Brown
+  "Software Engineering": "#ddc46f", // Lemoncake
   "Data Structures & Algorithms": "#DFDDF1", // Noctis Lilac
   "System Design": "#0B2942", // Night Owl
   "Game Development": "#FFC7D0", // Pink Lemonade
@@ -34,11 +34,11 @@ export const CATEGORY_COLORS = {
 
 // Text title colors for each category
 export const CATEGORY_TEXT_COLORS = {
-  "General": "#23555F", // Noctis Hibernicus
-  "AI": "#383A42", // Atom One Light
+  "General": "#0A1F33", // Dark text on light tiffany blue
+  "AI": "#0A1F33", // Dark text on light strawberry pink
   "Data": "#C9BEC2", // Noctis Bordo
-  "Product Management": "#23555F", // Noctis Lux
-  "Software Engineering": "#F8F8F2", // Darcula
+  "Product Management": "#efe7e4", // Light beige on brown (original)
+  "Software Engineering": "#0A1F33", // Dark text on light lemoncake
   "Data Structures & Algorithms": "#1C1372", // Noctis Lilac
   "System Design": "#669CF2", // Night Owl
   "Game Development": "#816E7D", // Pink Lemonade
@@ -50,11 +50,11 @@ export const CATEGORY_TEXT_COLORS = {
 
 // VSCode editor theme names that inspired each category palette
 export const CATEGORY_THEME_NAMES = {
-  "General": "Noctis Hibernicus",
-  "AI": "Atom One Light",
+  "General": "Original Tiffany Blue",
+  "AI": "Original Strawberry Pink",
   "Data": "Noctis Bordo",
-  "Product Management": "Noctis Lux",
-  "Software Engineering": "Darcula",
+  "Product Management": "Original Brown",
+  "Software Engineering": "Original Lemoncake",
   "Data Structures & Algorithms": "Noctis Lilac",
   "System Design": "Night Owl",
   "Game Development": "Pink Lemonade",
