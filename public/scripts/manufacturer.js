@@ -1,112 +1,169 @@
-// public/scripts/manufacturer.js
 import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { getCategoryColor, detectCategory } from "./lib/categories.js";
 import { preloadTechybaraImages } from "./lib/imageData.js";
+import { DEFAULT_VERSION_ID, VERSION_DEFINITIONS, getVersionCounts, getVersionLabel } from "./lib/versions.js";
+import { createPackagingSvg } from "./lib/packagingRenderer.js";
 
-const VARIETY_PACK_COUNTS = {
-  "General": 60,
-  "AI": 16,
-  "Software Engineering": 16,
-  "Product Management": 16,
+const ENABLED_SUPPLIER_VERSIONS = new Set([
+  "VARIETY_PACK",
+  "SOFTWARE_INTERVIEW_EXTENSION",
+]);
+
+const PACKAGING_VERSION_MAP = {
+  VARIETY_PACK: "VARIETY_PACK",
+  SOFTWARE_INTERVIEW_EXTENSION: "SOFTWARE_INTERVIEW_EXTENSION",
+  DEVSECOPS_PACK: "DEVSEC_PACK",
+  PRODUCT_PACK: "PRODUCT_EXPERIENCE_PACK",
+  Data_AI_PACK: "DATA_AI_PACK",
+  SWE_GAME_DEV_PACK: "ENGINEERING_GAME_PACK",
+  RESPONSIBLE_TECH_PACK: "Responsible Tech",
 };
+
+const MM_TO_PX_AT_96 = 96 / 25.4;
+const PACKAGING_TOTAL_MM = { width: 124.8, height: 153.8 };
+const PANEL_EXPORT_LAYOUT = [
+  { name: "lid-top", x: 29.4, y: 29.4, width: 66, height: 95 },
+  { name: "short-side-top", x: 29.4, y: 0, width: 66, height: 29.4 },
+  { name: "short-side-bottom", x: 29.4, y: 124.4, width: 66, height: 29.4 },
+  { name: "long-side-left", x: 0, y: 29.4, width: 29.4, height: 95 },
+  { name: "long-side-right", x: 95.4, y: 29.4, width: 29.4, height: 95 },
+];
 
 const I18N = {
   en: {
     title: "Manufacturer Download",
-    subtitle: "For our card manufacturer: download the complete Variety Pack as a PNG zip.",
-    download: "Download All Cards (PNG ZIP)",
-    referenceTitle: "Reference Preview",
-    referenceCaption: "Reference image (card.png). Please confirm fonts and layout match exactly.",
+    subtitle: "Select an edition, then export card PNG files and packaging print files.",
+    langLabel: "Language / 语言",
+    versionLabel: "Edition / 版本",
+    cardsBtn: "Download Cards (PNG ZIP)",
+    pkgWholeBtn: "Download Packaging (Whole ZIP)",
+    pkgPanelsBtn: "Download Packaging (Panels ZIP)",
     packagingTitle: "Packaging Designs",
-    packagingDesc: "Download the packaging design files as a zip.",
-    packagingDownload: "Download Packaging Designs (ZIP)",
-    back: "⤺ Back to Tech Taboo",
-    instructions: (count) => `Steps:\n1) Click “Download All Cards (PNG ZIP)”\n2) Wait until the download prompt appears (do not click multiple times)\n3) Unzip the file to get ${count} PNG images\n\nNotes:\n- This exports the Variety Pack selection used by the main app\n- Output resolution is high, so export may take a while\n- Please verify the downloaded designs (including the font) match the reference image: card.png`,
-    packInfo: (count) => `Variety Pack contents: ${count} cards. Categories and counts: General ${VARIETY_PACK_COUNTS["General"]}, AI ${VARIETY_PACK_COUNTS["AI"]}, Software Engineering ${VARIETY_PACK_COUNTS["Software Engineering"]}, Product Management ${VARIETY_PACK_COUNTS["Product Management"]}.`,
+    packagingDesc: "Export full packaging artwork or individual panel artwork for print.",
+    referenceTitle: "Reference Preview",
+    referenceCaption: "Reference image (card.png). Confirm final print files match font and layout.",
+    back: "↩ Back to Tech Taboo",
+    comingSoon: "Coming soon",
     statusReady: "Ready.",
-    statusWorking: (done, total) => `Exporting… ${done}/${total}`,
-    statusDone: "Export started (zip download).",
     statusError: "Export failed. Please refresh and try again.",
+    statusCards: (done, total) => `Rendering cards... ${done}/${total}`,
+    statusPackaging: "Rendering packaging...",
+    statusZip: "Generating ZIP...",
+    statusDone: "Download started.",
+    instructions: (label) =>
+      `Instructions for ${label}:\n` +
+      "1) Click \"Download Cards (PNG ZIP)\" to get all card fronts for this edition.\n" +
+      "2) Click \"Download Packaging (Whole ZIP)\" to get the full lid layout as one PNG.\n" +
+      "3) Click \"Download Packaging (Panels ZIP)\" to get top/long/short sides as separate PNGs.\n" +
+      "4) Unzip all files before print production.",
+    packInfo: (label, total, cats) => `${label}: ${total} cards. Category counts: ${cats}.`,
   },
   zh: {
     title: "工厂下载页面",
-    subtitle: "给卡牌生产工厂使用：一键下载“Variety Pack”全部卡牌（PNG 压缩包）。",
-    download: "下载全部卡牌（PNG ZIP）",
-    referenceTitle: "参考预览",
-    referenceCaption: "参考图片（card.png）。请确认字体与版式完全一致。",
+    subtitle: "请选择版本，然后分别导出卡牌 PNG 和包装印刷文件。",
+    langLabel: "语言 / Language",
+    versionLabel: "版本 / Edition",
+    cardsBtn: "下载卡牌（PNG ZIP）",
+    pkgWholeBtn: "下载包装整图（ZIP）",
+    pkgPanelsBtn: "下载包装分面（ZIP）",
     packagingTitle: "包装设计文件",
-    packagingDesc: "将包装设计文件打包下载（ZIP）。",
-    packagingDownload: "下载包装设计文件（ZIP）",
-    back: "⤺ 返回 Tech Taboo",
-    instructions: (count) => `操作步骤：\n1）点击“下载全部卡牌（PNG ZIP）”\n2）等待浏览器弹出下载（请勿重复点击）\n3）解压后会得到 ${count} 张 PNG 图片\n\n注意：\n- 导出内容与主页面的 Variety Pack 版本一致\n- 图片分辨率较高，导出需要一些时间\n- 请核对下载的设计稿（包含字体）与参考图片一致：card.png`,
-    packInfo: (count) => `Variety Pack 共 ${count} 张卡牌。分类数量：通用 ${VARIETY_PACK_COUNTS["General"]}，AI ${VARIETY_PACK_COUNTS["AI"]}，软件工程 ${VARIETY_PACK_COUNTS["Software Engineering"]}，产品管理 ${VARIETY_PACK_COUNTS["Product Management"]}。`,
+    packagingDesc: "可导出整张包装图，或按面导出（顶面/长边/短边）用于印刷。",
+    referenceTitle: "参考预览",
+    referenceCaption: "参考图（card.png）。请确认最终印刷文件的字体与版式一致。",
+    back: "↩ 返回 Tech Taboo",
+    comingSoon: "暂未开放",
     statusReady: "已就绪。",
-    statusWorking: (done, total) => `正在导出… ${done}/${total}`,
-    statusDone: "已开始下载（ZIP）。",
     statusError: "导出失败，请刷新后重试。",
-  }
+    statusCards: (done, total) => `正在渲染卡牌... ${done}/${total}`,
+    statusPackaging: "正在渲染包装...",
+    statusZip: "正在生成 ZIP...",
+    statusDone: "已开始下载。",
+    instructions: (label) =>
+      `${label} 操作说明：\n` +
+      "1）点击“下载卡牌（PNG ZIP）”，下载该版本全部卡牌图。\n" +
+      "2）点击“下载包装整图（ZIP）”，下载整张包装展开图 PNG。\n" +
+      "3）点击“下载包装分面（ZIP）”，下载顶面/长边/短边单独 PNG。\n" +
+      "4）下载后请先解压，再交付印刷。",
+    packInfo: (label, total, cats) => `${label}：共 ${total} 张卡牌。分类数量：${cats}。`,
+  },
 };
 
 let exportBusy = false;
 
+function getLang() {
+  return (document.getElementById("lang")?.value || "en");
+}
+
+function getText() {
+  return I18N[getLang()] || I18N.en;
+}
+
+function setStatus(text) {
+  const el = document.getElementById("status");
+  if (el) el.textContent = text || "";
+}
+
 function setExportBusy(busy, label) {
   exportBusy = !!busy;
-  const btn = document.getElementById('btn-download');
-  if (btn) btn.disabled = exportBusy;
+  ["btn-download-cards", "btn-download-packaging-whole", "btn-download-packaging-panels"]
+    .forEach((id) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.disabled = exportBusy;
+    });
 
-  let overlay = document.getElementById('export-loader');
+  let overlay = document.getElementById("export-loader");
   if (!exportBusy) {
-    if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    const style = document.getElementById('export-loader-style');
-    if (style && style.parentNode) style.parentNode.removeChild(style);
+    if (overlay?.parentNode) overlay.parentNode.removeChild(overlay);
+    const style = document.getElementById("export-loader-style");
+    if (style?.parentNode) style.parentNode.removeChild(style);
     return;
   }
 
   if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'export-loader';
-    overlay.style.position = 'fixed';
-    overlay.style.inset = '0';
-    overlay.style.background = 'rgba(0,0,0,0.45)';
-    overlay.style.zIndex = '9999';
-    overlay.style.display = 'flex';
-    overlay.style.alignItems = 'center';
-    overlay.style.justifyContent = 'center';
-    overlay.style.padding = '24px';
+    overlay = document.createElement("div");
+    overlay.id = "export-loader";
+    overlay.style.position = "fixed";
+    overlay.style.inset = "0";
+    overlay.style.background = "rgba(0,0,0,0.45)";
+    overlay.style.zIndex = "9999";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.padding = "24px";
 
-    const box = document.createElement('div');
-    box.style.background = '#ffffff';
-    box.style.borderRadius = '12px';
-    box.style.padding = '18px 20px';
-    box.style.maxWidth = '520px';
-    box.style.width = 'min(520px, 92vw)';
-    box.style.boxShadow = '0 10px 30px rgba(0,0,0,0.25)';
-    box.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+    const box = document.createElement("div");
+    box.style.background = "#fff";
+    box.style.borderRadius = "12px";
+    box.style.padding = "18px 20px";
+    box.style.maxWidth = "520px";
+    box.style.width = "min(520px, 92vw)";
+    box.style.boxShadow = "0 10px 30px rgba(0,0,0,0.25)";
+    box.style.fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
 
-    const title = document.createElement('div');
-    title.id = 'export-loader-title';
-    title.style.fontWeight = '700';
-    title.style.marginBottom = '10px';
-    title.style.fontSize = '16px';
-    title.textContent = 'Exporting…';
+    const title = document.createElement("div");
+    title.id = "export-loader-title";
+    title.style.fontWeight = "700";
+    title.style.marginBottom = "10px";
+    title.style.fontSize = "16px";
+    title.textContent = "Exporting...";
 
-    const barWrap = document.createElement('div');
-    barWrap.style.height = '10px';
-    barWrap.style.background = '#e5e7eb';
-    barWrap.style.borderRadius = '999px';
-    barWrap.style.overflow = 'hidden';
+    const barWrap = document.createElement("div");
+    barWrap.style.height = "10px";
+    barWrap.style.background = "#e5e7eb";
+    barWrap.style.borderRadius = "999px";
+    barWrap.style.overflow = "hidden";
 
-    const bar = document.createElement('div');
-    bar.style.height = '100%';
-    bar.style.width = '40%';
-    bar.style.background = '#17424A';
-    bar.style.borderRadius = '999px';
-    bar.style.animation = 'exportLoaderMove 1.05s ease-in-out infinite';
+    const bar = document.createElement("div");
+    bar.style.height = "100%";
+    bar.style.width = "40%";
+    bar.style.background = "#17424A";
+    bar.style.borderRadius = "999px";
+    bar.style.animation = "exportLoaderMove 1.05s ease-in-out infinite";
 
-    const style = document.createElement('style');
-    style.id = 'export-loader-style';
-    style.textContent = `@keyframes exportLoaderMove { 0% { transform: translateX(-60%); } 50% { transform: translateX(110%); } 100% { transform: translateX(-60%); } }`;
+    const style = document.createElement("style");
+    style.id = "export-loader-style";
+    style.textContent = "@keyframes exportLoaderMove { 0% { transform: translateX(-60%); } 50% { transform: translateX(110%); } 100% { transform: translateX(-60%); } }";
 
     barWrap.appendChild(bar);
     box.appendChild(title);
@@ -116,84 +173,13 @@ function setExportBusy(busy, label) {
     document.body.appendChild(overlay);
   }
 
-  const t = document.getElementById('export-loader-title');
-  if (t) t.textContent = String(label || 'Exporting…');
-}
-
-function buildVarietyPackPairs() {
-  const byCategory = {};
-  tabooList.forEach(item => {
-    const cat = item.category || detectCategory(item.word);
-    if (!byCategory[cat]) byCategory[cat] = [];
-    byCategory[cat].push(item);
-  });
-
-  const pairs = [];
-  Object.keys(VARIETY_PACK_COUNTS).forEach(cat => {
-    const targetCount = VARIETY_PACK_COUNTS[cat];
-    const wordsInCat = byCategory[cat] ? [...byCategory[cat]] : [];
-    if (!targetCount || wordsInCat.length === 0) return;
-
-    let take = Math.min(targetCount, wordsInCat.length);
-    if (take % 2 !== 0) take -= 1;
-    if (take < 2) return;
-
-    const selected = wordsInCat.slice(0, take);
-    for (let i = 0; i < selected.length; i += 2) {
-      const w1 = selected[i];
-      const w2 = selected[i + 1];
-      pairs.push({
-        top: {
-          word: w1.word,
-          taboos: w1.taboo,
-          category: w1.category || detectCategory(w1.word),
-        },
-        bottom: {
-          word: w2.word,
-          taboos: w2.taboo,
-          category: w2.category || detectCategory(w2.word),
-        }
-      });
-    }
-  });
-
-  return pairs;
-}
-
-function setText(lang, totalCards) {
-  const t = I18N[lang] || I18N.en;
-  document.getElementById('title').textContent = t.title;
-  document.getElementById('subtitle').textContent = t.subtitle;
-  document.getElementById('btn-download').textContent = t.download;
-  const referenceTitle = document.getElementById('referenceTitle');
-  if (referenceTitle) referenceTitle.textContent = t.referenceTitle || '';
-  const referenceCaption = document.getElementById('referenceCaption');
-  if (referenceCaption) referenceCaption.textContent = t.referenceCaption || '';
-  document.getElementById('packagingTitle').textContent = t.packagingTitle;
-  document.getElementById('packagingDesc').textContent = t.packagingDesc;
-  document.getElementById('btn-download-packaging').textContent = t.packagingDownload;
-  document.getElementById('backLink').textContent = t.back;
-  document.getElementById('instructions').textContent = t.instructions(totalCards);
-  document.getElementById('packInfo').textContent = t.packInfo(totalCards);
-  const status = document.getElementById('status');
-  if (status && !status.textContent) status.textContent = t.statusReady;
-}
-
-async function ensureJSZip() {
-  if (window.JSZip) return window.JSZip;
-  await new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
-    s.onload = resolve;
-    s.onerror = () => reject(new Error('Failed to load JSZip'));
-    document.head.appendChild(s);
-  });
-  return window.JSZip;
+  const t = document.getElementById("export-loader-title");
+  if (t) t.textContent = String(label || "Exporting...");
 }
 
 function triggerDownload(blob, filename) {
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);
@@ -202,88 +188,244 @@ function triggerDownload(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
-async function downloadPackagingZip() {
-  if (exportBusy) return;
+async function ensureJSZip() {
+  if (window.JSZip) return window.JSZip;
+  await new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+    s.onload = resolve;
+    s.onerror = () => reject(new Error("Failed to load JSZip"));
+    document.head.appendChild(s);
+  });
+  return window.JSZip;
+}
 
-  const lang = (document.getElementById('lang') || {}).value || 'en';
-  const t = I18N[lang] || I18N.en;
-  const statusEl = document.getElementById('status');
+function buildPairsForVersion(versionId) {
+  const counts = getVersionCounts(versionId) || {};
+  const byCategory = {};
 
-  setExportBusy(true, lang === 'zh' ? '正在打包…' : 'Packaging…');
-  try {
-    const JSZip = await ensureJSZip();
-    const zip = new JSZip();
+  tabooList.forEach((item) => {
+    const category = item.category || detectCategory(item.word);
+    if (!byCategory[category]) byCategory[category] = [];
+    byCategory[category].push(item);
+  });
 
-    let manifest;
-    try {
-      const res = await fetch('./packaging/manifest.json', { cache: 'no-cache' });
-      manifest = await res.json();
-    } catch (_) {
-      manifest = [];
+  const pairs = [];
+  Object.entries(counts).forEach(([category, target]) => {
+    const pool = byCategory[category] ? [...byCategory[category]] : [];
+    if (!pool.length || !target) return;
+
+    let take = Math.min(target, pool.length);
+    if (take % 2 !== 0) take -= 1;
+    if (take < 2) return;
+
+    const selected = pool.slice(0, take);
+    for (let i = 0; i < selected.length; i += 2) {
+      const top = selected[i];
+      const bottom = selected[i + 1];
+      pairs.push({
+        top: {
+          word: top.word,
+          taboos: top.taboo,
+          category: top.category || detectCategory(top.word),
+        },
+        bottom: {
+          word: bottom.word,
+          taboos: bottom.taboo,
+          category: bottom.category || detectCategory(bottom.word),
+        },
+      });
     }
+  });
 
-    const files = Array.isArray(manifest) ? manifest.map(String).filter(Boolean) : [];
-    const safeFiles = files.filter((p) => !p.includes('..') && !p.startsWith('/') && !/^[a-zA-Z]+:/.test(p));
+  return pairs;
+}
 
-    if (safeFiles.length === 0) {
-      if (statusEl) statusEl.textContent = lang === 'zh' ? '未找到包装文件（请先上传并更新 packaging/manifest.json）' : 'No packaging files found (please upload files and update packaging/manifest.json).';
-      return;
-    }
+function getSelectedVersion() {
+  return document.getElementById("versionSelect")?.value || DEFAULT_VERSION_ID;
+}
 
-    for (let i = 0; i < safeFiles.length; i++) {
-      const rel = safeFiles[i];
-      if (statusEl) statusEl.textContent = (lang === 'zh') ? `正在下载文件… ${i + 1}/${safeFiles.length}` : `Downloading files… ${i + 1}/${safeFiles.length}`;
+function getSelectedVersionLabel() {
+  return getVersionLabel(getSelectedVersion()) || getSelectedVersion();
+}
 
-      const res = await fetch(`./packaging/${encodeURI(rel).replace(/%2F/g, '/')}`, { cache: 'no-cache' });
-      if (!res.ok) continue;
-      const blob = await res.blob();
-      zip.file(rel, blob);
+function getCategorySummary(versionId) {
+  const counts = getVersionCounts(versionId) || {};
+  return Object.entries(counts)
+    .map(([name, count]) => `${name} ${count}`)
+    .join(", ");
+}
 
-      if (i % 6 === 0) {
-        await new Promise(r => setTimeout(r, 0));
-      }
-    }
+function populateVersionOptions() {
+  const select = document.getElementById("versionSelect");
+  if (!select) return;
+  const t = getText();
+  const prev = select.value;
 
-    if (statusEl) statusEl.textContent = (lang === 'zh') ? '正在生成 ZIP…' : 'Generating ZIP…';
-    const zipBlob = await zip.generateAsync({ type: 'blob' });
-    triggerDownload(zipBlob, 'tech-taboo-packaging-designs.zip');
-    if (statusEl) statusEl.textContent = t.statusDone;
-  } catch (_) {
-    if (statusEl) statusEl.textContent = t.statusError;
-  } finally {
-    setExportBusy(false);
+  select.innerHTML = VERSION_DEFINITIONS
+    .map((v) => {
+      const enabled = ENABLED_SUPPLIER_VERSIONS.has(v.id);
+      const extra = enabled ? "" : ` (${t.comingSoon})`;
+      return `<option value="${v.id}" ${enabled ? "" : "disabled"}>${v.label}${extra}</option>`;
+    })
+    .join("");
+
+  if (prev && ENABLED_SUPPLIER_VERSIONS.has(prev)) {
+    select.value = prev;
+  } else if (ENABLED_SUPPLIER_VERSIONS.has(DEFAULT_VERSION_ID)) {
+    select.value = DEFAULT_VERSION_ID;
+  } else {
+    const firstEnabled = VERSION_DEFINITIONS.find((v) => ENABLED_SUPPLIER_VERSIONS.has(v.id));
+    if (firstEnabled) select.value = firstEnabled.id;
   }
 }
 
-async function exportAllPngZip() {
+function applyText() {
+  const t = getText();
+  const selectedVersion = getSelectedVersion();
+  const label = getSelectedVersionLabel();
+  const pairs = buildPairsForVersion(selectedVersion);
+  const totalCards = pairs.length;
+  const cats = getCategorySummary(selectedVersion);
+
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("langLabel").textContent = t.langLabel;
+  document.getElementById("versionLabel").textContent = t.versionLabel;
+  document.getElementById("btn-download-cards").textContent = t.cardsBtn;
+  document.getElementById("btn-download-packaging-whole").textContent = t.pkgWholeBtn;
+  document.getElementById("btn-download-packaging-panels").textContent = t.pkgPanelsBtn;
+  document.getElementById("packagingTitle").textContent = t.packagingTitle;
+  document.getElementById("packagingDesc").textContent = t.packagingDesc;
+  document.getElementById("referenceTitle").textContent = t.referenceTitle;
+  document.getElementById("referenceCaption").textContent = t.referenceCaption;
+  document.getElementById("backLink").textContent = t.back;
+  document.getElementById("instructions").textContent = t.instructions(label);
+  document.getElementById("packInfo").textContent = t.packInfo(label, totalCards, cats);
+  if (!document.getElementById("status")?.textContent) setStatus(t.statusReady);
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function inlineSvgImages(svgMarkup) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(String(svgMarkup), "image/svg+xml");
+  const images = Array.from(doc.querySelectorAll("image"));
+
+  for (const img of images) {
+    const href = (img.getAttribute("href") || img.getAttribute("xlink:href") || "").trim();
+    if (!href || href.startsWith("data:")) continue;
+
+    let absUrl;
+    try {
+      absUrl = new URL(href, window.location.href).href;
+    } catch (_) {
+      continue;
+    }
+
+    let res;
+    try {
+      res = await fetch(absUrl, { cache: "force-cache" });
+    } catch (_) {
+      continue;
+    }
+    if (!res.ok) continue;
+
+    let blob;
+    try {
+      blob = await res.blob();
+    } catch (_) {
+      continue;
+    }
+
+    let dataUrl;
+    try {
+      dataUrl = await blobToDataUrl(blob);
+    } catch (_) {
+      continue;
+    }
+
+    img.setAttribute("href", dataUrl);
+    img.removeAttribute("xlink:href");
+  }
+
+  return new XMLSerializer().serializeToString(doc.documentElement);
+}
+
+function cropSvgToPanel(svgMarkup, panel) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(String(svgMarkup), "image/svg+xml");
+  const svg = doc.documentElement;
+  svg.setAttribute("width", `${panel.width}mm`);
+  svg.setAttribute("height", `${panel.height}mm`);
+  svg.setAttribute("viewBox", `${panel.x} ${panel.y} ${panel.width} ${panel.height}`);
+  return new XMLSerializer().serializeToString(svg);
+}
+
+async function svgToPngBlob(svgMarkup, widthMm, heightMm) {
+  return new Promise((resolve, reject) => {
+    const widthPx = Math.round(widthMm * MM_TO_PX_AT_96);
+    const heightPx = Math.round(heightMm * MM_TO_PX_AT_96);
+    const img = new Image();
+    const svgBlob = new Blob([String(svgMarkup)], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      const scale = 300 / 96;
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(widthPx * scale);
+      canvas.height = Math.round(heightPx * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, widthPx, heightPx);
+      ctx.drawImage(img, 0, 0, widthPx, heightPx);
+      canvas.toBlob((blob) => {
+        URL.revokeObjectURL(url);
+        if (blob) resolve(blob);
+        else reject(new Error("toBlob failed"));
+      }, "image/png");
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("PNG conversion failed"));
+    };
+
+    img.src = url;
+  });
+}
+
+function resolvePackagingSelection(versionId) {
+  return PACKAGING_VERSION_MAP[versionId] || versionId;
+}
+
+async function exportCardsZip() {
   if (exportBusy) return;
+  const versionId = getSelectedVersion();
+  const t = getText();
+  const pairs = buildPairsForVersion(versionId);
 
-  const lang = (document.getElementById('lang') || {}).value || 'en';
-  const t = I18N[lang] || I18N.en;
-
-  const pairs = buildVarietyPackPairs();
-  const total = pairs.length;
-
-  const statusEl = document.getElementById('status');
-
-  setExportBusy(true, lang === 'zh' ? '正在导出…' : 'Exporting…');
+  setExportBusy(true, t.statusPackaging);
   try {
-    const { savePNGsAsZip } = await import('./lib/exporters.js');
-
+    const { savePNGsAsZip } = await import("./lib/exporters.js");
     let techybaraImages;
     try {
       techybaraImages = await preloadTechybaraImages();
     } catch (_) {
-      techybaraImages = {
-        teacher: './techybara/teacher.png',
-        peekOut: './techybara/peek out.png',
-      };
+      techybaraImages = { teacher: "./techybara/teacher.png", peekOut: "./techybara/peek out.png" };
     }
 
     const items = [];
-    for (let i = 0; i < pairs.length; i++) {
-      if (statusEl) statusEl.textContent = t.statusWorking(i + 1, total);
-
+    for (let i = 0; i < pairs.length; i += 1) {
+      setStatus(t.statusCards(i + 1, pairs.length));
       const pair = pairs[i];
       const cardColor = getCategoryColor(pair.top.category);
       const svg = generateSVG(pair.top.word, pair.top.taboos, pair.bottom.word, pair.bottom.taboos, {
@@ -296,45 +438,103 @@ async function exportAllPngZip() {
         teacherImage: techybaraImages.teacher,
         peekOutImage: techybaraImages.peekOut,
       });
-
       items.push({ name: `card-${i + 1}.svg`, markup: svg });
-
-      if (i % 8 === 0) {
-        await new Promise(r => setTimeout(r, 0));
-      }
+      if (i % 8 === 0) await new Promise((r) => setTimeout(r, 0));
     }
 
-    await savePNGsAsZip(items, 'tech-taboo-variety-pack-png.zip', 610, 910);
-    if (statusEl) statusEl.textContent = t.statusDone;
+    await savePNGsAsZip(items, `tech-taboo-${versionId.toLowerCase()}-cards.zip`, 610, 910);
+    setStatus(t.statusDone);
   } catch (_) {
-    if (statusEl) statusEl.textContent = t.statusError;
+    setStatus(t.statusError);
   } finally {
     setExportBusy(false);
   }
 }
 
-function init() {
-  const pairs = buildVarietyPackPairs();
-  const totalCards = pairs.length;
+async function exportPackagingWholeZip() {
+  if (exportBusy) return;
+  const t = getText();
+  const versionId = getSelectedVersion();
+  const packagingKey = resolvePackagingSelection(versionId);
 
-  const langSel = document.getElementById('lang');
-  const lang = (langSel && langSel.value) || 'en';
-  setText(lang, totalCards);
-
-  if (langSel) {
-    langSel.addEventListener('change', () => {
-      setText(langSel.value || 'en', totalCards);
+  setExportBusy(true, t.statusPackaging);
+  try {
+    const JSZip = await ensureJSZip();
+    const zip = new JSZip();
+    const svg = await createPackagingSvg({
+      category: packagingKey,
+      includeBorders: false,
     });
+    const inlined = await inlineSvgImages(svg);
+    const pngBlob = await svgToPngBlob(inlined, PACKAGING_TOTAL_MM.width, PACKAGING_TOTAL_MM.height);
+    zip.file("packaging-whole.png", pngBlob);
+    setStatus(t.statusZip);
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    triggerDownload(zipBlob, `tech-taboo-${versionId.toLowerCase()}-packaging-whole.zip`);
+    setStatus(t.statusDone);
+  } catch (_) {
+    setStatus(t.statusError);
+  } finally {
+    setExportBusy(false);
   }
+}
 
-  const btn = document.getElementById('btn-download');
-  if (btn) btn.addEventListener('click', exportAllPngZip);
+async function exportPackagingPanelsZip() {
+  if (exportBusy) return;
+  const t = getText();
+  const versionId = getSelectedVersion();
+  const packagingKey = resolvePackagingSelection(versionId);
 
-  const btnPackaging = document.getElementById('btn-download-packaging');
-  if (btnPackaging) btnPackaging.addEventListener('click', downloadPackagingZip);
+  setExportBusy(true, t.statusPackaging);
+  try {
+    const JSZip = await ensureJSZip();
+    const zip = new JSZip();
+    const svg = await createPackagingSvg({
+      category: packagingKey,
+      includeBorders: false,
+    });
+    const inlined = await inlineSvgImages(svg);
 
-  const statusEl = document.getElementById('status');
-  if (statusEl) statusEl.textContent = (I18N[lang] || I18N.en).statusReady;
+    for (let i = 0; i < PANEL_EXPORT_LAYOUT.length; i += 1) {
+      const panel = PANEL_EXPORT_LAYOUT[i];
+      const cropped = cropSvgToPanel(inlined, panel);
+      const pngBlob = await svgToPngBlob(cropped, panel.width, panel.height);
+      zip.file(`${panel.name}.png`, pngBlob);
+    }
+
+    setStatus(t.statusZip);
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    triggerDownload(zipBlob, `tech-taboo-${versionId.toLowerCase()}-packaging-panels.zip`);
+    setStatus(t.statusDone);
+  } catch (_) {
+    setStatus(t.statusError);
+  } finally {
+    setExportBusy(false);
+  }
+}
+
+function wireEvents() {
+  document.getElementById("lang")?.addEventListener("change", () => {
+    populateVersionOptions();
+    applyText();
+    setStatus(getText().statusReady);
+  });
+
+  document.getElementById("versionSelect")?.addEventListener("change", () => {
+    applyText();
+    setStatus(getText().statusReady);
+  });
+
+  document.getElementById("btn-download-cards")?.addEventListener("click", exportCardsZip);
+  document.getElementById("btn-download-packaging-whole")?.addEventListener("click", exportPackagingWholeZip);
+  document.getElementById("btn-download-packaging-panels")?.addEventListener("click", exportPackagingPanelsZip);
+}
+
+function init() {
+  populateVersionOptions();
+  applyText();
+  wireEvents();
+  setStatus(getText().statusReady);
 }
 
 init();

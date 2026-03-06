@@ -1,0 +1,43 @@
+// Data Terms - 38 cards
+export const dataTabooList = [
+  { index: 1, word: "Aggregation", taboo: ["Sum", "Count", "Group", "Average", "Total"] },
+  { index: 2, word: "Batch Processing", taboo: ["Job", "Schedule", "Bulk", "Cron", "Nightly"] },
+  { index: 3, word: "Business Intelligence", taboo: ["Dashboard", "Data", "Insights", "Analytics", "Reporting"] },
+  { index: 4, word: "Columnar Database", taboo: ["Column", "Storage", "Analytics", "Compression", "Query"] },
+  { index: 5, word: "Data Catalog", taboo: ["Metadata", "Inventory", "Discovery", "Search", "Documentation"] },
+  { index: 6, word: "Data Lake", taboo: ["Storage", "Raw", "Unstructured", "Repository", "Hadoop"] },
+  { index: 7, word: "Data Lineage", taboo: ["Tracking", "Origin", "Flow", "Metadata", "Audit"] },
+  { index: 8, word: "PostgreSQL", taboo: ["Database", "SQL", "Table", "Query", "Relational"] },
+  { index: 9, word: "Data Pipeline", taboo: ["ETL", "Flow", "Process", "Airflow", "Integration"] },
+  { index: 10, word: "Join", taboo: ["SQL", "Merge", "Combine", "Tables", "Query"] },
+  { index: 11, word: "Data Schema", taboo: ["Structure", "Table", "Definition", "Blueprint", "Design"] },
+  { index: 12, word: "Database Management", taboo: ["Admin", "Storage", "Organization", "System", "Control"] },
+  { index: 13, word: "Denormalization", taboo: ["Database", "Performance", "Redundancy", "Join", "Speed"] },
+  { index: 14, word: "Elasticsearch", taboo: ["Search", "Engine", "Index", "Query", "Document"] },
+  { index: 15, word: "Extract Transform Load (ETL)", taboo: ["Pipeline", "Process", "Workflow", "Migration", "Integration"] },
+  { index: 16, word: "Foreign Key", taboo: ["Database", "Relation", "Reference", "Link", "Join"] },
+  { index: 17, word: "Data Governance", taboo: ["Rules", "Compliance", "Policy", "Oversight", "Quality"] },
+  { index: 18, word: "Indexing", taboo: ["Database", "Search", "Performance", "Query", "Fast"] },
+  { index: 19, word: "Data Quality", taboo: ["Accuracy", "Validation", "Cleansing", "Integrity", "Completeness"] },
+  { index: 20, word: "Kafka", taboo: ["Stream", "Message", "Broker", "Topic", "Publish"] },
+  { index: 21, word: "Data Lakehouse", taboo: ["Databricks", "Warehouse", "Lake", "Delta", "Analytics"] },
+  { index: 22, word: "Mining", taboo: ["Extract", "Dig", "Pattern", "Discovery", "Insights"] },
+  { index: 23, word: "Normalization", taboo: ["Database", "Redundancy", "Tables", "Relations", "Normal Form"] },
+  { index: 24, word: "NoSQL", taboo: ["Database", "MongoDB", "Document", "Schema", "Table"] },
+  { index: 25, word: "Partitioning", taboo: ["Split", "Divide", "Performance", "Table", "Range"] },
+  { index: 26, word: "Data Mart", taboo: ["Warehouse", "Subset", "Department", "Analytics", "Query"] },
+  { index: 27, word: "Predictive Analytics", taboo: ["Forecast", "Model", "Trend", "Insights", "Future"] },
+  { index: 28, word: "Primary Key", taboo: ["Database", "Unique", "Identifier", "Row", "ID"] },
+  { index: 29, word: "Protection", taboo: ["Security", "Guard", "Safe", "Confidential", "Private"] },
+  { index: 30, word: "RabbitMQ", taboo: ["Topic", "Bunny", "Broker", "Exchange", "Publish"] },
+  { index: 31, word: "Redis", taboo: ["Database", "Cache", "Key-Value", "Access", "Memory"] },
+  { index: 32, word: "Replication", taboo: ["Database", "Copy", "Backup", "Sync", "Mirror"] },
+  { index: 33, word: "Sharding", taboo: ["Database", "Partition", "Horizontal", "Split", "Distributed"] },
+  { index: 34, word: "SQLite", taboo: ["Database", "SQL", "File", "Lightweight", "Table"] },
+  { index: 35, word: "Stream Processing", taboo: ["Real-time", "Kafka", "Flow", "Event", "Continuous"] },
+  { index: 36, word: "Time Series", taboo: ["Temporal", "Timestamp", "Sequential", "Trend", "Historical"] },
+];
+
+dataTabooList.forEach(item => {
+  item.category = "Data";
+});
