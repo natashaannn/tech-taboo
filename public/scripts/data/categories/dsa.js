@@ -51,7 +51,7 @@ export const dsaTabooList = [
   { index: 49, word: "Bucket Sort", taboo: ["Distribute", "Range", "Bins", "Scatter", "Gather"] },
   { index: 50, word: "Heap Sort", taboo: ["Binary", "Min", "Priority", "Extract", "Max"] },
   { index: 51, word: "Bloom Filter", taboo: ["Probabilistic", "Hash", "Recommend", "Positive", "Filter"] },
-  { index: 52, word: "Suffix Array", taboo: ["String", "Array", "Suffix", "Search", "Pattern"] }
+  { index: 52, word: "Suffix Array", taboo: ["String", "Index", "Text", "Search", "Pattern"] }
 ];
 
 dsaTabooList.forEach(item => {

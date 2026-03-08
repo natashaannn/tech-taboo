@@ -106,7 +106,7 @@ export const softwareEngineeringTabooList = [
   { index: 105, word: "Python", taboo: ["Language", "Snake", "Programming", "AI", "Django"] },
   { index: 106, word: "Java", taboo: ["Language", "JVM", "Object-Oriented", "Spring", "Syntax"] },
   { index: 107, word: "C++", taboo: ["Language", "Performance", "Memory", "Object-Oriented", "Syntax"] },
-  { index: 108, word: "C", taboo: ["Language", "Low-level", "Memory", "Object-Oriented", "Syntax"] },
+  { index: 108, word: "C", taboo: ["Language", "Low-level", "Memory", "Pointer", "Syntax"] },
   { index: 109, word: "Go", taboo: ["Language", "Google", "Concurrent", "Goroutine", "Syntax"] },
   { index: 110, word: "Rust", taboo: ["Language", "Memory Safety", "Performance", "Ownership", "Syntax"] },
   { index: 111, word: "Swift", taboo: ["Language", "Apple", "Mobile", "Object-Oriented", "Syntax"] },
