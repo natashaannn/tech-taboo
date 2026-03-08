@@ -61,7 +61,6 @@ export const generalTabooList = [
   { index: 58, word: "Virus", taboo: ["Disease", "Infection", "Spread", "Hack", "Computer"], explanation: "Malicious software that replicates itself and spreads to other computers, causing harm." },
   { index: 59, word: "Vibe Coding", taboo: ["Autocorrect", "Programming", "Application", "AI", "Lovable"], explanation: "Writing code with AI assistance that suggests and autocompletes your intentions as you type." },
   { index: 60, word: "Incognito Mode", taboo: ["Private", "Browser", "History", "Secret", "Anonymous"], explanation: "A browsing mode that doesn't save your search history, cookies, or site data locally." },
-  // end of variety pack
   { index: 61, word: "Non-fungible Token (NFT)", taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"]},
   { index: 62, word: "Bitcoin", taboo: ["Cryptocurrency", "Solana", "Binance", "Asset", "Blockchain"]},
   { index: 63, word: "Digital Wallet", taboo: ["Payment", "Money", "Transaction", "Cryptocurrency", "Bitcoin"]},

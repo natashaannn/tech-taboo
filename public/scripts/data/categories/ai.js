@@ -17,7 +17,6 @@ export const aiTabooList = [
   { index: 14, word: "Speech-to-Text", taboo: ["AI", "Transcription", "Audio", "Model", "Voice"], explanation: "Technology that converts spoken words into written text automatically." },
   { index: 15, word: "GPT-4", taboo: ["OpenAI", "Model", "LLM", "AI", "Text"], explanation: "A powerful language system developed by OpenAI capable of understanding and generating human-like text." },
   { index: 16, word: "Retrieval Augmented Generation (RAG)", taboo: ["Document", "AI", "Search", "Context", "LLM"], explanation: "A technique that enhances AI responses by first retrieving relevant information from external sources." },
-  // end of variety pack
   { index: 17, word: "HuggingFace", taboo: ["AI", "Models", "Transformers", "Library", "Community"] },
   { index: 18, word: "Inference", taboo: ["Prediction", "Model", "Output", "Runtime", "Deploy"] },
   { index: 19, word: "Diffusers", taboo: ["AI", "Image", "Library", "Stable", "HuggingFace"] },
@@ -40,6 +39,7 @@ export const aiTabooList = [
   { index: 36, word: "Vector Database", taboo: ["Embedding", "AI", "Similarity", "Search", "Index"] },
   { index: 37, word: "Voice Assistant", taboo: ["Siri", "Speech", "Recognition", "Alexa", "Help"] },
   { index: 38, word: "Voice Cloning", taboo: ["AI", "Speech", "Synthesis", "Imitate", "Audio"] }
+  // end of variety pack
 ];
 
 aiTabooList.forEach(item => {
