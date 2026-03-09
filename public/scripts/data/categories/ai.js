@@ -17,7 +17,6 @@ export const aiTabooList = [
   { index: 14, word: "Speech-to-Text", taboo: ["AI", "Transcription", "Audio", "Model", "Voice"], explanation: "Technology that converts spoken words into written text automatically." },
   { index: 15, word: "GPT-4", taboo: ["OpenAI", "Model", "LLM", "AI", "Text"], explanation: "A powerful language system developed by OpenAI capable of understanding and generating human-like text." },
   { index: 16, word: "Retrieval Augmented Generation (RAG)", taboo: ["Document", "AI", "Search", "Context", "LLM"], explanation: "A technique that enhances AI responses by first retrieving relevant information from external sources." },
-  // end of variety pack
   { index: 17, word: "HuggingFace", taboo: ["AI", "Models", "Transformers", "Library", "Community"] },
   { index: 18, word: "Inference", taboo: ["Prediction", "Model", "Output", "Runtime", "Deploy"] },
   { index: 19, word: "Diffusers", taboo: ["AI", "Image", "Library", "Stable", "HuggingFace"] },
@@ -39,7 +38,22 @@ export const aiTabooList = [
   { index: 35, word: "Transformer", taboo: ["AI", "Model", "Attention", "Neural", "Network"] },
   { index: 36, word: "Vector Database", taboo: ["Embedding", "AI", "Similarity", "Search", "Index"] },
   { index: 37, word: "Voice Assistant", taboo: ["Siri", "Speech", "Recognition", "Alexa", "Help"] },
-  { index: 38, word: "Voice Cloning", taboo: ["AI", "Speech", "Synthesis", "Imitate", "Audio"] }
+  { index: 38, word: "Voice Cloning", taboo: ["AI", "Speech", "Synthesis", "Imitate", "Audio"] },
+  // end of variety pack
+  { index: 39, word: "Overfitting", taboo: ["Model", "Training", "Generalize", "Bias", "Variance"] },
+  { index: 40, word: "Underfitting", taboo: ["Model", "Training", "Simple", "Bias", "Variance"] },
+  { index: 41, word: "Zero-Shot Learning", taboo: ["AI", "Model", "Unseen", "Prompt", "Examples"] },
+  { index: 42, word: "Few-Shot Learning", taboo: ["AI", "Model", "Examples", "Prompt", "Training"] },
+  { index: 43, word: "One-Shot Learning", taboo: ["AI", "Model", "Example", "Single", "Training"] },
+  { index: 44, word: "Transfer Learning", taboo: ["Model", "Pretrained", "Adapt", "Fine-tune", "Reuse"] },
+  { index: 45, word: "Supervised Learning", taboo: ["AI", "Labels", "Training", "Classification", "Regression"] },
+  { index: 46, word: "Unsupervised Learning", taboo: ["AI", "Clustering", "Training", "Unlabeled", "Pattern"] },
+  { index: 47, word: "Classification", taboo: ["Model", "Category", "Label", "Predict", "Type"] },
+  { index: 48, word: "Model Evaluation", taboo: ["Testing", "Metrics", "Performance", "Accuracy", "Validation"] },
+  { index: 49, word: "Bias in AI", taboo: ["Fairness", "Model", "Discrimination", "Ethics", "Unfair"] },
+  { index: 50, word: "Batch Normalization", taboo: ["Layer", "Training", "Neural", "Network", "Normalize"] },
+  { index: 51, word: "Activation Function", taboo: ["Neural", "Network", "ReLU", "Sigmoid", "Layer"] },
+  { index: 52, word: "Gradient Descent", taboo: ["Optimization", "Training", "Minimize", "Loss", "Learning"] },
 ];
 
 aiTabooList.forEach(item => {

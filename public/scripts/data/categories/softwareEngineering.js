@@ -1,4 +1,3 @@
-// Software Engineering Terms - 100 cards
 export const softwareEngineeringTabooList = [
   { index: 1, word: "Docker", taboo: ["Container", "Virtualization", "Image", "Deploy", "Platform"], explanation: "A tool that packages applications and their dependencies into isolated units that can run consistently anywhere." },
   { index: 2, word: "Angular", taboo: ["JavaScript", "Framework", "Component", "UI", "Frontend"], explanation: "A platform for building web applications using TypeScript and a component-based architecture." },
@@ -16,7 +15,6 @@ export const softwareEngineeringTabooList = [
   { index: 14, word: "WebSocket", taboo: ["Connection", "Real-time", "Socket", "Message", "Protocol"], explanation: "A technology that enables two-way communication between a browser and server for live updates." },
   { index: 15, word: "Git", taboo: ["Version", "Control", "Repository", "Branch", "Commit"], explanation: "A system for tracking changes in code over time and collaborating with other developers." },
   { index: 16, word: "Compiler", taboo: ["Code", "Translate", "Language", "Program", "Binary"], explanation: "A tool that converts human-readable source code into machine-executable instructions." },
-    // end of variety pack
   { index: 17, word: "Compliance", taboo: ["Regulation", "Law", "Policy", "Adherence", "Rules"] },
   { index: 18, word: "Containerization", taboo: ["Docker", "Virtualization", "Deployment", "Isolation", "Lightweight"] },
   { index: 19, word: "Context", taboo: ["React", "State", "Provider", "Consumer", "Component"] },
@@ -24,7 +22,7 @@ export const softwareEngineeringTabooList = [
   { index: 21, word: "Cybercrime", taboo: ["Hacking", "Crime", "Security", "Threat", "Online"] },
   { index: 22, word: "Debug", taboo: ["Fix", "Error", "Breakpoint", "Trace", "Rubber Duck"] },
   { index: 23, word: "Stack Trace", taboo: ["Error", "Call", "Frame", "Exception", "Line Number"] },
-  { index: 24, word: "Depth-First Search", taboo: ["Algorithm", "Graph", "Traversal", "Breadth", "Recursive"] },
+  { index: 24, word: "Design Pattern", taboo: ["Implementation", "Solution", "Reusability", "Best Practice", "Code Structure"] },
   { index: 25, word: "DevOps", taboo: ["Automation", "Pipeline", "CI/CD", "Deploy", "Infrastructure"] },
   { index: 26, word: "Agile Development", taboo: ["Iterative", "Flexible", "Adaptive", "Scrum", "Sprint"] },
   { index: 27, word: "Domain Name System (DNS)", taboo: ["Resolve", "Lookup", "Server", "IP", "Route53"] },
@@ -100,7 +98,19 @@ export const softwareEngineeringTabooList = [
   { index: 97, word: "Sprint", taboo: ["Scrum", "Agile", "Iteration", "Goal", "Backlog"] },
   { index: 98, word: "Staging", taboo: ["Environment", "Deploy", "Test", "Production", "Pre"] },
   { index: 99, word: "Code Review", taboo: ["Pull Request", "Feedback", "Check", "Quality", "Approve"] },
-  { index: 100, word: "Tailwind", taboo: ["CSS", "Utility", "Framework", "Class", "Style"] }
+  { index: 100, word: "Tailwind", taboo: ["CSS", "Utility", "Framework", "Class", "Style"] },
+  { index: 101, word: "Test-Driven Development (TDD)", taboo: ["Red", "Green", "Refactor", "Test", "Code"] },
+  { index: 102, word: "Thread", taboo: ["Process", "Concurrent", "Execution", "Parallel", "Lightweight"] },
+  { index: 103, word: "C#", taboo: ["Language", "Microsoft", "DotNet", "Object-Oriented", "Syntax"] },
+  { index: 104, word: "TypeScript", taboo: ["JavaScript", "Superset", "Static", "Typing", "Microsoft"] },
+  { index: 105, word: "Python", taboo: ["Language", "Snake", "Programming", "AI", "Django"] },
+  { index: 106, word: "Java", taboo: ["Language", "JVM", "Object-Oriented", "Spring", "Syntax"] },
+  { index: 107, word: "C++", taboo: ["Language", "Performance", "Memory", "Object-Oriented", "Syntax"] },
+  { index: 108, word: "C", taboo: ["Language", "Low-level", "Memory", "Pointer", "Syntax"] },
+  { index: 109, word: "Go", taboo: ["Language", "Google", "Concurrent", "Goroutine", "Syntax"] },
+  { index: 110, word: "Rust", taboo: ["Language", "Memory Safety", "Performance", "Ownership", "Syntax"] },
+  { index: 111, word: "Swift", taboo: ["Language", "Apple", "Mobile", "Object-Oriented", "Syntax"] },
+  { index: 112, word: "Kotlin", taboo: ["Language", "JetBrains", "Android", "Object-Oriented", "Syntax"] },
 ];
 
 softwareEngineeringTabooList.forEach(item => {

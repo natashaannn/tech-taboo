@@ -51,6 +51,7 @@ export const systemDesignTabooList = [
   { index: 49, word: "Time to Live (TTL)", taboo: ["Expire", "Cache", "Duration", "Timeout", "Delete"] },
   { index: 50, word: "Webhook", taboo: ["Callback", "HTTP", "Event", "Notify", "Push"] },
   { index: 51, word: "Polling", taboo: ["Check", "Request", "Interval", "Update", "Repeatedly"] },
+  { index: 52, word: "Long Polling", taboo: ["Hold", "Request", "Server", "Response", "Timeout"] }
 ];
 
 systemDesignTabooList.forEach(item => {

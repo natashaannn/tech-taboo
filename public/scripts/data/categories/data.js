@@ -36,6 +36,22 @@ export const dataTabooList = [
   { index: 34, word: "SQLite", taboo: ["Database", "SQL", "File", "Lightweight", "Table"] },
   { index: 35, word: "Stream Processing", taboo: ["Real-time", "Kafka", "Flow", "Event", "Continuous"] },
   { index: 36, word: "Time Series", taboo: ["Temporal", "Timestamp", "Sequential", "Trend", "Historical"] },
+  { index: 37, word: "Data Warehouse", taboo: ["Storage", "Analytics", "ETL", "Lake", "Repository"] },
+  { index: 38, word: "Star Schema", taboo: ["Database", "Design", "Fact", "Dimension", "Model"] },
+  { index: 39, word: "Snowflake Schema", taboo: ["Database", "Design", "Normalized", "Dimension", "Model"] },
+  { index: 40, word: "OLAP", taboo: ["Analytical", "Cube", "Processing", "Query", "Multidimensional"] },
+  { index: 41, word: "OLTP", taboo: ["Transaction", "Processing", "Database", "Real-time", "Insert"] },
+  { index: 42, word: "Data Migration", taboo: ["Transfer", "Move", "Database", "Import", "Export"] },
+  { index: 43, word: "Data Masking", taboo: ["Security", "Privacy", "Hide", "Anonymize", "Protect"] },
+  { index: 44, word: "Data Cleansing", taboo: ["Quality", "Fix", "Scrub", "Purify", "Validation"] },
+  { index: 45, word: "Materialized View", taboo: ["Database", "Query", "Cache", "Precomputed", "Table"] },
+  { index: 46, word: "Database Transaction", taboo: ["ACID", "Commit", "Rollback", "Atomic", "Query"] },
+  { index: 47, word: "ACID Properties", taboo: ["Database", "Transaction", "Atomic", "Consistent", "Isolated"] },
+  { index: 48, word: "Data Integrity", taboo: ["Quality", "Accuracy", "Valid", "Constraint", "Consistent"] },
+  { index: 49, word: "Backup and Recovery", taboo: ["Restore", "Save", "Copy", "Disaster", "Database"] },
+  { index: 50, word: "Query Optimization", taboo: ["Performance", "Fast", "Database", "Index", "SQL"] },
+  { index: 51, word: "Stored Procedure", taboo: ["Database", "Function", "SQL", "Execute", "Routine"] },
+  { index: 52, word: "Data Modeling", taboo: ["Design", "Schema", "Structure", "Blueprint", "Diagram"] },
 ];
 
 dataTabooList.forEach(item => {

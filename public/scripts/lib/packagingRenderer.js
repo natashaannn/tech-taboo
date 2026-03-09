@@ -31,8 +31,8 @@ export const PACKAGING_VERSIONS = {
   },
   SOFTWARE_INTERVIEW_EXTENSION: {
     label: "Software Interview Prep",
-    categories: ["Data Structures & Algorithms", "System Design"],
-    description: "A card game for software interview preparation across algorithms and system design.",
+    categories: ["Data Structures & Algorithms", "System Design", "Software Engineering", "Product Management"],
+    description: "A card game for interview prep across algorithms, system design, and software.",
   },
   DEVSEC_PACK: {
     label: "DevSecOps Pack",
@@ -270,7 +270,7 @@ export async function createPackagingSvg({
   const sideDescriptionText = (description || defaultDescription || "").trim();
   const longSideDescriptionLines = wrapWords(sideDescriptionText, 40, 3);
   const samples = buildCategorySamples(activeCategories, {
-    onePerCategory: selectionKey === "VARIETY_PACK",
+    onePerCategory: selectionKey === "VARIETY_PACK" || selectionKey === "SOFTWARE_INTERVIEW_EXTENSION",
     singleCategoryCount: primaryCategory === "Responsible Tech" ? 4 : 6,
   });
   const cardPositions = buildArcPositions(samples.length, topX, topY);

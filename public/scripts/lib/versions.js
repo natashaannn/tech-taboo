@@ -1,14 +1,16 @@
 export const DEFAULT_VERSION_ID = "VARIETY_PACK";
 
+// Each pack should have 216 terms (54 cards back and front total per deck)
 export const VERSION_DEFINITIONS = [
   {
     id: "VARIETY_PACK",
     label: "Variety Pack Version",
     categoryCounts: {
-      "General": 60,
-      "AI": 16,
-      "Software Engineering": 16,
-      "Product Management": 16,
+      "General": 88,
+      "AI": 32,
+      "Software Engineering": 32,
+      "Product Management": 32,
+      "Responsible Tech": 32,
     },
   },
   {
@@ -17,6 +19,8 @@ export const VERSION_DEFINITIONS = [
     categoryCounts: {
       "Data Structures & Algorithms": 52,
       "System Design": 52,
+      "Software Engineering": 100,
+      "Product Management": 12,
     },
   },
     {
