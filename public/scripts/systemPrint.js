@@ -1,6 +1,7 @@
 // public/scripts/systemPrint.js
 import { generateSystemSVG } from './lib/generateSystemSVG.js';
 import { loadIcons } from './lib/icons.js';
+import { preloadFonts } from './lib/imageData.js';
 
 function readPayload() {
   try {
@@ -132,6 +133,15 @@ async function render2x2() {
   const { cards, baseColor, whiteBackground, strokeColor, includeBacking } = payload || fallback;
   const background = whiteBackground ? '#ffffff' : strokeColor;
 
+  // Preload fonts for embedded SVG
+  let embeddedFonts;
+  try {
+    embeddedFonts = await preloadFonts();
+  } catch (err) {
+    console.warn('Failed to preload fonts:', err);
+    embeddedFonts = null; // Will use URL paths as fallback
+  }
+
   // Preload any icons (both A and B) to ensure they render in this new tab
   try {
     const iconNames = Array.from(new Set((cards || []).flatMap(c => [c.iconNameA, c.iconNameB, c.iconName]).filter(Boolean)));
@@ -156,6 +166,7 @@ async function render2x2() {
       emojiB: card.emojiB,
       effect: card.effect,
       descAsText: false,
+      fonts: embeddedFonts,
     });
     const cell = document.getElementById(id);
     cell.innerHTML = svg;
