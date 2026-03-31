@@ -1,7 +1,7 @@
 // public/scripts/print.js
 import { generateSVG } from './lib/generateSVG.js';
 import { getCategoryColor } from './lib/categories.js';
-import { preloadTechybaraImages } from './lib/imageData.js';
+import { preloadTechybaraImages, preloadFonts } from './lib/imageData.js';
 
 function readPayload() {
   try {
@@ -14,17 +14,21 @@ function readPayload() {
 }
 
 async function render2x2() {
-  // Preload images first
-  let techybaraImages;
+  // Preload images and fonts first
+  let techybaraImages, embeddedFonts;
   try {
-    techybaraImages = await preloadTechybaraImages();
+    [techybaraImages, embeddedFonts] = await Promise.all([
+      preloadTechybaraImages(),
+      preloadFonts()
+    ]);
   } catch (err) {
-    console.warn('Failed to preload images:', err);
+    console.warn('Failed to preload assets:', err);
     // Fallback to relative paths
     techybaraImages = {
       teacher: './techybara/teacher.png',
       peekOut: './techybara/peek out.png'
     };
+    embeddedFonts = null; // Will use URL paths as fallback
   }
 
   const payload = readPayload();
@@ -83,6 +87,7 @@ async function render2x2() {
           category: card.top.category,
           teacherImage: techybaraImages.teacher,
           peekOutImage: techybaraImages.peekOut,
+          fonts: embeddedFonts,
         });
         cell.innerHTML = svg;
       }

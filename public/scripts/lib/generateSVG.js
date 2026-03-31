@@ -12,6 +12,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
     category = null,                  // category for determining text color
     teacherImage = "./techybara/teacher.png",  // teacher image (can be data URI or path)
     peekOutImage = "./techybara/peek out.png", // peek out image (can be data URI or path)
+    fonts = null,                     // optional embedded font data URIs
   } = options;
   
   // Determine text color based on category
@@ -58,11 +59,26 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   }
 
   const fontFamily = 'Monospace, "Sometype Mono", monospace';
-  const monospaceNormalSrc = resolveFontSrc('/fonts/monospace/Monospace.ttf');
-  const monospaceBoldSrc = resolveFontSrc('/fonts/monospace/MonospaceBold.ttf');
-  const monospaceObliqueSrc = resolveFontSrc('/fonts/monospace/MonospaceOblique.ttf');
-  const sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
-  const sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
+  
+  // Use embedded fonts if provided, otherwise fall back to URL paths
+  let monospaceNormalSrc, monospaceBoldSrc, monospaceObliqueSrc;
+  let sometypeMonoNormalSrc, sometypeMonoItalicSrc;
+  
+  if (fonts) {
+    // Use embedded font data URIs
+    monospaceNormalSrc = fonts.monospaceNormal || '';
+    monospaceBoldSrc = fonts.monospaceBold || '';
+    monospaceObliqueSrc = fonts.monospaceOblique || '';
+    sometypeMonoNormalSrc = fonts.sometypeMonoNormal || '';
+    sometypeMonoItalicSrc = fonts.sometypeMonoItalic || '';
+  } else {
+    // Fall back to URL paths (for backwards compatibility and local preview)
+    monospaceNormalSrc = resolveFontSrc('/fonts/monospace/Monospace.ttf');
+    monospaceBoldSrc = resolveFontSrc('/fonts/monospace/MonospaceBold.ttf');
+    monospaceObliqueSrc = resolveFontSrc('/fonts/monospace/MonospaceOblique.ttf');
+    sometypeMonoNormalSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
+    sometypeMonoItalicSrc = resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
+  }
 
   // helpers to adjust hex colors a bit lighter/darker
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }

@@ -1,7 +1,7 @@
 import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { getCategoryColor, detectCategory } from "./lib/categories.js";
-import { preloadTechybaraImages } from "./lib/imageData.js";
+import { preloadTechybaraImages, preloadFonts } from "./lib/imageData.js";
 import { DEFAULT_VERSION_ID, VERSION_DEFINITIONS, getVersionCounts, getVersionLabel } from "./lib/versions.js";
 import { createPackagingSvg } from "./lib/packagingRenderer.js";
 
@@ -416,11 +416,15 @@ async function exportCardsZip() {
   setExportBusy(true, t.statusPackaging);
   try {
     const { savePNGsAsZip } = await import("./lib/exporters.js");
-    let techybaraImages;
+    let techybaraImages, embeddedFonts;
     try {
-      techybaraImages = await preloadTechybaraImages();
+      [techybaraImages, embeddedFonts] = await Promise.all([
+        preloadTechybaraImages(),
+        preloadFonts()
+      ]);
     } catch (_) {
       techybaraImages = { teacher: "./techybara/teacher.png", peekOut: "./techybara/peek out.png" };
+      embeddedFonts = null;
     }
 
     const items = [];
@@ -437,6 +441,7 @@ async function exportCardsZip() {
         category: pair.top.category,
         teacherImage: techybaraImages.teacher,
         peekOutImage: techybaraImages.peekOut,
+        fonts: embeddedFonts,
       });
       items.push({ name: `card-${i + 1}.svg`, markup: svg });
       if (i % 8 === 0) await new Promise((r) => setTimeout(r, 0));
