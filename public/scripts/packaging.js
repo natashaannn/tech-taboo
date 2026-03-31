@@ -1,7 +1,13 @@
 import { CATEGORY_DESCRIPTIONS, PACKAGING_SELECTIONS, PACKAGING_VERSIONS, createPackagingSvg } from "./lib/packagingRenderer.js";
-import { savePNGFromSVG } from "./lib/exporters.js";
+import { savePNGFromSVG, addDpiMetadataToPng, setSvgPixelDimensions } from "./lib/exporters.js";
 
 let renderRequestId = 0;
+
+// DPI Constants for print quality
+const SCREEN_DPI = 96;      // Standard screen resolution
+const PRINT_DPI = 300;      // Target print resolution  
+const DPI_SCALE = PRINT_DPI / SCREEN_DPI; // = 3.125x
+
 const MM_TO_PX_AT_96 = 96 / 25.4;
 
 const PANEL_EXPORT_LAYOUT = [
@@ -96,28 +102,69 @@ function cropSvgToPanel(svgMarkup, panel) {
   return new XMLSerializer().serializeToString(svg);
 }
 
+/**
+ * Convert SVG to PNG blob at 300 DPI for print quality
+ * 
+ * DPI Calculation:
+ * 1. Convert mm to pixels at base 96 DPI: widthPx = widthMm * (96/25.4)
+ * 2. Scale canvas by 300/96 = 3.125x to achieve 300 DPI
+ * 3. Final DPI = pixels / (mm / 25.4) = 300 DPI
+ * 
+ * Example for 66mm x 95mm panel:
+ * - Base: 249px x 359px (at 96 DPI)
+ * - Scaled: 778px x 1122px (at 300 DPI) ✓
+ * 
+ * NOTE: canvas.toBlob() sets correct pixel dimensions but may not write
+ * DPI metadata (pHYs chunk) to PNG file. Print software should use pixel
+ * dimensions and physical size (mm) to calculate 300 DPI.
+ * 
+ * @param {string} svgMarkup - SVG content to convert
+ * @param {number} widthMm - Physical width in millimeters
+ * @param {number} heightMm - Physical height in millimeters
+ * @returns {Promise<Blob>} PNG blob with 300 DPI pixel dimensions
+ */
 async function svgToPngBlob(svgMarkup, widthMm, heightMm) {
   return new Promise((resolve, reject) => {
     const widthPx = Math.round(widthMm * MM_TO_PX_AT_96);
     const heightPx = Math.round(heightMm * MM_TO_PX_AT_96);
+    
+    // Calculate target dimensions at 300 DPI
+    const scale = DPI_SCALE; // = 3.125x
+    const targetWidth = Math.round(widthPx * scale);
+    const targetHeight = Math.round(heightPx * scale);
+    
+    // Modify SVG to use pixel dimensions for proper high-DPI rasterization
+    const modifiedSvg = setSvgPixelDimensions(
+      String(svgMarkup),
+      targetWidth,
+      targetHeight,
+      `0 0 ${widthMm} ${heightMm}`
+    );
+    
     const img = new Image();
-    const svgBlob = new Blob([String(svgMarkup)], { type: "image/svg+xml;charset=utf-8" });
+    const svgBlob = new Blob([modifiedSvg], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(svgBlob);
 
     img.onload = () => {
-      const scale = 300 / 96;
       const canvas = document.createElement("canvas");
-      canvas.width = Math.round(widthPx * scale);
-      canvas.height = Math.round(heightPx * scale);
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
       const ctx = canvas.getContext("2d");
-      ctx.scale(scale, scale);
+      
+      // SVG already rasterized at target resolution - draw 1:1
+      ctx.imageSmoothingEnabled = false;
       ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, widthPx, heightPx);
-      ctx.drawImage(img, 0, 0, widthPx, heightPx);
-      canvas.toBlob((blob) => {
+      ctx.fillRect(0, 0, targetWidth, targetHeight);
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(async (blob) => {
         URL.revokeObjectURL(url);
-        if (blob) resolve(blob);
-        else reject(new Error("toBlob failed"));
+        if (blob) {
+          // Add 300 DPI metadata to PNG
+          const pngWithDpi = await addDpiMetadataToPng(blob, 300);
+          resolve(pngWithDpi);
+        } else {
+          reject(new Error("toBlob failed"));
+        }
       }, "image/png");
     };
 
@@ -158,13 +205,19 @@ async function renderPackaging() {
   output.innerHTML = svg;
 }
 
+/**
+ * Export full packaging design as PNG at 300 DPI (no borders)
+ * Dimensions: 125.4mm x 153.8mm
+ * Output: ~1476px x 1810px at 300 DPI
+ */
 async function exportPackagingPngNoBorders() {
   const { category, version, description } = getCurrentPackagingInputs();
   const svg = await createPackagingSvg({ category, version, description, includeBorders: false });
 
-  // 125.4mm x 153.8mm converted at ~96 DPI, exporter scales further for print.
-  const width = Math.round((125.4 / 25.4) * 96);
-  const height = Math.round((153.8 / 25.4) * 96);
+  // Full packaging dimensions: 125.4mm x 153.8mm
+  // Convert to pixels at 96 DPI base, savePNGFromSVG will scale to 300 DPI
+  const width = Math.round((125.4 / 25.4) * 96);   // ~469px base → ~1468px at 300 DPI
+  const height = Math.round((153.8 / 25.4) * 96);  // ~579px base → ~1810px at 300 DPI
   savePNGFromSVG(svg, "packaging-lid-no-borders.png", width, height);
 }
 

@@ -1,6 +1,7 @@
 import { tabooList } from "../data/tabooList.js";
 import { CATEGORIES, CATEGORY_COLORS, CATEGORY_TEXT_COLORS, CATEGORY_THEME_NAMES } from "./categories.js";
 import { generateSVG } from "./generateSVG.js";
+import { preloadFonts } from "./imageData.js";
 
 export const PACKAGING_PANEL_MM = {
   lidTop: { width: 66, height: 95 },
@@ -203,7 +204,7 @@ async function ensureEmbeddedFonts() {
   return FONT_DATA_CACHE;
 }
 
-async function createCardThumbnailDataUri(item, fallbackCategory, fallbackColor) {
+async function createCardThumbnailDataUri(item, fallbackCategory, fallbackColor, embeddedCardFonts) {
   const itemCategory = item?.category || fallbackCategory;
   const categoryColor = CATEGORY_COLORS[itemCategory] || fallbackColor;
   const word = String(item?.word || "").trim() || itemCategory;
@@ -220,12 +221,13 @@ async function createCardThumbnailDataUri(item, fallbackCategory, fallbackColor)
     teacherImage: embeddedImages.teacher,
     peekOutImage: embeddedImages.peekOut,
     showBleed: false,
+    fonts: embeddedCardFonts,
   });
   return `data:image/svg+xml;utf8,${encodeURIComponent(cardSvg)}`;
 }
 
-async function buildCardSampleMarkup(item, x, y, rotate, cardWidth, cardHeight, fallbackCategory, fallbackColor) {
-  const href = await createCardThumbnailDataUri(item, fallbackCategory, fallbackColor);
+async function buildCardSampleMarkup(item, x, y, rotate, cardWidth, cardHeight, fallbackCategory, fallbackColor, embeddedCardFonts) {
+  const href = await createCardThumbnailDataUri(item, fallbackCategory, fallbackColor, embeddedCardFonts);
   const cx = x + (cardWidth / 2);
   const cy = y + (cardHeight / 2);
   return `<image href="${href}" x="${x}" y="${y}" width="${cardWidth}" height="${cardHeight}" transform="rotate(${rotate} ${cx} ${cy})" preserveAspectRatio="xMidYMid meet" />`;
@@ -275,16 +277,19 @@ export async function createPackagingSvg({
   });
   const cardPositions = buildArcPositions(samples.length, topX, topY);
 
+  // Preload fonts for card thumbnails
+  const embeddedCardFonts = await preloadFonts();
+  
   const sampleCardsMarkup = await Promise.all(
-    cardPositions.map((pos, idx) => buildCardSampleMarkup(samples[idx], pos.x, pos.y, pos.rotate, 35, 52.4, primaryCategory, categoryColor))
+    cardPositions.map((pos, idx) => buildCardSampleMarkup(samples[idx], pos.x, pos.y, pos.rotate, 35, 52.4, primaryCategory, categoryColor, embeddedCardFonts))
   );
   const embeddedFonts = await ensureEmbeddedFonts();
   const longPool = tabooList.filter((item) => activeCategories.includes(item.category));
   const longSideLeftItem = longPool[0] || samples[0];
   const longSideRightItem = longPool[Math.floor(longPool.length / 2)] || samples[1] || samples[0];
   const longSideCardsMarkup = await Promise.all([
-    buildCardSampleMarkup(longSideLeftItem, leftX - 11, topY + 1, -90, 30, 44, primaryCategory, categoryColor),
-    buildCardSampleMarkup(longSideRightItem, rightX + 10, topY + 1, 90, 30, 44, primaryCategory, categoryColor),
+    buildCardSampleMarkup(longSideLeftItem, leftX - 11, topY + 1, -90, 30, 44, primaryCategory, categoryColor, embeddedCardFonts),
+    buildCardSampleMarkup(longSideRightItem, rightX + 10, topY + 1, 90, 30, 44, primaryCategory, categoryColor, embeddedCardFonts),
   ]);
   const leftLongCenterX = leftX + (PACKAGING_PANEL_MM.longSide.height / 2);
   const rightLongCenterX = rightX + (PACKAGING_PANEL_MM.longSide.height / 2);
@@ -303,7 +308,7 @@ export async function createPackagingSvg({
   const panelAttrs = includeBorders ? 'class="panel-stroke"' : 'stroke="none"';
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}mm" height="${totalHeight}mm" viewBox="0 0 ${totalWidth} ${totalHeight}">
+<svg xmlns="http://www.w3.org/2000/svg" width="${totalWidth}mm" height="${totalHeight}mm" viewBox="0 0 ${totalWidth} ${totalHeight}" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <style><![CDATA[
       @font-face {
