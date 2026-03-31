@@ -213,7 +213,7 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   const blurId = `blur_${uniqueId}`;
   
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" width="610" height="910" viewBox="0 0 610 910" version="1.1" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
   <defs>
     <style><![CDATA[
       @font-face {
