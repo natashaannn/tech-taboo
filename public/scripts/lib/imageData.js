@@ -58,10 +58,17 @@ export async function getImageDataURI(path) {
  * @param {string} path - Path to the font file
  * @returns {Promise<string>} Base64 data URI
  */
-async function getFontDataURI(path) {
+async function getFontDataURI(path, timeoutMs = 15000) {
   try {
     const absolutePath = new URL(path, window.location.origin).href;
-    const response = await fetch(absolutePath, { cache: 'force-cache' });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    let response;
+    try {
+      response = await fetch(absolutePath, { cache: 'force-cache', signal: controller.signal });
+    } finally {
+      clearTimeout(timeoutId);
+    }
     if (!response.ok) throw new Error(`Failed to fetch font: ${path}`);
     const blob = await response.blob();
     return new Promise((resolve, reject) => {
@@ -88,15 +95,16 @@ export async function preloadFonts() {
     sometypeMonoNormal: './fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf',
     sometypeMonoItalic: './fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf',
   };
-  
+
+  const entries = Object.entries(fonts);
+  const dataUris = await Promise.all(entries.map(([, path]) => getFontDataURI(path)));
+
   const results = {};
   let successCount = 0;
-  
-  for (const [key, path] of Object.entries(fonts)) {
-    const dataUri = await getFontDataURI(path);
-    results[key] = dataUri;
-    if (dataUri) successCount++;
-  }
+  entries.forEach(([key], i) => {
+    results[key] = dataUris[i];
+    if (dataUris[i]) successCount++;
+  });
   
   // If no fonts loaded successfully, return null to trigger URL fallback
   if (successCount === 0) {

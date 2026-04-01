@@ -65,12 +65,12 @@ export function generateSVG(topWord, topTaboos, bottomWord, bottomTaboos, option
   let sometypeMonoNormalSrc, sometypeMonoItalicSrc;
   
   if (fonts) {
-    // Use embedded font data URIs
-    monospaceNormalSrc = fonts.monospaceNormal || '';
-    monospaceBoldSrc = fonts.monospaceBold || '';
-    monospaceObliqueSrc = fonts.monospaceOblique || '';
-    sometypeMonoNormalSrc = fonts.sometypeMonoNormal || '';
-    sometypeMonoItalicSrc = fonts.sometypeMonoItalic || '';
+    // Use embedded font data URIs with URL fallback (same pattern as packagingRenderer)
+    monospaceNormalSrc = fonts.monospaceNormal || resolveFontSrc('/fonts/monospace/Monospace.ttf');
+    monospaceBoldSrc = fonts.monospaceBold || resolveFontSrc('/fonts/monospace/MonospaceBold.ttf');
+    monospaceObliqueSrc = fonts.monospaceOblique || resolveFontSrc('/fonts/monospace/MonospaceOblique.ttf');
+    sometypeMonoNormalSrc = fonts.sometypeMonoNormal || resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf');
+    sometypeMonoItalicSrc = fonts.sometypeMonoItalic || resolveFontSrc('/fonts/Sometype_Mono/SometypeMono-Italic-VariableFont_wght.ttf');
   } else {
     // Fall back to URL paths (for backwards compatibility and local preview)
     monospaceNormalSrc = resolveFontSrc('/fonts/monospace/Monospace.ttf');

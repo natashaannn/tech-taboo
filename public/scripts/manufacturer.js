@@ -51,6 +51,7 @@ const I18N = {
     statusPackaging: "Rendering packaging...",
     statusZip: "Generating ZIP...",
     statusDone: "Download started.",
+    statusFontError: "Export blocked: fonts failed to load. Check your network connection and try again.",
     instructions: (label) =>
       `Instructions for ${label}:\n` +
       "1) Click \"Download Cards (PNG ZIP)\" to get all card fronts for this edition.\n" +
@@ -79,6 +80,7 @@ const I18N = {
     statusPackaging: "正在渲染包装...",
     statusZip: "正在生成 ZIP...",
     statusDone: "已开始下载。",
+    statusFontError: "导出已中止：字体加载失败，请检查网络连接后重试。",
     instructions: (label) =>
       `${label} 操作说明：\n` +
       "1）点击“下载卡牌（PNG ZIP）”，下载该版本全部卡牌图。\n" +
@@ -425,6 +427,15 @@ async function exportCardsZip() {
     } catch (_) {
       techybaraImages = { teacher: "./techybara/teacher.png", peekOut: "./techybara/peek out.png" };
       embeddedFonts = null;
+    }
+
+    const fontsOk = embeddedFonts &&
+      embeddedFonts.monospaceNormal &&
+      embeddedFonts.monospaceBold;
+    if (!fontsOk) {
+      setStatus(t.statusFontError);
+      setExportBusy(false);
+      return;
     }
 
     const items = [];
