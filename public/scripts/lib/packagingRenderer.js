@@ -1,7 +1,6 @@
 import { tabooList } from "../data/tabooList.js";
 import { CATEGORIES, CATEGORY_COLORS, CATEGORY_TEXT_COLORS, CATEGORY_THEME_NAMES } from "./categories.js";
 import { generateSVG } from "./generateSVG.js";
-import { preloadFonts } from "./imageData.js";
 
 export const PACKAGING_PANEL_MM = {
   lidTop: { width: 66, height: 95 },
@@ -165,6 +164,7 @@ const TECHYBARA_IMAGE_CACHE = {
 const FONT_DATA_CACHE = {
   gaegu: null,
   mono: null,
+  monoBold: null,
 };
 
 function blobToDataUri(blob) {
@@ -194,12 +194,15 @@ async function ensureEmbeddedTechybaraImages() {
   return TECHYBARA_IMAGE_CACHE;
 }
 
-async function ensureEmbeddedFonts() {
+export async function ensureEmbeddedFonts() {
   if (!FONT_DATA_CACHE.gaegu) {
     FONT_DATA_CACHE.gaegu = await fetchImageAsDataUri("./fonts/Gaegu/Gaegu-Bold.ttf");
   }
   if (!FONT_DATA_CACHE.mono) {
     FONT_DATA_CACHE.mono = await fetchImageAsDataUri("./fonts/monospace/Monospace.ttf");
+  }
+  if (!FONT_DATA_CACHE.monoBold) {
+    FONT_DATA_CACHE.monoBold = await fetchImageAsDataUri("./fonts/monospace/MonospaceBold.ttf");
   }
   return FONT_DATA_CACHE;
 }
@@ -277,8 +280,15 @@ export async function createPackagingSvg({
   });
   const cardPositions = buildArcPositions(samples.length, topX, topY);
 
-  // Preload fonts for card thumbnails
-  const embeddedCardFonts = await preloadFonts();
+  // Use the same proven font cache as the packaging SVG itself
+  const { mono, monoBold } = await ensureEmbeddedFonts();
+  const embeddedCardFonts = mono ? {
+    monospaceNormal: mono,
+    monospaceBold: monoBold || mono,
+    monospaceOblique: "",
+    sometypeMonoNormal: "",
+    sometypeMonoItalic: "",
+  } : null;
   
   const sampleCardsMarkup = await Promise.all(
     cardPositions.map((pos, idx) => buildCardSampleMarkup(samples[idx], pos.x, pos.y, pos.rotate, 35, 52.4, primaryCategory, categoryColor, embeddedCardFonts))
@@ -322,6 +332,12 @@ export async function createPackagingSvg({
         src: url('${embeddedFonts.mono || resolveAssetUrl("./fonts/monospace/Monospace.ttf")}') format('truetype');
         font-style: normal;
         font-weight: 400;
+      }
+      @font-face {
+        font-family: 'Monospace';
+        src: url('${embeddedFonts.monoBold || embeddedFonts.mono || resolveAssetUrl("./fonts/monospace/MonospaceBold.ttf")}') format('truetype');
+        font-style: normal;
+        font-weight: 700;
       }
       .gaegu { font-family: 'Gaegu', cursive; }
       .mono { font-family: 'Monospace', monospace; }

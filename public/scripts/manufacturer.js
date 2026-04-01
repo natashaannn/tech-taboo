@@ -1,9 +1,9 @@
 import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { getCategoryColor, detectCategory } from "./lib/categories.js";
-import { preloadTechybaraImages, preloadFonts } from "./lib/imageData.js";
+import { preloadTechybaraImages } from "./lib/imageData.js";
 import { DEFAULT_VERSION_ID, VERSION_DEFINITIONS, getVersionCounts, getVersionLabel } from "./lib/versions.js";
-import { createPackagingSvg } from "./lib/packagingRenderer.js";
+import { createPackagingSvg, ensureEmbeddedFonts } from "./lib/packagingRenderer.js";
 
 const ENABLED_SUPPLIER_VERSIONS = new Set([
   "VARIETY_PACK",
@@ -51,6 +51,7 @@ const I18N = {
     statusPackaging: "Rendering packaging...",
     statusZip: "Generating ZIP...",
     statusDone: "Download started.",
+    statusFontError: "Export blocked: fonts failed to load. Check your network connection and try again.",
     instructions: (label) =>
       `Instructions for ${label}:\n` +
       "1) Click \"Download Cards (PNG ZIP)\" to get all card fronts for this edition.\n" +
@@ -79,6 +80,7 @@ const I18N = {
     statusPackaging: "正在渲染包装...",
     statusZip: "正在生成 ZIP...",
     statusDone: "已开始下载。",
+    statusFontError: "导出已中止：字体加载失败，请检查网络连接后重试。",
     instructions: (label) =>
       `${label} 操作说明：\n` +
       "1）点击“下载卡牌（PNG ZIP）”，下载该版本全部卡牌图。\n" +
@@ -418,13 +420,28 @@ async function exportCardsZip() {
     const { savePNGsAsZip } = await import("./lib/exporters.js");
     let techybaraImages, embeddedFonts;
     try {
-      [techybaraImages, embeddedFonts] = await Promise.all([
+      const [images, pkgFonts] = await Promise.all([
         preloadTechybaraImages(),
-        preloadFonts()
+        ensureEmbeddedFonts(),
       ]);
+      techybaraImages = images;
+      embeddedFonts = pkgFonts.mono ? {
+        monospaceNormal: pkgFonts.mono,
+        monospaceBold: pkgFonts.monoBold || pkgFonts.mono,
+        monospaceOblique: "",
+        sometypeMonoNormal: "",
+        sometypeMonoItalic: "",
+      } : null;
     } catch (_) {
       techybaraImages = { teacher: "./techybara/teacher.png", peekOut: "./techybara/peek out.png" };
       embeddedFonts = null;
+    }
+
+    if (!embeddedFonts) {
+      setExportBusy(false);
+      setStatus(t.statusFontError);
+      alert(`${I18N.en.statusFontError}\n\n${I18N.zh.statusFontError}`);
+      return;
     }
 
     const items = [];
@@ -464,6 +481,13 @@ async function exportPackagingWholeZip() {
 
   setExportBusy(true, t.statusPackaging);
   try {
+    const pkgFonts = await ensureEmbeddedFonts().catch(() => ({}));
+    if (!pkgFonts.mono) {
+      setExportBusy(false);
+      setStatus(t.statusFontError);
+      alert(`${I18N.en.statusFontError}\n\n${I18N.zh.statusFontError}`);
+      return;
+    }
     const JSZip = await ensureJSZip();
     const zip = new JSZip();
     const svg = await createPackagingSvg({
@@ -492,6 +516,13 @@ async function exportPackagingPanelsZip() {
 
   setExportBusy(true, t.statusPackaging);
   try {
+    const pkgFonts = await ensureEmbeddedFonts().catch(() => ({}));
+    if (!pkgFonts.mono) {
+      setExportBusy(false);
+      setStatus(t.statusFontError);
+      alert(`${I18N.en.statusFontError}\n\n${I18N.zh.statusFontError}`);
+      return;
+    }
     const JSZip = await ensureJSZip();
     const zip = new JSZip();
     const svg = await createPackagingSvg({
