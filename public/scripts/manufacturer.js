@@ -1,9 +1,9 @@
 import { tabooList } from "./data/tabooList.js";
 import { generateSVG } from "./lib/generateSVG.js";
 import { getCategoryColor, detectCategory } from "./lib/categories.js";
-import { preloadTechybaraImages, preloadFonts } from "./lib/imageData.js";
+import { preloadTechybaraImages } from "./lib/imageData.js";
 import { DEFAULT_VERSION_ID, VERSION_DEFINITIONS, getVersionCounts, getVersionLabel } from "./lib/versions.js";
-import { createPackagingSvg } from "./lib/packagingRenderer.js";
+import { createPackagingSvg, ensureEmbeddedFonts } from "./lib/packagingRenderer.js";
 
 const ENABLED_SUPPLIER_VERSIONS = new Set([
   "VARIETY_PACK",
@@ -420,21 +420,27 @@ async function exportCardsZip() {
     const { savePNGsAsZip } = await import("./lib/exporters.js");
     let techybaraImages, embeddedFonts;
     try {
-      [techybaraImages, embeddedFonts] = await Promise.all([
+      const [images, pkgFonts] = await Promise.all([
         preloadTechybaraImages(),
-        preloadFonts()
+        ensureEmbeddedFonts(),
       ]);
+      techybaraImages = images;
+      embeddedFonts = pkgFonts.mono ? {
+        monospaceNormal: pkgFonts.mono,
+        monospaceBold: pkgFonts.monoBold || pkgFonts.mono,
+        monospaceOblique: "",
+        sometypeMonoNormal: "",
+        sometypeMonoItalic: "",
+      } : null;
     } catch (_) {
       techybaraImages = { teacher: "./techybara/teacher.png", peekOut: "./techybara/peek out.png" };
       embeddedFonts = null;
     }
 
-    const fontsOk = embeddedFonts &&
-      embeddedFonts.monospaceNormal &&
-      embeddedFonts.monospaceBold;
-    if (!fontsOk) {
-      setStatus(t.statusFontError);
+    if (!embeddedFonts) {
       setExportBusy(false);
+      setStatus(t.statusFontError);
+      alert(`${I18N.en.statusFontError}\n\n${I18N.zh.statusFontError}`);
       return;
     }
 
@@ -475,6 +481,13 @@ async function exportPackagingWholeZip() {
 
   setExportBusy(true, t.statusPackaging);
   try {
+    const pkgFonts = await ensureEmbeddedFonts().catch(() => ({}));
+    if (!pkgFonts.mono) {
+      setExportBusy(false);
+      setStatus(t.statusFontError);
+      alert(`${I18N.en.statusFontError}\n\n${I18N.zh.statusFontError}`);
+      return;
+    }
     const JSZip = await ensureJSZip();
     const zip = new JSZip();
     const svg = await createPackagingSvg({
@@ -503,6 +516,13 @@ async function exportPackagingPanelsZip() {
 
   setExportBusy(true, t.statusPackaging);
   try {
+    const pkgFonts = await ensureEmbeddedFonts().catch(() => ({}));
+    if (!pkgFonts.mono) {
+      setExportBusy(false);
+      setStatus(t.statusFontError);
+      alert(`${I18N.en.statusFontError}\n\n${I18N.zh.statusFontError}`);
+      return;
+    }
     const JSZip = await ensureJSZip();
     const zip = new JSZip();
     const svg = await createPackagingSvg({
