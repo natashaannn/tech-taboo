@@ -1,318 +1,454 @@
-import { useState } from 'react'
-import { Navigation } from '@/components/Navigation'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
-import { Input } from '@/components/ui/input'
-import { tabooList } from '../lib/data/tabooList'
-import { generateSVG } from '../lib/generateSVG'
-import { CATEGORIES } from '../lib/categories'
+import { useState, useEffect, useCallback } from "react";
+import { Navigation } from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  PACKAGING_VERSIONS,
+  PACKAGING_SELECTIONS,
+  createPackagingSvg,
+  CATEGORY_DESCRIPTIONS,
+} from "../lib/renderers/packagingDesignRenderer";
+import { ensurePackagingFonts } from "../lib/utils/fontUtils";
+import {
+  svgToPng,
+  downloadBlob,
+  svgStringToImageElement,
+} from "../lib/utils/svgUtils";
+import JSZip from "jszip";
+
+const PANEL_EXPORT_LAYOUT = [
+  { name: "lid-top", x: 29.4, y: 29.4, width: 66, height: 95 },
+  { name: "short-side-top", x: 29.4, y: 0, width: 66, height: 29.4 },
+  { name: "short-side-bottom", x: 29.4, y: 124.4, width: 66, height: 29.4 },
+  { name: "long-side-left", x: 0, y: 29.4, width: 29.4, height: 95 },
+  { name: "long-side-right", x: 95.4, y: 29.4, width: 29.4, height: 95 },
+];
+
+const MM_TO_PX_AT_96 = 96 / 25.4;
+const PRINT_DPI = 300;
+const DPI_SCALE = PRINT_DPI / 96;
+
+async function cropSvgToPanel(
+  svgString: string,
+  panel: (typeof PANEL_EXPORT_LAYOUT)[0],
+): Promise<string> {
+  const img = await svgStringToImageElement(svgString);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not get canvas context");
+
+  // Convert mm to pixels (assuming 96 DPI)
+  const mmToPx = 96 / 25.4;
+  const pixelWidth = panel.width * mmToPx;
+  const pixelHeight = panel.height * mmToPx;
+  const pixelX = panel.x * mmToPx;
+  const pixelY = panel.y * mmToPx;
+
+  canvas.width = pixelWidth;
+  canvas.height = pixelHeight;
+
+  ctx.drawImage(
+    img,
+    pixelX,
+    pixelY,
+    pixelWidth,
+    pixelHeight,
+    0,
+    0,
+    pixelWidth,
+    pixelHeight,
+  );
+
+  // Convert canvas back to SVG with embedded image
+  const dataUrl = canvas.toDataURL("image/png");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${panel.width}mm" height="${panel.height}mm" viewBox="0 0 ${panel.width} ${panel.height}">
+  <image width="100%" height="100%" href="${dataUrl}" />
+</svg>`;
+}
+
+async function svgToPngPrint(
+  svgString: string,
+  widthMm: number,
+  heightMm: number,
+): Promise<Blob> {
+  const widthPx = Math.round(widthMm * MM_TO_PX_AT_96);
+  const heightPx = Math.round(heightMm * MM_TO_PX_AT_96);
+
+  // Calculate target dimensions at 300 DPI
+  const scale = DPI_SCALE;
+  const targetWidth = Math.round(widthPx * scale);
+  const targetHeight = Math.round(heightPx * scale);
+
+  return svgToPng(svgString, targetWidth, targetHeight, PRINT_DPI);
+}
 
 export function Packaging() {
-  const [selectedVersion, setSelectedVersion] = useState('v1')
-  const [selectedLanguage, setSelectedLanguage] = useState('en')
-  const [showBleed, setShowBleed] = useState(true)
-  const [cardSize, setCardSize] = useState({ width: 610, height: 910 })
-  const [output, setOutput] = useState<string>('')
-  
-  // Version definitions
-  const versions = {
-    v1: { name: 'Version 1', cardCount: 40, description: 'Original version with 40 cards' },
-    v2: { name: 'Version 2', cardCount: 60, description: 'Extended version with 60 cards' },
-    v3: { name: 'Version 3', cardCount: 80, description: 'Complete version with 80 cards' }
-  }
-  
-  // Generate packaging layout
-  const generatePackaging = () => {
-    const version = versions[selectedVersion as keyof typeof versions]
-    const cards = tabooList.slice(0, version.cardCount)
-    
-    // Generate packaging SVG with multiple cards arranged in a grid
-    const packagingSVG = `
-      <svg width="2480" height="3508" viewBox="0 0 2480 3508" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <style>
-            .packaging-text { 
-              font-family: Arial, sans-serif; 
-              font-size: 24px; 
-              font-weight: bold; 
-              fill: #17424A;
-            }
-            .info-text {
-              font-family: Arial, sans-serif;
-              font-size: 18px;
-              fill: #666;
-            }
-          </style>
-        </defs>
-        
-        <!-- Background -->
-        <rect width="2480" height="3508" fill="#f8f8f8"/>
-        
-        <!-- Title -->
-        <text x="1240" y="100" text-anchor="middle" class="packaging-text" style="font-size: 48px;">
-          Techie Taboo - ${version.name}
-        </text>
-        
-        <!-- Card grid -->
-        ${cards.map((card, index) => {
-            const row = Math.floor(index / 4)
-            const col = index % 4
-            const x = 240 + col * 600
-            const y = 200 + row * 850
-            
-            return `
-              <g transform="translate(${x}, ${y})">
-                ${generateSVG({
-                  id: `pack-card-${index}`,
-                  top: { ...card.top },
-                  bottom: { ...card.bottom },
-                  createdAt: new Date()
-                }, {
-                  showBleed: false,
-                  category: CATEGORIES[index % CATEGORIES.length]
-                })}
-              </g>
-            `
-        }).join('\n        ')}
-        
-        <!-- Footer info -->
-        <text x="1240" y="3400" text-anchor="middle" class="info-text">
-          ${version.cardCount} cards • ${selectedLanguage.toUpperCase()} • Made with 💜 by ragTech
-        </text>
-      </svg>
-    `
-    
-    setOutput(packagingSVG)
-  }
-  
-  // Generate panels (individual card faces for printing)
-  const generatePanels = () => {
-    const version = versions[selectedVersion as keyof typeof versions]
-    const cards = tabooList.slice(0, version.cardCount)
-    
-    // Create front and back panels
-    const frontCards = cards.map((card, index) => card.top)
-    const backCards = cards.map((card, index) => card.bottom)
-    
-    const panelsSVG = `
-      <svg width="2480" height="3508" viewBox="0 0 2480 3508" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <style>
-            .panel-label { 
-              font-family: Arial, sans-serif; 
-              font-size: 32px; 
-              font-weight: bold; 
-              fill: #17424A;
-            }
-          </style>
-        </defs>
-        
-        <!-- Background -->
-        <rect width="2480" height="3508" fill="white"/>
-        
-        <!-- Front Panel -->
-        <g transform="translate(0, 100)">
-          <text x="1240" y="0" text-anchor="middle" class="panel-label">Front Cards</text>
-          ${frontCards.map((card) => {
-            const row = Math.floor(frontCards.indexOf(card) / 4)
-            const col = frontCards.indexOf(card) % 4
-            const x = 240 + col * 600
-            const y = 50 + row * 850
-            
-            return `
-              <g transform="translate(${x}, ${y})">
-                ${generateSVG({
-                  id: `front-card-${frontCards.indexOf(card)}`,
-                  top: { ...card },
-                  bottom: { word: '', taboos: [] },
-                  createdAt: new Date()
-                }, {
-                  showBleed: false,
-                  category: CATEGORIES[frontCards.indexOf(card) % CATEGORIES.length]
-                })}
-              </g>
-            `
-          }).join('\n          ')}
-        </g>
-        
-        <!-- Back Panel -->
-        <g transform="translate(0, 1850)">
-          <text x="1240" y="0" text-anchor="middle" class="panel-label">Back Cards</text>
-          ${backCards.map((card) => {
-            const row = Math.floor(backCards.indexOf(card) / 4)
-            const col = backCards.indexOf(card) % 4
-            const x = 240 + col * 600
-            const y = 50 + row * 850
-            
-            return `
-              <g transform="translate(${x}, ${y})">
-                ${generateSVG({
-                  id: `back-card-${backCards.indexOf(card)}`,
-                  top: { word: '', taboos: [] },
-                  bottom: { ...card },
-                  createdAt: new Date()
-                }, {
-                  showBleed: false,
-                  category: CATEGORIES[backCards.indexOf(card) % CATEGORIES.length]
-                })}
-              </g>
-            `
-          }).join('\n          ')}
-        </g>
-      </svg>
-    `
-    
-    setOutput(panelsSVG)
-  }
-  
-  // Export functions
-  const exportSVG = () => {
-    if (!output) return
-    const blob = new Blob([output], { type: 'image/svg+xml' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `packaging-${selectedVersion}-${selectedLanguage}.svg`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-  
+  const [selectedEdition, setSelectedEdition] = useState("VARIETY_PACK");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [customDescription, setCustomDescription] = useState("");
+  const [customVersion, setCustomVersion] = useState("v1.0");
+  const [includeBorders, setIncludeBorders] = useState(true);
+  const [output, setOutput] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const handleGenerate = useCallback(async () => {
+    if (!fontsLoaded) {
+      return;
+    }
+
+    setIsGenerating(true);
+    setOutput("");
+
+    try {
+      const key = selectedCategory || selectedEdition;
+      const svg = await createPackagingSvg(key, {
+        includeBorders,
+      });
+      setOutput(svg);
+    } catch (error) {
+      console.error("Failed to generate packaging:", error);
+      alert(
+        "Failed to generate packaging. Please check the console for errors.",
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [fontsLoaded, selectedCategory, selectedEdition, includeBorders]);
+
+  useEffect(() => {
+    // Preload fonts
+    ensurePackagingFonts()
+      .then(() => {
+        setFontsLoaded(true);
+      })
+      .catch(console.error);
+  }, []);
+
+  // Auto-generate when fonts are loaded and initial selection is made
+  useEffect(() => {
+    if (fontsLoaded && !output) {
+      handleGenerate();
+    }
+  }, [fontsLoaded, handleGenerate, output]);
+
+  useEffect(() => {
+    // Auto-sync description when category/edition changes
+    if (!customDescription) {
+      const key = selectedCategory || selectedEdition;
+      const edition =
+        PACKAGING_VERSIONS[key as keyof typeof PACKAGING_VERSIONS];
+      const description =
+        edition?.description ||
+        CATEGORY_DESCRIPTIONS[key as keyof typeof CATEGORY_DESCRIPTIONS] ||
+        "";
+      setCustomDescription(description);
+    }
+  }, [selectedEdition, selectedCategory, customDescription]);
+
+  const handleExportPNG = async () => {
+    if (!output) return;
+
+    try {
+      // Generate fresh SVG with all assets embedded for export
+      const key = selectedCategory || selectedEdition;
+      const svg = await createPackagingSvg(key, {
+        includeBorders,
+        useSystemFonts: false,
+      });
+      const png = await svgToPngPrint(svg, 124.8, 153.8); // High DPI for print
+      const filename = `${selectedCategory || selectedEdition}-packaging.png`;
+      downloadBlob(png, filename);
+    } catch (error) {
+      console.error("Failed to export PNG:", error);
+      alert("Failed to export PNG. Please check the console for errors.");
+    }
+  };
+
+  const handleExportPNGNoBorders = async () => {
+    if (!output) return;
+
+    try {
+      // Generate SVG without borders
+      const key = selectedCategory || selectedEdition;
+      const svg = await createPackagingSvg(key, {
+        includeBorders: false,
+        useSystemFonts: false,
+      });
+      const png = await svgToPngPrint(svg, 124.8, 153.8);
+      const filename = `${selectedCategory || selectedEdition}-packaging-no-borders.png`;
+      downloadBlob(png, filename);
+    } catch (error) {
+      console.error("Failed to export PNG:", error);
+      alert("Failed to export PNG. Please check the console for errors.");
+    }
+  };
+
+  const handleExportPanelsZip = async () => {
+    if (!output) return;
+
+    try {
+      const zip = new JSZip();
+      const panelsFolder = zip.folder("panels");
+
+      for (const panel of PANEL_EXPORT_LAYOUT) {
+        const panelSvg = await cropSvgToPanel(output, panel);
+        const png = await svgToPngPrint(panelSvg, panel.width, panel.height);
+        panelsFolder?.file(`${panel.name}.png`, png);
+      }
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const filename = `${selectedCategory || selectedEdition}-panels.zip`;
+      downloadBlob(zipBlob, filename);
+    } catch (error) {
+      console.error("Failed to export panels:", error);
+      alert("Failed to export panels. Please check the console for errors.");
+    }
+  };
+
+  const handleExportSVG = () => {
+    if (!output) return;
+
+    const blob = new Blob([output], { type: "image/svg+xml" });
+    const filename = `${selectedCategory || selectedEdition}-packaging.svg`;
+    downloadBlob(blob, filename);
+  };
+
+  const handleResetDescription = () => {
+    const key = selectedCategory || selectedEdition;
+    const edition = PACKAGING_VERSIONS[key as keyof typeof PACKAGING_VERSIONS];
+    const description =
+      edition?.description ||
+      CATEGORY_DESCRIPTIONS[key as keyof typeof CATEGORY_DESCRIPTIONS] ||
+      "";
+    setCustomDescription(description);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
-      <main className="container py-8">
+
+      <main className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="space-y-8">
-          {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Packaging Generator</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Packaging Lid Renderer
+            </h1>
             <p className="text-muted-foreground">
-              Generate print-ready packaging layouts for Techie Taboo cards
+              Rigid box full-lid layout with 5 sides: lid top 66x95mm, long side
+              95x29.4mm x2, short side 66x29.4mm x2.
             </p>
           </div>
-          
-          {/* Controls */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Packaging Options</CardTitle>
-              <CardDescription>
-                Configure your packaging layout settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="version">Version</Label>
-                  <Select value={selectedVersion} onValueChange={setSelectedVersion}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select version" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(versions).map(([key, version]) => (
-                        <SelectItem key={key} value={key}>
-                          {version.name} ({version.cardCount} cards)
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="language">Language</Label>
-                  <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="zh">中文</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Card Size</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      value={cardSize.width}
-                      onChange={(e) => setCardSize(prev => ({ ...prev, width: parseInt(e.target.value) || 610 }))}
-                      placeholder="Width"
-                    />
-                    <span className="flex items-center">×</span>
-                    <Input
-                      type="number"
-                      value={cardSize.height}
-                      onChange={(e) => setCardSize(prev => ({ ...prev, height: parseInt(e.target.value) || 910 }))}
-                      placeholder="Height"
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Show Bleed</Label>
-                  <Switch
-                    checked={showBleed}
-                    onCheckedChange={setShowBleed}
-                  />
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-4">
-                <Button onClick={generatePackaging}>
-                  Generate Packaging Layout
-                </Button>
-                <Button variant="outline" onClick={generatePanels}>
-                  Generate Print Panels
-                </Button>
-                {output && (
-                  <Button variant="secondary" onClick={exportSVG}>
-                    Export as SVG
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Version Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Version Details</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.entries(versions).map(([key, version]) => (
-                  <div key={key} className="p-4 border rounded-lg">
-                    <h3 className="font-semibold">{version.name}</h3>
-                    <p className="text-sm text-muted-foreground">{version.description}</p>
-                    <p className="text-sm font-medium mt-2">{version.cardCount} cards</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Output */}
+
+          {/* Preview */}
           {output && (
             <Card>
               <CardHeader>
-                <CardTitle>Generated Packaging</CardTitle>
-                <CardDescription>
-                  Print-ready packaging layout (A4 size at 300 DPI)
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Packaging Preview</CardTitle>
+                    <CardDescription>
+                      Preview of your packaging design (1:1 scale)
+                    </CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={handleExportSVG}
+                      disabled={!output}
+                    >
+                      Export as SVG
+                    </Button>
+                    <Button onClick={handleExportPNG} disabled={!output}>
+                      Export as PNG (Print Quality)
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="border rounded-lg p-4 bg-white overflow-auto max-h-screen">
-                  <div dangerouslySetInnerHTML={{ __html: output }} />
+              <CardContent>
+                <div className="overflow-auto bg-gray-50 rounded-lg p-4">
+                  <div
+                    dangerouslySetInnerHTML={{ __html: output }}
+                    style={{
+                      width: "100%",
+                      maxWidth: "980px",
+                      margin: "0 auto",
+                    }}
+                  />
                 </div>
               </CardContent>
             </Card>
           )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Packaging Options</CardTitle>
+              <CardDescription>
+                Configure your packaging design settings
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category / Edition</Label>
+                  <Select
+                    value={selectedCategory || selectedEdition}
+                    onValueChange={(value) => {
+                      // Determine if it's an edition or category
+                      const isEdition =
+                        PACKAGING_VERSIONS[
+                          value as keyof typeof PACKAGING_VERSIONS
+                        ] !== undefined;
+                      if (isEdition) {
+                        setSelectedEdition(value);
+                        setSelectedCategory("");
+                      } else {
+                        setSelectedCategory(value);
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category or edition" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PACKAGING_SELECTIONS.map(
+                        ({ key, label }: { key: string; label: string }) => (
+                          <SelectItem key={key} value={key}>
+                            {label}
+                          </SelectItem>
+                        ),
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="version">Version</Label>
+                  <Input
+                    id="version"
+                    placeholder="Enter version"
+                    value={customVersion}
+                    onChange={(e) => setCustomVersion(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Enter description"
+                    value={customDescription}
+                    onChange={(e) => setCustomDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="borders">Borders</Label>
+                  <div className="flex items-center space-x-2 pt-2">
+                    <Switch
+                      id="borders"
+                      checked={includeBorders}
+                      onCheckedChange={setIncludeBorders}
+                    />
+                    <Label htmlFor="borders" className="text-sm">
+                      Include Panel Borders
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 pt-4">
+                <Button
+                  onClick={handleGenerate}
+                  disabled={isGenerating || !fontsLoaded}
+                >
+                  {isGenerating ? "Generating..." : "Generate Packaging"}
+                </Button>
+                <Button variant="outline" onClick={handleResetDescription}>
+                  Reset Category Description
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleExportPNGNoBorders}
+                  disabled={!output}
+                >
+                  Export PNG (No Borders)
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleExportPanelsZip}
+                  disabled={!output}
+                >
+                  Export Panels PNG ZIP
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Info */}
+          {selectedEdition && !selectedCategory && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Edition Info</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-2">
+                  {
+                    PACKAGING_VERSIONS[
+                      selectedEdition as keyof typeof PACKAGING_VERSIONS
+                    ]?.description
+                  }
+                </p>
+                <p className="text-sm">
+                  <strong>Categories:</strong>{" "}
+                  {PACKAGING_VERSIONS[
+                    selectedEdition as keyof typeof PACKAGING_VERSIONS
+                  ]?.categories.join(", ")}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {selectedCategory &&
+            CATEGORY_DESCRIPTIONS[
+              selectedCategory as keyof typeof CATEGORY_DESCRIPTIONS
+            ] && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Category Info</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    {
+                      CATEGORY_DESCRIPTIONS[
+                        selectedCategory as keyof typeof CATEGORY_DESCRIPTIONS
+                      ]
+                    }
+                  </p>
+                </CardContent>
+              </Card>
+            )}
         </div>
       </main>
     </div>
-  )
+  );
 }

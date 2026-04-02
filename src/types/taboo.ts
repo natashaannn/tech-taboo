@@ -3,6 +3,7 @@ export interface TabooWord {
   word: string;
   taboo: string[];
   explanation: string;
+  category: string;
 }
 
 export interface TabooCard {
@@ -24,7 +25,6 @@ export interface CardGenerationOptions {
   background: string;
   strokeColor: string;
   matchStrokeBackground: boolean;
-  showBleed: boolean;
   category?: string;
   teacherImage?: string;
   peekOutImage?: string;
