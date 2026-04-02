@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { tabooList } from "../lib/data/tabooList";
-import { generateMultipleSVGs } from "../lib/renderers/cardRenderer";
+import { generateSVG } from "../lib/renderers/cardRenderer";
 import {
   PACKAGING_VERSIONS,
   createPackagingSvg,
 } from "../lib/renderers/packagingDesignRenderer";
 import {
-  svgStringToImageElement,
+  inlineSvgImages,
   svgToPng,
   svgToPngPrint,
   downloadBlob,
@@ -103,51 +103,48 @@ const PANEL_EXPORT_LAYOUT = [
   { name: "long-side-right", x: 95.4, y: 29.4, width: 29.4, height: 95 },
 ];
 
+const CARD_EXPORT_SCALE = 300 / 96;
+const CARD_EXPORT_WIDTH = Math.round(500 * CARD_EXPORT_SCALE);
+const CARD_EXPORT_HEIGHT = Math.round(810 * CARD_EXPORT_SCALE);
+
 async function cropSvgToPanel(
   svgString: string,
   panel: (typeof PANEL_EXPORT_LAYOUT)[0],
 ): Promise<string> {
-  const img = await svgStringToImageElement(svgString);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Could not get canvas context");
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgString, "image/svg+xml");
+  const svg = doc.documentElement;
+  const serializer = new XMLSerializer();
 
-  // Convert mm to pixels (assuming 96 DPI)
-  const mmToPx = 96 / 25.4;
-  const pixelWidth = panel.width * mmToPx;
-  const pixelHeight = panel.height * mmToPx;
-  const pixelX = panel.x * mmToPx;
-  const pixelY = panel.y * mmToPx;
+  const defsMarkup = Array.from(svg.children)
+    .filter((child) => child.tagName.toLowerCase() === "defs")
+    .map((child) => serializer.serializeToString(child))
+    .join("");
 
-  canvas.width = pixelWidth;
-  canvas.height = pixelHeight;
+  const contentMarkup = Array.from(svg.children)
+    .filter((child) => child.tagName.toLowerCase() !== "defs")
+    .map((child) => serializer.serializeToString(child))
+    .join("");
 
-  ctx.drawImage(
-    img,
-    pixelX,
-    pixelY,
-    pixelWidth,
-    pixelHeight,
-    0,
-    0,
-    pixelWidth,
-    pixelHeight,
-  );
-
-  // Convert canvas back to SVG with embedded image
-  const dataUrl = canvas.toDataURL("image/png");
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${panel.width}mm" height="${panel.height}mm" viewBox="0 0 ${panel.width} ${panel.height}">
-  <image width="100%" height="100%" href="${dataUrl}" />
+  ${defsMarkup}
+  <g transform="translate(${-panel.x} ${-panel.y})">
+    ${contentMarkup}
+  </g>
 </svg>`;
 }
 
 export default function Manufacturer() {
-  const [lang, setLang] = useState("en");
+  const [lang, setLang] = useState("zh");
   const [selectedEdition, setSelectedEdition] = useState("VARIETY_PACK");
   const [isBusy, setIsBusy] = useState(false);
   const [status, setStatus] = useState("");
   const t = I18N[lang as keyof typeof I18N] || I18N.en;
+  const enabledEditions = new Set([
+    "VARIETY_PACK",
+    "SOFTWARE_INTERVIEW_EXTENSION",
+  ]);
 
   const edition =
     PACKAGING_VERSIONS[selectedEdition as keyof typeof PACKAGING_VERSIONS];
@@ -155,36 +152,89 @@ export default function Manufacturer() {
     ? tabooList.filter((card) => edition.categories.includes(card.category))
     : [];
 
+  const resolveCategoryAlias = (category: string) => {
+    if (category === "Game Development") return "Game Dev";
+    return category;
+  };
+
+  const buildEditionPairsFromCounts = () => {
+    if (!edition) return [] as TabooCard[];
+
+    const counts = edition.categoryCounts || {};
+    const buckets = Object.entries(counts)
+      .map(([rawCategory, wordCount]) => {
+        const category = resolveCategoryAlias(rawCategory);
+        const pool = tabooList.filter((card) => card.category === category);
+        return {
+          category,
+          pool,
+          pairTarget: Math.floor(wordCount / 2),
+          pairCount: 0,
+          cursor: 0,
+        };
+      })
+      .filter((bucket) => bucket.pool.length > 0 && bucket.pairTarget > 0);
+
+    const pairs: TabooCard[] = [];
+    let hasRemaining = true;
+
+    while (hasRemaining) {
+      hasRemaining = false;
+
+      for (const bucket of buckets) {
+        if (bucket.pairCount >= bucket.pairTarget) continue;
+        hasRemaining = true;
+
+        const top = bucket.pool[bucket.cursor % bucket.pool.length];
+        const bottom = bucket.pool[(bucket.cursor + 1) % bucket.pool.length];
+        bucket.cursor += 2;
+        bucket.pairCount += 1;
+
+        pairs.push({
+          id: `${selectedEdition}-${bucket.category}-${bucket.pairCount}`,
+          top,
+          bottom,
+          createdAt: new Date(),
+        });
+      }
+    }
+
+    return pairs;
+  };
+
   useEffect(() => {
     setStatus(t.statusReady);
   }, [t]);
 
   const downloadCards = async () => {
     if (isBusy || !edition) return;
+    const pairs = buildEditionPairsFromCounts();
     setIsBusy(true);
-    setStatus(t.statusCards(0, editionCards.length));
+    setStatus(t.statusCards(0, pairs.length));
 
     try {
-      const pairs: TabooCard[] = [];
-      for (let i = 0; i < editionCards.length - 1; i += 2) {
-        pairs.push({
-          id: `${selectedEdition}-${i}`,
-          top: editionCards[i],
-          bottom: editionCards[i + 1],
-          createdAt: new Date(),
-        });
-      }
-
-      const svgs = await generateMultipleSVGs(pairs, {
-        category: edition.categories[0],
-      });
+      const svgs = await Promise.all(
+        pairs.map((pair) =>
+          generateSVG(pair, {
+            category: pair.top.category,
+          }),
+        ),
+      );
       const zip = new JSZip();
       const folder = zip.folder("cards");
 
       for (let i = 0; i < svgs.length; i++) {
-        const png = await svgToPng(svgs[i], 500, 810);
+        const png = await svgToPng(
+          svgs[i],
+          CARD_EXPORT_WIDTH,
+          CARD_EXPORT_HEIGHT,
+        );
+        const categorySlug = String(pairs[i].top.category || "unknown")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
         folder?.file(
-          `card-${pairs[i].top.index}-${pairs[i].bottom.index}.png`,
+          `${String(i + 1).padStart(3, "0")}-${categorySlug}-card-${pairs[i].top.index}-${pairs[i].bottom.index}.png`,
           png,
         );
       }
@@ -227,11 +277,12 @@ export default function Manufacturer() {
       const svg = await createPackagingSvg(selectedEdition, {
         useSystemFonts: false,
       });
+      const inlinedSvg = await inlineSvgImages(svg);
       const zip = new JSZip();
       const panelsFolder = zip.folder("panels");
 
       for (const panel of PANEL_EXPORT_LAYOUT) {
-        const panelSvg = await cropSvgToPanel(svg, panel);
+        const panelSvg = await cropSvgToPanel(inlinedSvg, panel);
         const png = await svgToPngPrint(panelSvg, panel.width, panel.height);
         panelsFolder?.file(`${panel.name}.png`, png);
       }
@@ -296,7 +347,11 @@ export default function Manufacturer() {
                         <SelectContent>
                           {Object.entries(PACKAGING_VERSIONS).map(
                             ([key, value]) => (
-                              <SelectItem key={key} value={key}>
+                              <SelectItem
+                                key={key}
+                                value={key}
+                                disabled={!enabledEditions.has(key)}
+                              >
                                 {value.label}
                               </SelectItem>
                             ),

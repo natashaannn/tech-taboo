@@ -112,46 +112,11 @@ function resolveAssetUrl(url: string): string {
   }
 }
 
-async function cardSvgToPngDataUri(svgMarkup: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    const svgBlob = new Blob([svgMarkup], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const url = URL.createObjectURL(svgBlob);
-
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 610;
-      canvas.height = 910;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        URL.revokeObjectURL(url);
-        reject(new Error("Could not get canvas context"));
-        return;
-      }
-
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL("image/png"));
-    };
-
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Failed to load card SVG for thumbnail"));
-    };
-
-    image.src = url;
-  });
-}
-
-async function createCardThumbnailDataUri(
+async function createCardSampleSvgMarkup(
   item: (typeof tabooList)[0] | null,
   fallbackCategory: string,
   fallbackColor: string,
-) {
+): Promise<string> {
   try {
     const itemCategory = item?.category || fallbackCategory;
     const categoryColor =
@@ -191,11 +156,11 @@ async function createCardThumbnailDataUri(
       },
     );
 
-    return await cardSvgToPngDataUri(cardSvg);
+    return String(cardSvg).replace(/^\s*<\?xml[^>]*>\s*/i, "");
   } catch (error) {
-    console.error("Error in createCardThumbnailDataUri:", error);
+    console.error("Error in createCardSampleSvgMarkup:", error);
     // Return a simple fallback SVG
-    return `data:image/svg+xml;base64,${btoa(`<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="${fallbackColor}"/></svg>`)}`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 910"><rect width="610" height="910" fill="${fallbackColor}"/></svg>`;
   }
 }
 
@@ -209,8 +174,19 @@ async function buildCardSampleMarkup(
   category: string,
   color: string,
 ) {
-  const dataUri = await createCardThumbnailDataUri(item, category, color);
-  return `<image x="${x}" y="${y}" width="${width}" height="${height}" transform="rotate(${rotate} ${x + width / 2} ${y + height / 2})" href="${dataUri}" />`;
+  const cardSvgMarkup = await createCardSampleSvgMarkup(item, category, color);
+  const parser = new DOMParser();
+  const cardDoc = parser.parseFromString(cardSvgMarkup, "image/svg+xml");
+  const cardSvg = cardDoc.documentElement;
+  cardSvg.setAttribute("x", String(x));
+  cardSvg.setAttribute("y", String(y));
+  cardSvg.setAttribute("width", String(width));
+  cardSvg.setAttribute("height", String(height));
+  cardSvg.setAttribute("viewBox", "0 0 610 910");
+  cardSvg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+  const serializedCardSvg = new XMLSerializer().serializeToString(cardSvg);
+  return `<g transform="rotate(${rotate} ${x + width / 2} ${y + height / 2})">${serializedCardSvg}</g>`;
 }
 
 function wrapWords(text: string, maxCharsPerLine: number, maxLines = 3) {
@@ -470,7 +446,7 @@ export async function createPackagingSVG(
   <rect x="${leftX}" y="${topY}" width="${PACKAGING_PANEL_MM.longSide.height}" height="${PACKAGING_PANEL_MM.longSide.width}" fill="${background}" ${panelAttrs} />
   <rect x="${rightX}" y="${topY}" width="${PACKAGING_PANEL_MM.longSide.height}" height="${PACKAGING_PANEL_MM.longSide.width}" fill="${background}" ${panelAttrs} />
   
-  <image href="${embeddedImages.ragtechLogo}" x="${topX + 2}" y="${topY + 2}" width="16" height="6" preserveAspectRatio="xMidYMid meet" />
+  <image href="${embeddedImages.ragtechLogo}" x="${topX + 2}" y="${topY + 2}" width="16" height="6" preserveAspectRatio="xMidYMid meet" style="image-rendering: optimizeQuality;" />
   <text x="${topX + 34}" y="${topY + 6.9}" text-anchor="middle" fill="${techieColor}" font-size="2.5" class="gaegu">Great for parties and events!</text>
   
   <g transform="rotate(25 ${topX + 55} ${topY + 6.9})">
@@ -495,19 +471,19 @@ export async function createPackagingSVG(
   </g>
 
   <g class="gaegu" transform="rotate(180 ${topX + PACKAGING_PANEL_MM.shortSide.height / 2} ${topSideY + PACKAGING_PANEL_MM.shortSide.width / 2})">
-    <image href="${embeddedImages.ragtechLogo}" x="${topX + 2}" y="${topSideY + 1}" width="14" height="5.3" preserveAspectRatio="xMidYMid meet" />
+    <image href="${embeddedImages.ragtechLogo}" x="${topX + 2}" y="${topSideY + 1}" width="14" height="5.3" preserveAspectRatio="xMidYMid meet" style="image-rendering: optimizeQuality;" />
     <text x="${topX + 4}" y="${topSideY + 15.2}" fill="${techieColor}" font-size="11.0" font-weight="900">TECHIE</text>
     <text x="${topX + 4}" y="${topSideY + 24.4}" fill="${tabooColor}" font-size="11.0" font-weight="900">TABOO</text>
-    <image href="${embeddedImages.techybaraPlaying}" x="${topX + 38}" y="${topSideY + 0.4}" width="21" height="21" preserveAspectRatio="xMidYMid meet" />
+    <image href="${embeddedImages.techybaraPlaying}" x="${topX + 38}" y="${topSideY + 0.4}" width="21" height="21" preserveAspectRatio="xMidYMid meet" style="image-rendering: optimizeQuality;" />
     <rect x="${shortPillX}" y="${topSideY + 20.0}" width="${shortPillWidth}" height="${shortPillHeight}" rx="${shortPillHeight / 2}" fill="${categoryColor}" />
     <text x="${shortPillCenterX}" y="${topSideY + 22.1}" text-anchor="middle" fill="${categoryTextColor}" font-size="1.25" font-weight="800" class="mono">${topEditionName}</text>
   </g>
 
   <g class="gaegu">
-    <image href="${embeddedImages.ragtechLogo}" x="${topX + 2}" y="${bottomSideY + 1}" width="14" height="5.3" preserveAspectRatio="xMidYMid meet" />
+    <image href="${embeddedImages.ragtechLogo}" x="${topX + 2}" y="${bottomSideY + 1}" width="14" height="5.3" preserveAspectRatio="xMidYMid meet" style="image-rendering: optimizeQuality;" />
     <text x="${topX + 4}" y="${bottomSideY + 14.5}" fill="${techieColor}" font-size="11.0" font-weight="900">TECHIE</text>
     <text x="${topX + 4}" y="${bottomSideY + 23.7}" fill="${tabooColor}" font-size="11.0" font-weight="900">TABOO</text>
-    <image href="${embeddedImages.techybaraPlaying}" x="${topX + 38}" y="${bottomSideY + 0.4}" width="21" height="21" preserveAspectRatio="xMidYMid meet" />
+    <image href="${embeddedImages.techybaraPlaying}" x="${topX + 38}" y="${bottomSideY + 0.4}" width="21" height="21" preserveAspectRatio="xMidYMid meet" style="image-rendering: optimizeQuality;" />
     <rect x="${shortPillX}" y="${bottomSideY + 20.0}" width="${shortPillWidth}" height="${shortPillHeight}" rx="${shortPillHeight / 2}" fill="${categoryColor}" />
     <text x="${shortPillCenterX}" y="${bottomSideY + 22.1}" text-anchor="middle" fill="${categoryTextColor}" font-size="1.25" font-weight="800" class="mono">${topEditionName}</text>
   </g>

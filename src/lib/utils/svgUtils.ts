@@ -205,7 +205,8 @@ export async function svgToPngPrint(
         return;
       }
 
-      ctx.imageSmoothingEnabled = false;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, targetWidth, targetHeight);
 
