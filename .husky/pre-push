@@ -1,0 +1,6 @@
+# Load nvm so npm works
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Run tests - block push if any test failed
+npm test

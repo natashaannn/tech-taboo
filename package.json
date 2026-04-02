@@ -1,13 +1,19 @@
 {
-  "name": "tech-taboo",
+  "name": "techie-taboo",
   "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch public --exec 'serve public -l 5173'",
-    "start": "serve public"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "prepare": "husky",
+    "test": "echo 'No tests yet'"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0",
-    "serve": "14.2.3"
+    "husky": "^9.1.7",
+    "prettier": "3.8.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.0.1"
   }
 }
