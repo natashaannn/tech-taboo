@@ -26,11 +26,7 @@ import {
   CATEGORY_DESCRIPTIONS,
 } from "../lib/renderers/packagingDesignRenderer";
 import { ensurePackagingFonts } from "../lib/utils/fontUtils";
-import {
-  svgToPng,
-  downloadBlob,
-  svgStringToImageElement,
-} from "../lib/utils/svgUtils";
+import { svgStringToImageElement, downloadBlob } from "../lib/utils/svgUtils";
 import JSZip from "jszip";
 
 const PANEL_EXPORT_LAYOUT = [
@@ -40,10 +36,6 @@ const PANEL_EXPORT_LAYOUT = [
   { name: "long-side-left", x: 0, y: 29.4, width: 29.4, height: 95 },
   { name: "long-side-right", x: 95.4, y: 29.4, width: 29.4, height: 95 },
 ];
-
-const MM_TO_PX_AT_96 = 96 / 25.4;
-const PRINT_DPI = 300;
-const DPI_SCALE = PRINT_DPI / 96;
 
 async function cropSvgToPanel(
   svgString: string,
@@ -89,15 +81,51 @@ async function svgToPngPrint(
   widthMm: number,
   heightMm: number,
 ): Promise<Blob> {
-  const widthPx = Math.round(widthMm * MM_TO_PX_AT_96);
-  const heightPx = Math.round(heightMm * MM_TO_PX_AT_96);
+  // Convert mm to pixels at 300 DPI
+  const DPI = 300;
+  const MM_TO_PX = DPI / 25.4;
+  const widthPx = Math.round(widthMm * MM_TO_PX);
+  const heightPx = Math.round(heightMm * MM_TO_PX);
 
-  // Calculate target dimensions at 300 DPI
-  const scale = DPI_SCALE;
-  const targetWidth = Math.round(widthPx * scale);
-  const targetHeight = Math.round(heightPx * scale);
+  // Create canvas
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not get canvas context");
 
-  return svgToPng(svgString, targetWidth, targetHeight, PRINT_DPI);
+  canvas.width = widthPx;
+  canvas.height = heightPx;
+
+  // Create image from SVG
+  const img = new Image();
+  const svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(svg);
+
+  return new Promise((resolve, reject) => {
+    img.onload = () => {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+
+      // Convert to blob
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Could not convert canvas to blob"));
+          }
+        },
+        "image/png",
+        1.0,
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load SVG image"));
+    };
+    img.src = url;
+  });
 }
 
 export function Packaging() {
