@@ -83,7 +83,7 @@ test.describe("Export Quality Verification", () => {
     // Log file size for manual verification
     console.log(`Card PNG size: ${imageBuffer.length} bytes`);
 
-    // Note: Card should be 1224x1832 pixels at 300 DPI
+    // Note: Card should be 1906x2844 pixels at 300 DPI (610x910 SVG * 300/96 scale)
   });
 
   test("should export SVG with all required elements", async ({ page }) => {

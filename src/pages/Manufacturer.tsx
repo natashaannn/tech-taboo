@@ -104,8 +104,8 @@ const PANEL_EXPORT_LAYOUT = [
 ];
 
 const CARD_EXPORT_SCALE = 300 / 96;
-const CARD_EXPORT_WIDTH = Math.round(500 * CARD_EXPORT_SCALE);
-const CARD_EXPORT_HEIGHT = Math.round(810 * CARD_EXPORT_SCALE);
+const CARD_EXPORT_WIDTH = Math.round(610 * CARD_EXPORT_SCALE);
+const CARD_EXPORT_HEIGHT = Math.round(910 * CARD_EXPORT_SCALE);
 
 async function cropSvgToPanel(
   svgString: string,
@@ -148,9 +148,6 @@ export default function Manufacturer() {
 
   const edition =
     PACKAGING_VERSIONS[selectedEdition as keyof typeof PACKAGING_VERSIONS];
-  const editionCards = edition
-    ? tabooList.filter((card) => edition.categories.includes(card.category))
-    : [];
 
   const resolveCategoryAlias = (category: string) => {
     if (category === "Game Development") return "Game Dev";
@@ -297,12 +294,17 @@ export default function Manufacturer() {
     setIsBusy(false);
   };
 
+  // Calculate total cards and category breakdown from edition definition
+  const totalCards = edition
+    ? Object.values(edition.categoryCounts).reduce(
+        (sum, count) => sum + count,
+        0,
+      ) / 2
+    : 0;
+
   const categoryCounts = edition
-    ? edition.categories
-        .map(
-          (cat) =>
-            `${cat}: ${editionCards.filter((c) => c.category === cat).length}`,
-        )
+    ? Object.entries(edition.categoryCounts)
+        .map(([cat, count]) => `${cat} ${count}`)
         .join(", ")
     : "";
 
@@ -379,14 +381,14 @@ export default function Manufacturer() {
 
             <CardContent className="space-y-6">
               <div className="border-t pt-6">
-                <div className="flex flex-col sm:flex-row gap-4 sm:items-end sm:justify-between">
+                <div className="flex flex-col gap-4">
                   <div>
                     <h3 className="font-semibold mb-2">{t.packagingTitle}</h3>
                     <p className="text-sm text-muted-foreground">
                       {t.packagingDesc}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       variant="outline"
                       onClick={downloadPackagingWhole}
@@ -429,11 +431,7 @@ export default function Manufacturer() {
             <CardContent className="pt-6">
               <p className="text-sm text-muted-foreground">
                 {edition &&
-                  t.packInfo(
-                    edition.label,
-                    editionCards.length,
-                    categoryCounts,
-                  )}
+                  t.packInfo(edition.label, totalCards, categoryCounts)}
               </p>
             </CardContent>
           </Card>

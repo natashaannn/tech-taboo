@@ -152,8 +152,9 @@ export function useCardGeneration({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = 1224;
-    canvas.height = 1832;
+    // 300 DPI for print quality: 610x910 SVG * (300/96)
+    canvas.width = 1906;
+    canvas.height = 2844;
 
     // Create image from SVG
     const img = new Image();
