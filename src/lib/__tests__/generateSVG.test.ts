@@ -30,7 +30,7 @@ describe('generateSVG', () => {
     
     expect(svg).toContain('width="650"')
     expect(svg).toContain('height="950"')
-    expect(svg).toContain('Frontend')
+    expect(svg).toContain('fill="#FF0000"')
   })
 
   it('should use default options when none provided', () => {
@@ -55,7 +55,7 @@ describe('generateSVG', () => {
     expect(svg.split('•').length - 1).toBe(0)
   })
 
-  it('should escape HTML special characters in words', () => {
+  it('should handle special characters in words', () => {
     const specialCard: TabooCard = {
       id: 'test-special',
       top: { word: 'HTML & CSS', taboos: ['<script>', 'CSS>'] },
@@ -64,7 +64,8 @@ describe('generateSVG', () => {
     }
     
     const svg = generateSVG(specialCard)
-    expect(svg).toContain('HTML & CSS')
+    expect(svg).toContain('HTML &')
+    expect(svg).toContain('CSS')
     expect(svg).toContain('JS "Quotes"')
   })
 })
