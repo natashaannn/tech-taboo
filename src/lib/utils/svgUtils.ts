@@ -8,12 +8,18 @@ export async function svgToPng(
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
+    const svgBlob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+
     img.onload = () => {
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext("2d");
       if (!ctx) {
+        URL.revokeObjectURL(url);
         reject(new Error("Could not get canvas context"));
         return;
       }
@@ -22,25 +28,28 @@ export async function svgToPng(
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
 
-      // Draw at higher resolution
-      ctx.drawImage(img, 0, 0, width, height);
+      setTimeout(() => {
+        ctx.drawImage(img, 0, 0, width, height);
 
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(new Error("Could not convert canvas to blob"));
-          }
-        },
-        "image/png",
-        1.0,
-      );
+        canvas.toBlob(
+          (blob) => {
+            URL.revokeObjectURL(url);
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error("Could not convert canvas to blob"));
+            }
+          },
+          "image/png",
+          1.0,
+        );
+      }, 120);
     };
-    img.onerror = reject;
-    img.src =
-      "data:image/svg+xml;base64," +
-      btoa(unescape(encodeURIComponent(svgString)));
+    img.onerror = (error) => {
+      URL.revokeObjectURL(url);
+      reject(error);
+    };
+    img.src = url;
   });
 }
 

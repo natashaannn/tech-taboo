@@ -86,6 +86,11 @@ export async function ensureEmbeddedFonts(): Promise<FontData> {
       "/assets/fonts/monospace/MonospaceBold.ttf",
     );
   }
+  if (!FONT_DATA_CACHE.sometypeMono) {
+    FONT_DATA_CACHE.sometypeMono = await fetchImageAsDataUri(
+      "/assets/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf",
+    );
+  }
   return FONT_DATA_CACHE;
 }
 

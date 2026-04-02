@@ -18,6 +18,13 @@ const DEFAULT_OPTIONS: CardGenerationOptions = {
   peekOutImage: undefined,
 };
 
+function toFontSrc(fontData: string | undefined, fallbackPath: string): string {
+  if (fontData && fontData.startsWith("data:")) return fontData;
+  if (fontData && /^(https?:|\/)/i.test(fontData)) return fontData;
+  if (fontData) return `data:font/truetype;base64,${fontData}`;
+  return fallbackPath;
+}
+
 export async function generateCardSVG(
   card: TabooCard,
   options: Partial<CardGenerationOptions> = {},
@@ -31,22 +38,35 @@ export async function generateCardSVG(
   // Ensure techybara images are embedded
   const techybaraImages = await ensureEmbeddedTechybaraImages();
 
+  const monoFontSrc = toFontSrc(
+    fonts.mono,
+    "/assets/fonts/monospace/Monospace.ttf",
+  );
+  const monoBoldFontSrc = toFontSrc(
+    fonts.monoBold || fonts.mono,
+    "/assets/fonts/monospace/MonospaceBold.ttf",
+  );
+  const sometypeFontSrc = toFontSrc(
+    fonts.sometypeMono,
+    "/assets/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf",
+  );
+
   const fontFaceCSS = `
     @font-face {
       font-family: 'Monospace';
-      src: url('data:font/truetype;base64,${fonts.mono}') format('truetype');
+      src: url('${monoFontSrc}') format('truetype');
       font-weight: 400;
       font-style: normal;
     }
     @font-face {
       font-family: 'Monospace';
-      src: url('data:font/truetype;base64,${fonts.monoBold}') format('truetype');
+      src: url('${monoBoldFontSrc}') format('truetype');
       font-weight: 700;
       font-style: normal;
     }
     @font-face {
       font-family: 'Sometype Mono';
-      src: url('data:font/truetype;base64,${fonts.sometypeMono}') format('truetype');
+      src: url('${sometypeFontSrc}') format('truetype');
       font-weight: 100 900;
       font-style: normal;
     }
