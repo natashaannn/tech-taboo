@@ -14,7 +14,7 @@ test.describe("Navigation", () => {
     await page.getByRole("link", { name: /manufacturer/i }).click();
     await expect(page).toHaveURL(/.*manufacturer/);
     await expect(
-      page.getByRole("heading", { name: /manufacturer downloads/i }),
+      page.getByRole("heading", { name: /manufacturer download/i }),
     ).toBeVisible();
 
     // Navigate back to home
@@ -27,11 +27,15 @@ test.describe("Navigation", () => {
 
     // Desktop view
     await page.setViewportSize({ width: 1200, height: 800 });
-    await expect(page.getByText("Techie Taboo")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Techie Taboo" }),
+    ).toBeVisible();
 
-    // Mobile view
+    // Mobile view - check logo instead since text is hidden
     await page.setViewportSize({ width: 375, height: 667 });
-    await expect(page.getByText("Techie Taboo")).toBeVisible();
+    await expect(
+      page.locator('object[aria-label="Techie Taboo"]'),
+    ).toBeVisible();
     await expect(
       page.getByRole("link", { name: /manufacturer/i }),
     ).toBeVisible();

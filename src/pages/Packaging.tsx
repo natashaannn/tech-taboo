@@ -26,7 +26,11 @@ import {
   CATEGORY_DESCRIPTIONS,
 } from "../lib/renderers/packagingDesignRenderer";
 import { ensurePackagingFonts } from "../lib/utils/fontUtils";
-import { svgStringToImageElement, downloadBlob } from "../lib/utils/svgUtils";
+import {
+  svgStringToImageElement,
+  downloadBlob,
+  svgToPngPrint,
+} from "../lib/utils/svgUtils";
 import JSZip from "jszip";
 
 const PANEL_EXPORT_LAYOUT = [
@@ -74,58 +78,6 @@ async function cropSvgToPanel(
 <svg xmlns="http://www.w3.org/2000/svg" width="${panel.width}mm" height="${panel.height}mm" viewBox="0 0 ${panel.width} ${panel.height}">
   <image width="100%" height="100%" href="${dataUrl}" />
 </svg>`;
-}
-
-async function svgToPngPrint(
-  svgString: string,
-  widthMm: number,
-  heightMm: number,
-): Promise<Blob> {
-  // Convert mm to pixels at 300 DPI
-  const DPI = 300;
-  const MM_TO_PX = DPI / 25.4;
-  const widthPx = Math.round(widthMm * MM_TO_PX);
-  const heightPx = Math.round(heightMm * MM_TO_PX);
-
-  // Create canvas
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Could not get canvas context");
-
-  canvas.width = widthPx;
-  canvas.height = heightPx;
-
-  // Create image from SVG
-  const img = new Image();
-  const svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(svg);
-
-  return new Promise((resolve, reject) => {
-    img.onload = () => {
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
-
-      // Convert to blob
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(new Error("Could not convert canvas to blob"));
-          }
-        },
-        "image/png",
-        1.0,
-      );
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Failed to load SVG image"));
-    };
-    img.src = url;
-  });
 }
 
 export function Packaging() {
@@ -288,7 +240,7 @@ export function Packaging() {
 
           {/* Preview */}
           {output && (
-            <Card>
+            <Card data-testid="packaging-preview">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -302,10 +254,15 @@ export function Packaging() {
                       variant="outline"
                       onClick={handleExportSVG}
                       disabled={!output}
+                      data-testid="export-svg-button"
                     >
                       Export as SVG
                     </Button>
-                    <Button onClick={handleExportPNG} disabled={!output}>
+                    <Button
+                      onClick={handleExportPNG}
+                      disabled={!output}
+                      data-testid="export-png-button"
+                    >
                       Export as PNG (Print Quality)
                     </Button>
                   </div>
@@ -314,6 +271,7 @@ export function Packaging() {
               <CardContent>
                 <div className="overflow-auto bg-gray-50 rounded-lg p-4">
                   <div
+                    data-testid="packaging-svg"
                     dangerouslySetInnerHTML={{ __html: output }}
                     style={{
                       width: "100%",
@@ -352,6 +310,7 @@ export function Packaging() {
                         setSelectedCategory(value);
                       }
                     }}
+                    data-testid="category-select"
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select category or edition" />
@@ -386,6 +345,7 @@ export function Packaging() {
                     value={customDescription}
                     onChange={(e) => setCustomDescription(e.target.value)}
                     rows={3}
+                    data-testid="description-textarea"
                   />
                 </div>
 
@@ -396,6 +356,7 @@ export function Packaging() {
                       id="borders"
                       checked={includeBorders}
                       onCheckedChange={setIncludeBorders}
+                      data-testid="include-borders-switch"
                     />
                     <Label htmlFor="borders" className="text-sm">
                       Include Panel Borders
@@ -408,16 +369,22 @@ export function Packaging() {
                 <Button
                   onClick={handleGenerate}
                   disabled={isGenerating || !fontsLoaded}
+                  data-testid="generate-button"
                 >
                   {isGenerating ? "Generating..." : "Generate Packaging"}
                 </Button>
-                <Button variant="outline" onClick={handleResetDescription}>
+                <Button
+                  variant="outline"
+                  onClick={handleResetDescription}
+                  data-testid="reset-description-button"
+                >
                   Reset Category Description
                 </Button>
                 <Button
                   variant="outline"
                   onClick={handleExportPNGNoBorders}
                   disabled={!output}
+                  data-testid="export-png-no-borders-button"
                 >
                   Export PNG (No Borders)
                 </Button>
@@ -425,6 +392,7 @@ export function Packaging() {
                   variant="outline"
                   onClick={handleExportPanelsZip}
                   disabled={!output}
+                  data-testid="export-panels-zip-button"
                 >
                   Export Panels PNG ZIP
                 </Button>

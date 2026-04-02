@@ -30,15 +30,24 @@ export function CardOutput({
       <CardContent className="space-y-4">
         <div
           className="rounded-lg p-4 bg-white overflow-x-auto"
+          data-testid="card-output"
           dangerouslySetInnerHTML={{ __html: output }}
         />
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="w-full sm:w-auto">Export</Button>
+              <Button
+                className="w-full sm:w-auto"
+                data-testid="export-dropdown"
+              >
+                Export
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={onExportPNG}>
+              <DropdownMenuItem
+                onClick={onExportPNG}
+                data-testid="export-png-button"
+              >
                 Export as PNG
               </DropdownMenuItem>
               <DropdownMenuItem onClick={onExportSVG}>

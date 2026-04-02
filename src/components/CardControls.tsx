@@ -44,6 +44,7 @@ export function CardControls({
                 <Button
                   variant="outline"
                   className="w-full justify-between h-10 pr-8"
+                  data-testid="category-select"
                 >
                   <span className="truncate">{selectedCategory}</span>
                   <ChevronDown className="h-2 w-2 flex-shrink-0 ml-2 sm:h-4 sm:w-4" />
@@ -61,7 +62,9 @@ export function CardControls({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Button onClick={onShuffle}>Shuffle Cards</Button>
+          <Button onClick={onShuffle} data-testid="generate-button">
+            Shuffle Cards
+          </Button>
         </div>
       </CardContent>
     </Card>

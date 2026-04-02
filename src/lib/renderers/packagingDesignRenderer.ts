@@ -156,7 +156,6 @@ async function createCardThumbnailDataUri(
       },
     );
 
-    // Convert SVG to data URI
     return `data:image/svg+xml;utf8,${encodeURIComponent(cardSvg)}`;
   } catch (error) {
     console.error("Error in createCardThumbnailDataUri:", error);
@@ -217,12 +216,12 @@ async function ensurePackagingImages() {
 
   if (!images.ragtechLogo) {
     images.ragtechLogo = await fetchImageAsDataUri(
-      "./ragtech-logo-rectangle.png",
+      "/ragtech-logo-rectangle.png",
     );
   }
   if (!images.techybaraPlaying) {
     images.techybaraPlaying = await fetchImageAsDataUri(
-      "./techybara/techybaras-playing-card-game.png",
+      "/techybara/techybaras-playing-card-game.png",
     );
   }
 

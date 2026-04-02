@@ -74,6 +74,30 @@ export function svgToDataUrl(svgString: string): string {
   );
 }
 
+function setSvgPixelDimensions(
+  svgMarkup: string,
+  widthPx: number,
+  heightPx: number,
+  viewBox: string,
+): string {
+  const source = String(svgMarkup);
+  const match = source.match(/<svg\b[^>]*>/i);
+  if (!match || !match[0]) return source;
+
+  const originalTag = match[0];
+  let newTag = originalTag
+    .replace(/\swidth\s*=\s*"[^"]*"/i, "")
+    .replace(/\sheight\s*=\s*"[^"]*"/i, "")
+    .replace(/\sviewBox\s*=\s*"[^"]*"/i, "")
+    .replace(/\sviewbox\s*=\s*"[^"]*"/i, "");
+
+  const insertPos = newTag.lastIndexOf(">");
+  if (insertPos === -1) return source;
+  newTag = `${newTag.substring(0, insertPos)} width="${widthPx}" height="${heightPx}" viewBox="${viewBox}"${newTag.substring(insertPos)}`;
+
+  return source.replace(originalTag, newTag);
+}
+
 export async function inlineSvgImages(svgMarkup: string): Promise<string> {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgMarkup, "image/svg+xml");
@@ -129,5 +153,79 @@ function blobToDataUrl(blob: Blob): Promise<string> {
     reader.onload = () => resolve(String(reader.result || ""));
     reader.onerror = reject;
     reader.readAsDataURL(blob);
+  });
+}
+
+export async function svgToPngPrint(
+  svgMarkup: string,
+  widthMm: number,
+  heightMm: number,
+  dpi = 300,
+): Promise<Blob> {
+  const pxAt96 = 96 / 25.4;
+  const scale = dpi / 96;
+  const widthPx96 = Math.round(widthMm * pxAt96);
+  const heightPx96 = Math.round(heightMm * pxAt96);
+  const targetWidth = Math.round(widthPx96 * scale);
+  const targetHeight = Math.round(heightPx96 * scale);
+
+  let inlinedMarkup = String(svgMarkup);
+  try {
+    inlinedMarkup = await inlineSvgImages(inlinedMarkup);
+  } catch (_) {
+    inlinedMarkup = String(svgMarkup);
+  }
+
+  const sanitizedMarkup = inlinedMarkup.replace(
+    /<foreignObject[\s\S]*?<\/foreignObject>/gi,
+    "",
+  );
+  const normalizedSvg = setSvgPixelDimensions(
+    sanitizedMarkup,
+    targetWidth,
+    targetHeight,
+    `0 0 ${widthMm} ${heightMm}`,
+  );
+
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const svgBlob = new Blob([normalizedSvg], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        URL.revokeObjectURL(url);
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+
+      ctx.imageSmoothingEnabled = false;
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, targetWidth, targetHeight);
+      ctx.drawImage(image, 0, 0);
+
+      canvas.toBlob(
+        (blob) => {
+          URL.revokeObjectURL(url);
+          if (blob) resolve(blob);
+          else reject(new Error("Could not convert canvas to blob"));
+        },
+        "image/png",
+        1.0,
+      );
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load SVG image"));
+    };
+
+    image.src = url;
   });
 }

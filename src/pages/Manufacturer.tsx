@@ -19,62 +19,11 @@ import {
 import {
   svgStringToImageElement,
   svgToPng,
+  svgToPngPrint,
   downloadBlob,
 } from "../lib/utils/svgUtils";
 import JSZip from "jszip";
 import type { TabooCard } from "../types/taboo";
-
-async function svgToPngPrint(
-  svgString: string,
-  widthMm: number,
-  heightMm: number,
-): Promise<Blob> {
-  // Convert mm to pixels at 300 DPI
-  const DPI = 300;
-  const MM_TO_PX = DPI / 25.4;
-  const widthPx = Math.round(widthMm * MM_TO_PX);
-  const heightPx = Math.round(heightMm * MM_TO_PX);
-
-  // Create canvas
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Could not get canvas context");
-
-  canvas.width = widthPx;
-  canvas.height = heightPx;
-
-  // Create image from SVG
-  const img = new Image();
-  const svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(svg);
-
-  return new Promise((resolve, reject) => {
-    img.onload = () => {
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
-
-      // Convert to blob
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(new Error("Could not convert canvas to blob"));
-          }
-        },
-        "image/png",
-        1.0,
-      );
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Failed to load SVG image"));
-    };
-    img.src = url;
-  });
-}
 
 const I18N = {
   en: {
@@ -256,7 +205,9 @@ export default function Manufacturer() {
     setStatus(t.statusPackaging);
 
     try {
-      const svg = await createPackagingSvg(selectedEdition);
+      const svg = await createPackagingSvg(selectedEdition, {
+        useSystemFonts: false,
+      });
       const png = await svgToPngPrint(svg, 124.8, 153.8);
       downloadBlob(png, `${selectedEdition}-packaging-whole.png`);
       setStatus(t.statusDone);
@@ -273,7 +224,9 @@ export default function Manufacturer() {
     setStatus(t.statusPackaging);
 
     try {
-      const svg = await createPackagingSvg(selectedEdition);
+      const svg = await createPackagingSvg(selectedEdition, {
+        useSystemFonts: false,
+      });
       const zip = new JSZip();
       const panelsFolder = zip.folder("panels");
 
@@ -335,6 +288,7 @@ export default function Manufacturer() {
                       <Select
                         value={selectedEdition}
                         onValueChange={setSelectedEdition}
+                        data-testid="edition-select"
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -357,6 +311,7 @@ export default function Manufacturer() {
                     onClick={downloadCards}
                     disabled={isBusy}
                     className="w-full sm:w-auto"
+                    data-testid="download-cards-button"
                   >
                     {t.cardsBtn}
                   </Button>
@@ -381,6 +336,7 @@ export default function Manufacturer() {
                       variant="outline"
                       onClick={downloadPackagingWhole}
                       disabled={isBusy}
+                      data-testid="download-packaging-whole-button"
                     >
                       {t.pkgWholeBtn}
                     </Button>
@@ -388,6 +344,7 @@ export default function Manufacturer() {
                       variant="outline"
                       onClick={downloadPackagingPanels}
                       disabled={isBusy}
+                      data-testid="download-packaging-panels-button"
                     >
                       {t.pkgPanelsBtn}
                     </Button>
