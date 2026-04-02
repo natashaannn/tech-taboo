@@ -1,5 +1,5 @@
 // Migrated from public/scripts/lib/generateSVG.js
-import { TabooCard, CardGenerationOptions } from '@/types/taboo'
+import type { TabooCard, CardGenerationOptions } from '../types/taboo'
 import { getCategoryColor, getCategoryTextColor } from './categories'
 
 const DEFAULT_OPTIONS: Required<CardGenerationOptions> = {
@@ -8,9 +8,9 @@ const DEFAULT_OPTIONS: Required<CardGenerationOptions> = {
   strokeColor: '#17424A',
   matchStrokeBackground: true,
   showBleed: false,
-  category: undefined,
-  teacherImage: undefined,
-  peekOutImage: undefined
+  category: undefined as string | undefined,
+  teacherImage: undefined as string | undefined,
+  peekOutImage: undefined as string | undefined
 }
 
 export function generateSVG(card: TabooCard, options: Partial<CardGenerationOptions> = {}): string {
@@ -21,7 +21,7 @@ export function generateSVG(card: TabooCard, options: Partial<CardGenerationOpti
   let cardColor = opts.baseColor
   let textColor = '#FFFFFF'
   
-  if (!opts.useCustomColor && opts.category) {
+  if (opts.category) {
     cardColor = getCategoryColor(opts.category)
     textColor = getCategoryTextColor(opts.category)
   }

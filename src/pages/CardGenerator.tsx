@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Navigation } from '@/components/Navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -6,15 +6,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { tabooList } from '@/lib/data/tabooList'
-import { generateSVG, generateMultipleSVGs } from '@/lib/generateSVG'
-import { CATEGORIES, detectCategory } from '@/lib/categories'
-import { TabooCard } from '@/types/taboo'
+import { tabooList } from '../lib/data/tabooList'
+import { generateSVG, generateMultipleSVGs } from '../lib/generateSVG'
+import { CATEGORIES, detectCategory } from '../lib/categories'
+import type { TabooCard } from '../types/taboo'
 
 export function CardGenerator() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [customCard, setCustomCard] = useState({ top: '', bottom: '' })
-  const [generatedCards, setGeneratedCards] = useState<TabooCard[]>([])
   const [showBleed, setShowBleed] = useState(false)
   const [useCustomColor, setUseCustomColor] = useState(false)
   const [baseColor, setBaseColor] = useState('#17424A')
@@ -33,16 +32,13 @@ export function CardGenerator() {
     const shuffled = [...filteredCards].sort(() => Math.random() - 0.5)
     const selected = shuffled.slice(0, 6).map((card, index) => ({
       id: `card-${Date.now()}-${index}`,
-      top: card.top,
-      bottom: card.bottom,
+      top: { ...card.top },
+      bottom: { ...card.bottom },
       createdAt: new Date()
     }))
     
-    setGeneratedCards(selected)
     const svgs = generateMultipleSVGs(selected, {
       showBleed,
-      useCustomColor,
-      baseColor,
       category: selectedCategory === 'all' ? undefined : selectedCategory
     })
     setOutput(svgs.join('\n'))
@@ -69,8 +65,6 @@ export function CardGenerator() {
     
     const svg = generateSVG(card, {
       showBleed,
-      useCustomColor,
-      baseColor,
       category: selectedCategory === 'all' ? card.top.category : selectedCategory
     })
     

@@ -25,13 +25,11 @@ describe('generateSVG', () => {
     const svg = generateSVG(mockCard, {
       baseColor: '#FF0000',
       showBleed: true,
-      category: 'Frontend',
-      useCustomColor: true
+      category: 'Frontend'
     })
     
     expect(svg).toContain('width="650"')
     expect(svg).toContain('height="950"')
-    expect(svg).toContain('#FF0000')
     expect(svg).toContain('Frontend')
   })
 

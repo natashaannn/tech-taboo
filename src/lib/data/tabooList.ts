@@ -49,4 +49,4 @@ export const tabooList = [
     top: { word: "Debugging", taboos: ["Bug", "Error", "Breakpoint", "Console", "Testing"] },
     bottom: { word: "Refactoring", taboos: ["Code", "Improvement", "Clean Code", "Technical Debt", "Restructuring"] }
   }
-] as const
+]

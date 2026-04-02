@@ -6,9 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
-import { tabooList } from '@/lib/data/tabooList'
-import { generateSVG } from '@/lib/generateSVG'
-import { CATEGORIES } from '@/lib/categories'
+import { tabooList } from '../lib/data/tabooList'
+import { generateSVG } from '../lib/generateSVG'
+import { CATEGORIES } from '../lib/categories'
 
 export function Packaging() {
   const [selectedVersion, setSelectedVersion] = useState('v1')
@@ -58,24 +58,24 @@ export function Packaging() {
         
         <!-- Card grid -->
         ${cards.map((card, index) => {
-          const row = Math.floor(index / 4)
-          const col = index % 4
-          const x = 240 + col * 600
-          const y = 200 + row * 850
-          
-          return `
-            <g transform="translate(${x}, ${y})">
-              ${generateSVG({
-                id: `pack-card-${index}`,
-                top: card.top,
-                bottom: card.bottom,
-                createdAt: new Date()
-              }, {
-                showBleed: false,
-                category: CATEGORIES[index % CATEGORIES.length]
-              })}
-            </g>
-          `
+            const row = Math.floor(index / 4)
+            const col = index % 4
+            const x = 240 + col * 600
+            const y = 200 + row * 850
+            
+            return `
+              <g transform="translate(${x}, ${y})">
+                ${generateSVG({
+                  id: `pack-card-${index}`,
+                  top: { ...card.top },
+                  bottom: { ...card.bottom },
+                  createdAt: new Date()
+                }, {
+                  showBleed: false,
+                  category: CATEGORIES[index % CATEGORIES.length]
+                })}
+              </g>
+            `
         }).join('\n        ')}
         
         <!-- Footer info -->
@@ -116,22 +116,22 @@ export function Packaging() {
         <!-- Front Panel -->
         <g transform="translate(0, 100)">
           <text x="1240" y="0" text-anchor="middle" class="panel-label">Front Cards</text>
-          ${frontCards.map((card, index) => {
-            const row = Math.floor(index / 4)
-            const col = index % 4
+          ${frontCards.map((card) => {
+            const row = Math.floor(frontCards.indexOf(card) / 4)
+            const col = frontCards.indexOf(card) % 4
             const x = 240 + col * 600
             const y = 50 + row * 850
             
             return `
               <g transform="translate(${x}, ${y})">
                 ${generateSVG({
-                  id: `front-card-${index}`,
-                  top: card,
+                  id: `front-card-${frontCards.indexOf(card)}`,
+                  top: { ...card },
                   bottom: { word: '', taboos: [] },
                   createdAt: new Date()
                 }, {
                   showBleed: false,
-                  category: CATEGORIES[index % CATEGORIES.length]
+                  category: CATEGORIES[frontCards.indexOf(card) % CATEGORIES.length]
                 })}
               </g>
             `
@@ -141,22 +141,22 @@ export function Packaging() {
         <!-- Back Panel -->
         <g transform="translate(0, 1850)">
           <text x="1240" y="0" text-anchor="middle" class="panel-label">Back Cards</text>
-          ${backCards.map((card, index) => {
-            const row = Math.floor(index / 4)
-            const col = index % 4
+          ${backCards.map((card) => {
+            const row = Math.floor(backCards.indexOf(card) / 4)
+            const col = backCards.indexOf(card) % 4
             const x = 240 + col * 600
             const y = 50 + row * 850
             
             return `
               <g transform="translate(${x}, ${y})">
                 ${generateSVG({
-                  id: `back-card-${index}`,
+                  id: `back-card-${backCards.indexOf(card)}`,
                   top: { word: '', taboos: [] },
-                  bottom: card,
+                  bottom: { ...card },
                   createdAt: new Date()
                 }, {
                   showBleed: false,
-                  category: CATEGORIES[index % CATEGORIES.length]
+                  category: CATEGORIES[backCards.indexOf(card) % CATEGORIES.length]
                 })}
               </g>
             `
