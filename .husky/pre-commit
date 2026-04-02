@@ -13,4 +13,4 @@ npm audit --audit-level=high
 tsc --noEmit
 
 # Run tests - block push if any test failed
-npm test
+npm run test:run
