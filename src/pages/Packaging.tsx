@@ -148,13 +148,8 @@ export function Packaging() {
     if (!output) return;
 
     try {
-      // Generate fresh SVG with all assets embedded for export
-      const key = selectedCategory || selectedEdition;
-      const svg = await createPackagingSvg(key, {
-        includeBorders,
-        useSystemFonts: false,
-      });
-      const png = await svgToPngPrint(svg, 124.8, 153.8); // High DPI for print
+      // Export current preview SVG to avoid first-click regeneration timing issues
+      const png = await svgToPngPrint(output, 124.8, 153.8); // High DPI for print
       const filename = `${selectedCategory || selectedEdition}-packaging.png`;
       downloadBlob(png, filename);
     } catch (error) {

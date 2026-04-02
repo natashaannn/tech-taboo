@@ -208,17 +208,20 @@ export async function svgToPngPrint(
       ctx.imageSmoothingEnabled = false;
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, targetWidth, targetHeight);
-      ctx.drawImage(image, 0, 0);
 
-      canvas.toBlob(
-        (blob) => {
-          URL.revokeObjectURL(url);
-          if (blob) resolve(blob);
-          else reject(new Error("Could not convert canvas to blob"));
-        },
-        "image/png",
-        1.0,
-      );
+      setTimeout(() => {
+        ctx.drawImage(image, 0, 0);
+
+        canvas.toBlob(
+          (blob) => {
+            URL.revokeObjectURL(url);
+            if (blob) resolve(blob);
+            else reject(new Error("Could not convert canvas to blob"));
+          },
+          "image/png",
+          1.0,
+        );
+      }, 120);
     };
 
     image.onerror = () => {

@@ -112,6 +112,41 @@ function resolveAssetUrl(url: string): string {
   }
 }
 
+async function cardSvgToPngDataUri(svgMarkup: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const svgBlob = new Blob([svgMarkup], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(svgBlob);
+
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 610;
+      canvas.height = 910;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        URL.revokeObjectURL(url);
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/png"));
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load card SVG for thumbnail"));
+    };
+
+    image.src = url;
+  });
+}
+
 async function createCardThumbnailDataUri(
   item: (typeof tabooList)[0] | null,
   fallbackCategory: string,
@@ -156,7 +191,7 @@ async function createCardThumbnailDataUri(
       },
     );
 
-    return `data:image/svg+xml;utf8,${encodeURIComponent(cardSvg)}`;
+    return await cardSvgToPngDataUri(cardSvg);
   } catch (error) {
     console.error("Error in createCardThumbnailDataUri:", error);
     // Return a simple fallback SVG
