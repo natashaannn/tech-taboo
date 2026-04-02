@@ -108,7 +108,7 @@ export function generateSVG(card: TabooCard, options: Partial<CardGenerationOpti
               fill="${textColor}" font-weight="bold">${topTextInfo.lines[1]}</text>`
       }
       <rect x="50" y="140" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.85"/>
-      ${top.taboos.map((w,i) =>
+      ${top.taboo.map((w,i) =>
         `<text x="250" y="${190+i*40}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="#062E35">${w}</text>`
       ).join("")}
       <image href="${teacherImageHref}" x="400" y="320" width="80" height="80"/>
@@ -126,7 +126,7 @@ export function generateSVG(card: TabooCard, options: Partial<CardGenerationOpti
               fill="${textColor}" font-weight="bold">${bottomTextInfo.lines[1]}</text>`
       }
       <rect x="50" y="140" width="400" height="250" rx="20" ry="20" fill="white" opacity="0.85"/>
-      ${bottom.taboos.map((w,i) =>
+      ${bottom.taboo.map((w,i) =>
         `<text x="250" y="${190+i*40}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="28" fill="#062E35">${w}</text>`
       ).join("")}
       <image href="${peekOutImageHref}" x="420" y="280" width="90" height="70"/>

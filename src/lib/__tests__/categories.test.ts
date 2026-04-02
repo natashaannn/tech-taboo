@@ -3,18 +3,18 @@ import { detectCategory, getCategoryColor, getCategoryTextColor } from '../categ
 
 describe('categories', () => {
   describe('detectCategory', () => {
-    it('should detect Frontend category correctly', () => {
-      expect(detectCategory('React')).toBe('Frontend')
-      expect(detectCategory('CSS')).toBe('Frontend')
-      expect(detectCategory('JavaScript')).toBe('Frontend')
-      expect(detectCategory('Vue.js')).toBe('Frontend')
+    it('should detect AI category correctly', () => {
+      expect(detectCategory('Artificial Intelligence')).toBe('AI')
+      expect(detectCategory('Machine Learning')).toBe('AI')
+      expect(detectCategory('Neural Network')).toBe('AI')
+      expect(detectCategory('ChatGPT')).toBe('AI')
     })
 
-    it('should detect Backend category correctly', () => {
-      expect(detectCategory('Node.js')).toBe('Backend')
-      expect(detectCategory('Database')).toBe('Backend')
-      expect(detectCategory('API')).toBe('Backend')
-      expect(detectCategory('Express')).toBe('Backend')
+    it('should detect Software Engineering category correctly', () => {
+      expect(detectCategory('Code')).toBe('Software Engineering')
+      expect(detectCategory('Programming')).toBe('Software Engineering')
+      expect(detectCategory('Debugging')).toBe('Software Engineering')
+      expect(detectCategory('Refactoring')).toBe('Software Engineering')
     })
 
     it('should detect DevOps category correctly', () => {
@@ -24,11 +24,11 @@ describe('categories', () => {
       expect(detectCategory('CI/CD')).toBe('DevOps')
     })
 
-    it('should detect Mobile category correctly', () => {
-      expect(detectCategory('React Native')).toBe('Mobile')
-      expect(detectCategory('Flutter')).toBe('Mobile')
-      expect(detectCategory('Swift')).toBe('Mobile')
-      expect(detectCategory('Kotlin')).toBe('Mobile')
+    it('should detect Data category correctly', () => {
+      expect(detectCategory('Database')).toBe('Data')
+      expect(detectCategory('Analytics')).toBe('Data')
+      expect(detectCategory('Big Data')).toBe('Data')
+      expect(detectCategory('Data Science')).toBe('Data')
     })
 
     it('should return General for unknown words', () => {
@@ -40,25 +40,37 @@ describe('categories', () => {
 
   describe('getCategoryColor', () => {
     it('should return correct colors for each category', () => {
-      expect(getCategoryColor('Frontend')).toBe('#61DAFB')
-      expect(getCategoryColor('Backend')).toBe('#68217A')
-      expect(getCategoryColor('DevOps')).toBe('#2496ED')
-      expect(getCategoryColor('Mobile')).toBe('#A4C639')
       expect(getCategoryColor('General')).toBe('#FF6B6B')
+      expect(getCategoryColor('AI')).toBe('#8B5CF6')
+      expect(getCategoryColor('Software Engineering')).toBe('#3B82F6')
+      expect(getCategoryColor('Data')).toBe('#10B981')
+      expect(getCategoryColor('DevOps')).toBe('#2496ED')
     })
 
     it('should return General color for unknown category', () => {
       expect(getCategoryColor('Unknown')).toBe('#FF6B6B')
     })
+
+    it('should return correct text colors for each category', () => {
+      expect(getCategoryTextColor('General')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('AI')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('Software Engineering')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('Data')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('DevOps')).toBe('#FFFFFF')
+    })
+
+    it('should return General text color for unknown category', () => {
+      expect(getCategoryTextColor('Unknown')).toBe('#FFFFFF')
+    })
   })
 
   describe('getCategoryTextColor', () => {
     it('should return correct text colors for each category', () => {
-      expect(getCategoryTextColor('Frontend')).toBe('#000000')
-      expect(getCategoryTextColor('Backend')).toBe('#FFFFFF')
-      expect(getCategoryTextColor('DevOps')).toBe('#FFFFFF')
-      expect(getCategoryTextColor('Mobile')).toBe('#000000')
       expect(getCategoryTextColor('General')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('AI')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('Software Engineering')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('Data')).toBe('#FFFFFF')
+      expect(getCategoryTextColor('DevOps')).toBe('#FFFFFF')
     })
 
     it('should return General text color for unknown category', () => {

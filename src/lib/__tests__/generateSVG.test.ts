@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { generateSVG } from '../generateSVG'
-import { TabooCard } from '@/types/taboo'
+import type { TabooCard } from '../../types/taboo'
 
 describe('generateSVG', () => {
   const mockCard: TabooCard = {
     id: 'test-card-1',
-    top: { word: 'React', taboos: ['JavaScript', 'Library', 'Facebook'] },
-    bottom: { word: 'State', taboos: ['Data', 'useState', 'Redux'] },
+    top: { index: 1, word: 'React', taboo: ['JavaScript', 'Library', 'Facebook', 'Components', 'Virtual DOM'], explanation: 'A JavaScript library' },
+    bottom: { index: 2, word: 'State', taboo: ['Data', 'Management', 'useState', 'Redux', 'Props'], explanation: 'Component data' },
     createdAt: new Date()
   }
 
@@ -44,8 +44,8 @@ describe('generateSVG', () => {
   it('should handle empty taboo arrays', () => {
     const emptyCard: TabooCard = {
       id: 'test-empty',
-      top: { word: 'Test', taboos: [] },
-      bottom: { word: 'Empty', taboos: [] },
+      top: { index: 1, word: 'Test', taboo: [], explanation: '' },
+      bottom: { index: 2, word: 'Empty', taboo: [], explanation: '' },
       createdAt: new Date()
     }
     
@@ -58,8 +58,8 @@ describe('generateSVG', () => {
   it('should handle special characters in words', () => {
     const specialCard: TabooCard = {
       id: 'test-special',
-      top: { word: 'HTML & CSS', taboos: ['<script>', 'CSS>'] },
-      bottom: { word: 'JS "Quotes"', taboos: ["'single'", '"double"'] },
+      top: { index: 1, word: 'HTML & CSS', taboo: ['<script>', 'CSS>'], explanation: '' },
+      bottom: { index: 2, word: 'JS "Quotes"', taboo: ["'single'", '"double"'], explanation: '' },
       createdAt: new Date()
     }
     

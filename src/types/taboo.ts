@@ -1,7 +1,8 @@
 export interface TabooWord {
+  index: number;
   word: string;
-  taboos: string[];
-  category?: string;
+  taboo: string[];
+  explanation: string;
 }
 
 export interface TabooCard {

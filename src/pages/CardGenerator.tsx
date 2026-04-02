@@ -23,19 +23,23 @@ export function CardGenerator() {
   const filteredCards = selectedCategory === 'all' 
     ? tabooList 
     : tabooList.filter(card => 
-        detectCategory(card.top.word) === selectedCategory || 
-        detectCategory(card.bottom.word) === selectedCategory
+        detectCategory(card.word) === selectedCategory
       )
   
   // Generate random cards
   const generateRandomCards = () => {
     const shuffled = [...filteredCards].sort(() => Math.random() - 0.5)
-    const selected = shuffled.slice(0, 6).map((card, index) => ({
-      id: `card-${Date.now()}-${index}`,
-      top: { ...card.top },
-      bottom: { ...card.bottom },
-      createdAt: new Date()
-    }))
+    const numCards = Math.min(6, Math.floor(shuffled.length / 2) * 2)
+    const selected = []
+    
+    for (let i = 0; i < numCards; i += 2) {
+      selected.push({
+        id: `card-${Date.now()}-${i}`,
+        top: shuffled[i],
+        bottom: shuffled[i + 1],
+        createdAt: new Date()
+      })
+    }
     
     const svgs = generateMultipleSVGs(selected, {
       showBleed,
@@ -51,21 +55,23 @@ export function CardGenerator() {
     const card: TabooCard = {
       id: `custom-${Date.now()}`,
       top: {
+        index: 0,
         word: customCard.top,
-        taboos: customCard.top.split(',').map(t => t.trim()).filter(t => t),
-        category: detectCategory(customCard.top)
+        taboo: customCard.top.split(',').map(t => t.trim()).filter(t => t),
+        explanation: ''
       },
       bottom: {
+        index: 0,
         word: customCard.bottom,
-        taboos: customCard.bottom.split(',').map(t => t.trim()).filter(t => t),
-        category: detectCategory(customCard.bottom)
+        taboo: customCard.bottom.split(',').map(t => t.trim()).filter(t => t),
+        explanation: ''
       },
       createdAt: new Date()
     }
     
     const svg = generateSVG(card, {
       showBleed,
-      category: selectedCategory === 'all' ? card.top.category : selectedCategory
+      category: selectedCategory === 'all' ? detectCategory(customCard.top) : selectedCategory
     })
     
     setOutput(svg)
