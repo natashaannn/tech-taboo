@@ -317,6 +317,9 @@ export default function Manufacturer() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{t.title}</h1>
             <p className="text-muted-foreground">{t.subtitle}</p>
+            <div className="mt-4 text-sm text-muted-foreground whitespace-pre-line">
+              {t.instructions(edition?.label || selectedEdition)}
+            </div>
           </div>
 
           <Card>
@@ -419,10 +422,6 @@ export default function Manufacturer() {
                   alt="Reference card preview"
                   className="w-full max-w-[420px] h-auto border rounded-lg bg-white"
                 />
-              </div>
-
-              <div className="text-sm text-muted-foreground whitespace-pre-line">
-                {t.instructions(edition?.label || selectedEdition)}
               </div>
             </CardContent>
           </Card>
