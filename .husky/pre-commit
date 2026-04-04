@@ -1,0 +1,16 @@
+# Load nvm so npm works
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Lint staged files
+prettier $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g') --write --ignore-unknown
+git update-index --again
+
+# Dependency audit - block push if high/critical vulnerabilities found
+npm audit --audit-level=high
+
+# Type safety - block push if any type errors
+tsc --noEmit
+
+# Run tests - block push if any test failed
+npm run test:run
