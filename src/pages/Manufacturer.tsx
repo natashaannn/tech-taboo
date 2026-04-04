@@ -333,7 +333,7 @@ export default function Manufacturer() {
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent position="item-aligned">
                           <SelectItem value="en">English</SelectItem>
                           <SelectItem value="zh">中文</SelectItem>
                         </SelectContent>
@@ -349,7 +349,7 @@ export default function Manufacturer() {
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent position="item-aligned">
                           {Object.entries(PACKAGING_VERSIONS).map(
                             ([key, value]) => (
                               <SelectItem
