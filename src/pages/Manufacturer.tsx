@@ -210,13 +210,16 @@ export default function Manufacturer() {
     setStatus(t.statusCards(0, pairs.length));
 
     try {
-      const svgs = await Promise.all(
-        pairs.map((pair) =>
-          generateSVG(pair, {
-            category: pair.top.category,
-          }),
-        ),
-      );
+      const svgs: string[] = [];
+      for (let i = 0; i < pairs.length; i++) {
+        const svg = await generateSVG(pairs[i], {
+          category: pairs[i].top.category,
+        });
+        svgs.push(svg);
+        setStatus(t.statusCards(i + 1, pairs.length));
+      }
+
+      setStatus(t.statusZip);
       const zip = new JSZip();
       const folder = zip.folder("cards");
 
@@ -333,7 +336,7 @@ export default function Manufacturer() {
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent position="item-aligned">
+                        <SelectContent>
                           <SelectItem value="en">English</SelectItem>
                           <SelectItem value="zh">中文</SelectItem>
                         </SelectContent>
@@ -349,7 +352,7 @@ export default function Manufacturer() {
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent position="item-aligned">
+                        <SelectContent>
                           {Object.entries(PACKAGING_VERSIONS).map(
                             ([key, value]) => (
                               <SelectItem
