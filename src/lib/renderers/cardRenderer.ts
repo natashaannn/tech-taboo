@@ -180,20 +180,20 @@ export async function generateCardSVG(
   }
 
   // Calculate font size for taboo words to prevent overflow
-  function getTabooFontSize(text: string, maxWidth = 380) {
+  function getTabooFontSize(text: string, maxWidth = 360) {
     try {
       // Check if we're in a browser environment
       if (typeof window === "undefined" || typeof document === "undefined") {
-        return 32;
+        return 30;
       }
 
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        return 32;
+        return 30;
       }
 
-      const baseFontSize = 32;
+      const baseFontSize = 30;
       ctx.font = `${baseFontSize}px sometype mono, monospace`;
       const w = ctx.measureText(text).width;
 
@@ -203,9 +203,9 @@ export async function generateCardSVG(
 
       // Scale down to fit
       const ratio = maxWidth / w;
-      return Math.max(24, Math.floor(baseFontSize * ratio));
+      return Math.max(22, Math.floor(baseFontSize * ratio));
     } catch (_) {
-      return 32;
+      return 30;
     }
   }
 
