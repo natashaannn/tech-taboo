@@ -184,16 +184,16 @@ export async function generateCardSVG(
     try {
       // Check if we're in a browser environment
       if (typeof window === "undefined" || typeof document === "undefined") {
-        return 28;
+        return 32;
       }
 
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        return 28;
+        return 32;
       }
 
-      const baseFontSize = 28;
+      const baseFontSize = 32;
       ctx.font = `${baseFontSize}px sometype mono, monospace`;
       const w = ctx.measureText(text).width;
 
@@ -203,9 +203,9 @@ export async function generateCardSVG(
 
       // Scale down to fit
       const ratio = maxWidth / w;
-      return Math.max(20, Math.floor(baseFontSize * ratio));
+      return Math.max(24, Math.floor(baseFontSize * ratio));
     } catch (_) {
-      return 28;
+      return 32;
     }
   }
 
