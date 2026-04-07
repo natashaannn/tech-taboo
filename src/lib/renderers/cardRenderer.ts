@@ -89,7 +89,7 @@ export async function generateCardSVG(
   // Helper to split and size text with proper wrapping
   function splitAndSizeText(text: string, baseSize = 54, maxWidth = 490) {
     try {
-      const fontFamily = 'Monospace, "Sometype Mono", monospace';
+      const fontFamily = "Monospace, 'Sometype Mono', monospace";
       // Check if we're in a browser environment
       if (typeof window === "undefined" || typeof document === "undefined") {
         return { lines: [text], fontSize: baseSize };
@@ -194,7 +194,7 @@ export async function generateCardSVG(
       }
 
       const baseFontSize = 30;
-      ctx.font = `${baseFontSize}px sometype mono, monospace`;
+      ctx.font = `${baseFontSize}px Monospace, 'Sometype Mono', monospace`;
       const w = ctx.measureText(text).width;
 
       if (w <= maxWidth) {
