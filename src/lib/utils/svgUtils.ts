@@ -6,9 +6,20 @@ export async function svgToPng(
   height: number,
   _dpi: number = 96,
 ): Promise<Blob> {
+  // Parse and re-serialize through DOMParser to pre-load @font-face resources
+  // before handing off to the image renderer (same approach as svgToPngPrint).
+  let processedSvg = svgString;
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgString, "image/svg+xml");
+    processedSvg = new XMLSerializer().serializeToString(doc.documentElement);
+  } catch (_) {
+    processedSvg = svgString;
+  }
+
   return new Promise((resolve, reject) => {
     const img = new Image();
-    const svgBlob = new Blob([svgString], {
+    const svgBlob = new Blob([processedSvg], {
       type: "image/svg+xml;charset=utf-8",
     });
     const url = URL.createObjectURL(svgBlob);
@@ -43,7 +54,7 @@ export async function svgToPng(
           "image/png",
           1.0,
         );
-      }, 120);
+      }, 800);
     };
     img.onerror = (error) => {
       URL.revokeObjectURL(url);
@@ -231,7 +242,7 @@ export async function svgToPngPrint(
           "image/png",
           1.0,
         );
-      }, 120);
+      }, 800);
     };
 
     image.onerror = () => {

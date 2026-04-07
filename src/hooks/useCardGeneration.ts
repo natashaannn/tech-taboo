@@ -147,6 +147,9 @@ export function useCardGeneration({
   const exportPNG = async () => {
     if (!output) return;
 
+    // Ensure page fonts are loaded before rendering
+    await document.fonts.ready;
+
     // Create canvas
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -164,20 +167,22 @@ export function useCardGeneration({
     img.onload = () => {
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const pngUrl = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = pngUrl;
-          a.download = "taboo-cards.png";
-          a.click();
-          URL.revokeObjectURL(pngUrl);
-        }
-      }, "image/png");
+      setTimeout(() => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      URL.revokeObjectURL(url);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const pngUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = pngUrl;
+            a.download = "taboo-cards.png";
+            a.click();
+            URL.revokeObjectURL(pngUrl);
+          }
+          URL.revokeObjectURL(url);
+        }, "image/png");
+      }, 800);
     };
 
     img.onerror = () => {

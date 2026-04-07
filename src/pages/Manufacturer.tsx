@@ -209,6 +209,9 @@ export default function Manufacturer() {
     setIsBusy(true);
     setStatus(t.statusCards(0, pairs.length));
 
+    // Ensure page fonts are loaded before rendering SVGs to PNG
+    await document.fonts.ready;
+
     try {
       const svgs: string[] = [];
       for (let i = 0; i < pairs.length; i++) {
