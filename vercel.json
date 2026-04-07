@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/manufacturer", "destination": "/index.html" },
+    { "source": "/packaging", "destination": "/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
