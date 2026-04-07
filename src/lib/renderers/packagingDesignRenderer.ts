@@ -404,13 +404,13 @@ export async function createPackagingSVG(
         font-weight: 700;
       }
       @font-face {
-        font-family: 'TechTabooMono';
+        font-family: 'Monospace';
         src: url('${embeddedFonts?.mono || resolveAssetUrl("/assets/fonts/monospace/Monospace.ttf")}') format('truetype');
         font-style: normal;
         font-weight: 400;
       }
       @font-face {
-        font-family: 'TechTabooMono';
+        font-family: 'Monospace';
         src: url('${embeddedFonts?.monoBold || embeddedFonts?.mono || resolveAssetUrl("/assets/fonts/monospace/MonospaceBold.ttf")}') format('truetype');
         font-style: normal;
         font-weight: 700;
@@ -418,7 +418,7 @@ export async function createPackagingSVG(
       `
       }
       .gaegu { font-family: ${useSystemFonts ? "'Comic Sans MS', 'Marker Felt', cursive, sans-serif" : "'Gaegu', cursive"}; }
-      .mono { font-family: ${useSystemFonts ? "'Courier New', 'Monaco', monospace" : "'TechTabooMono', monospace"}; }
+      .mono { font-family: ${useSystemFonts ? "'Courier New', 'Monaco', monospace" : "'Monospace', monospace"}; }
       .panel-stroke { stroke: rgba(8, 20, 24, 0.48); stroke-width: 0.35; }
     ]]></style>
     <filter id="titleLift" x="-20%" y="-20%" width="140%" height="140%">

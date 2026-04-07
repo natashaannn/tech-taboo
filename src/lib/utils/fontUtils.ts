@@ -121,13 +121,13 @@ export async function loadFontAsBase64(url: string): Promise<string> {
 export function getCardFontFaceCSS(fonts: EmbeddedFonts): string {
   return `
     @font-face {
-      font-family: 'TechTabooMono';
+      font-family: 'Monospace';
       src: url('data:font/truetype;base64,${fonts.monospaceNormal}') format('truetype');
       font-style: normal;
       font-weight: 400;
     }
     @font-face {
-      font-family: 'TechTabooMono';
+      font-family: 'Monospace';
       src: url('data:font/truetype;base64,${fonts.monospaceBold}') format('truetype');
       font-style: normal;
       font-weight: 700;
@@ -156,13 +156,13 @@ export function getPackagingFontFaceCSS(fonts: FontData): string {
       font-weight: 700;
     }
     @font-face {
-      font-family: 'TechTabooMono';
+      font-family: 'Monospace';
       src: url('${fonts.mono || resolveAssetUrl("/assets/fonts/monospace/Monospace.ttf")}') format('truetype');
       font-style: normal;
       font-weight: 400;
     }
     @font-face {
-      font-family: 'TechTabooMono';
+      font-family: 'Monospace';
       src: url('${fonts.monoBold || fonts.mono || resolveAssetUrl("/assets/fonts/monospace/MonospaceBold.ttf")}') format('truetype');
       font-style: normal;
       font-weight: 700;
