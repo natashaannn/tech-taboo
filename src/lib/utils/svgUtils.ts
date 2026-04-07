@@ -1,4 +1,5 @@
 // Shared SVG utilities for card generation and packaging
+import { Canvg } from "canvg";
 
 export async function svgToPng(
   svgString: string,
@@ -6,61 +7,38 @@ export async function svgToPng(
   height: number,
   _dpi: number = 96,
 ): Promise<Blob> {
-  // Parse and re-serialize through DOMParser to pre-load @font-face resources
-  // before handing off to the image renderer (same approach as svgToPngPrint).
-  let processedSvg = svgString;
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svgString, "image/svg+xml");
-    processedSvg = new XMLSerializer().serializeToString(doc.documentElement);
-  } catch (_) {
-    processedSvg = svgString;
+  // Ensure page fonts are ready before rendering
+  await document.fonts.ready;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
   }
 
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
+  // Use canvg to render SVG directly to canvas — this uses the page's
+  // document.fonts instead of the SVG-as-img sandbox, ensuring custom
+  // fonts work in all browsers including WeChat/QQ/Baidu.
+  const canvg = await Canvg.from(ctx, svgString);
+  await canvg.render();
+
   return new Promise((resolve, reject) => {
-    const img = new Image();
-    const svgBlob = new Blob([processedSvg], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const url = URL.createObjectURL(svgBlob);
-
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        URL.revokeObjectURL(url);
-        reject(new Error("Could not get canvas context"));
-        return;
-      }
-
-      // Set DPI for canvas
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-
-      setTimeout(() => {
-        ctx.drawImage(img, 0, 0, width, height);
-
-        canvas.toBlob(
-          (blob) => {
-            URL.revokeObjectURL(url);
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error("Could not convert canvas to blob"));
-            }
-          },
-          "image/png",
-          1.0,
-        );
-      }, 800);
-    };
-    img.onerror = (error) => {
-      URL.revokeObjectURL(url);
-      reject(error);
-    };
-    img.src = url;
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Could not convert canvas to blob"));
+        }
+      },
+      "image/png",
+      1.0,
+    );
   });
 }
 
@@ -189,6 +167,9 @@ export async function svgToPngPrint(
   const targetWidth = Math.round(widthPx96 * scale);
   const targetHeight = Math.round(heightPx96 * scale);
 
+  // Ensure page fonts are ready before rendering
+  await document.fonts.ready;
+
   let inlinedMarkup = String(svgMarkup);
   try {
     inlinedMarkup = await inlineSvgImages(inlinedMarkup);
@@ -207,49 +188,32 @@ export async function svgToPngPrint(
     `0 0 ${widthMm} ${heightMm}`,
   );
 
+  const canvas = document.createElement("canvas");
+  canvas.width = targetWidth;
+  canvas.height = targetHeight;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
+  }
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, targetWidth, targetHeight);
+
+  // Use canvg to render SVG directly to canvas — bypasses SVG-as-img sandbox
+  // so custom fonts from document.fonts are used in all browsers.
+  const canvg = await Canvg.from(ctx, normalizedSvg);
+  await canvg.render();
+
   return new Promise((resolve, reject) => {
-    const image = new Image();
-    const svgBlob = new Blob([normalizedSvg], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const url = URL.createObjectURL(svgBlob);
-
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = targetWidth;
-      canvas.height = targetHeight;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        URL.revokeObjectURL(url);
-        reject(new Error("Could not get canvas context"));
-        return;
-      }
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, targetWidth, targetHeight);
-
-      setTimeout(() => {
-        ctx.drawImage(image, 0, 0);
-
-        canvas.toBlob(
-          (blob) => {
-            URL.revokeObjectURL(url);
-            if (blob) resolve(blob);
-            else reject(new Error("Could not convert canvas to blob"));
-          },
-          "image/png",
-          1.0,
-        );
-      }, 800);
-    };
-
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("Failed to load SVG image"));
-    };
-
-    image.src = url;
+    canvas.toBlob(
+      (blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error("Could not convert canvas to blob"));
+      },
+      "image/png",
+      1.0,
+    );
   });
 }
