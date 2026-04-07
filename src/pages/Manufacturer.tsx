@@ -209,7 +209,28 @@ export default function Manufacturer() {
     setIsBusy(true);
     setStatus(t.statusCards(0, pairs.length));
 
-    // Ensure page fonts are loaded before rendering SVGs to PNG
+    // Explicitly load fonts via FontFace API for cross-browser compatibility
+    // (QQ/Baidu/WeChat browsers may not honour CSS @font-face for SVG-as-img)
+    try {
+      const monoFont = new FontFace(
+        "Monospace",
+        "url(/assets/fonts/monospace/Monospace.ttf)",
+        { weight: "400" },
+      );
+      const monoBoldFont = new FontFace(
+        "Monospace",
+        "url(/assets/fonts/monospace/MonospaceBold.ttf)",
+        { weight: "700" },
+      );
+      const [loaded, loadedBold] = await Promise.all([
+        monoFont.load(),
+        monoBoldFont.load(),
+      ]);
+      document.fonts.add(loaded);
+      document.fonts.add(loadedBold);
+    } catch (_) {
+      // Continue — fall back to CSS @font-face
+    }
     await document.fonts.ready;
 
     try {
