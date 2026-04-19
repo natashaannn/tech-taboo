@@ -102,7 +102,7 @@ export const dataTabooList: TabooWord[] = [
   },
   {
     index: 15,
-    word: "Extract Transform Load (ETL)",
+    word: "Extract Transform Load",
     taboo: ["Pipeline", "Process", "Workflow", "Migration", "Integration"],
     explanation: "",
     category: "Data",

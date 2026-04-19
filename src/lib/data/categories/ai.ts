@@ -45,7 +45,7 @@ export const aiTabooList: TabooWord[] = [
   },
   {
     index: 6,
-    word: "Natural Language Processing (NLP)",
+    word: "Natural Language Processing",
     taboo: ["Text", "Model", "Understand", "Linguistics", "Speech"],
     explanation:
       "The field of enabling computers to understand, interpret, and generate human language.",
@@ -125,7 +125,7 @@ export const aiTabooList: TabooWord[] = [
   },
   {
     index: 16,
-    word: "Retrieval Augmented Generation (RAG)",
+    word: "Retrieval Augmented Generation",
     taboo: ["Document", "AI", "Search", "Context", "LLM"],
     explanation:
       "A technique that enhances AI responses by first retrieving relevant information from external sources.",

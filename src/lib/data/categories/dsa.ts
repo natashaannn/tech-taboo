@@ -109,14 +109,14 @@ export const dsaTabooList: TabooWord[] = [
   },
   {
     index: 16,
-    word: "Breadth-First Search (BFS)",
+    word: "Breadth-First Search",
     taboo: ["Queue", "Level", "Graph", "Traverse", "Node"],
     explanation: "",
     category: "Data Structures & Algorithms",
   },
   {
     index: 17,
-    word: "Depth-First Search (DFS)",
+    word: "Depth-First Search",
     taboo: ["Stack", "Recursive", "Graph", "Traverse", "Backtrack"],
     explanation: "",
     category: "Data Structures & Algorithms",
@@ -244,7 +244,7 @@ export const dsaTabooList: TabooWord[] = [
     index: 35,
     word: "Topological Sort",
     taboo: [
-      "Directed Acyclic Graph (DAG)",
+      "Directed Acyclic Graph",
       "Order",
       "Node",
       "Dependencies",
@@ -311,7 +311,7 @@ export const dsaTabooList: TabooWord[] = [
   },
   {
     index: 44,
-    word: "Binary Search Tree (BST)",
+    word: "Binary Search Tree",
     taboo: ["Ordered", "Left", "Right", "Search", "Insert"],
     explanation: "",
     category: "Data Structures & Algorithms",

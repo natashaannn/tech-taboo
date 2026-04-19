@@ -19,7 +19,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 3,
-    word: "Application Programming Interface (API)",
+    word: "Application Programming Interface",
     taboo: ["Endpoint", "Request", "Response", "Data", "Exchange"],
     explanation:
       "A set of rules and protocols that allows different software applications to communicate with each other.",
@@ -75,7 +75,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 10,
-    word: "Cascading Style Sheets (CSS)",
+    word: "Cascading Style Sheets",
     taboo: ["Design", "Layout", "Format", "HTML", "Selector"],
     explanation:
       "A language used to describe how web pages should look, including colors, fonts, and spacing.",
@@ -91,7 +91,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 12,
-    word: "Continuous Integration (CI)",
+    word: "Continuous Integration",
     taboo: ["Deploy", "Pipeline", "Automation", "Jenkins", "Build"],
     explanation:
       "The practice of automatically testing and merging code changes frequently to catch issues early.",
@@ -213,7 +213,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 27,
-    word: "Domain Name System (DNS)",
+    word: "Domain Name System",
     taboo: ["Resolve", "Lookup", "Server", "IP", "Route53"],
     explanation: "",
     category: "Software Engineering",
@@ -275,14 +275,14 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 35,
-    word: "Wide Area Network (WAN)",
+    word: "Wide Area Network",
     taboo: ["Connection", "Remote", "Internet", "Router", "Distance"],
     explanation: "",
     category: "Software Engineering",
   },
   {
     index: 36,
-    word: "Graphics Processing Unit (GPU)",
+    word: "Graphics Processing Unit",
     taboo: ["Card", "Fast", "CUDA", "Nvidia", "Render"],
     explanation: "",
     category: "Software Engineering",
@@ -317,14 +317,14 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 41,
-    word: "HyperText Markup Language (HTML)",
+    word: "HyperText Markup Language",
     taboo: ["Code", "Web", "Page", "Tag", "Element"],
     explanation: "",
     category: "Software Engineering",
   },
   {
     index: 42,
-    word: "HyperText Transfer Protocol (HTTP)",
+    word: "HyperText Transfer Protocol",
     taboo: ["Web", "Data", "Request", "Response", "GET"],
     explanation: "",
     category: "Software Engineering",
@@ -352,7 +352,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 46,
-    word: "Integrated Development Environment (IDE)",
+    word: "Integrated Development Environment",
     taboo: ["Write", "Code", "VSCode", "IntelliJ", "Workspace"],
     explanation: "",
     category: "Software Engineering",
@@ -387,7 +387,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 51,
-    word: "JSON Web Token (JWT)",
+    word: "JSON Web Token",
     taboo: ["Authentication", "API", "Bearer", "Header", "Claim"],
     explanation: "",
     category: "Software Engineering",
@@ -527,7 +527,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 71,
-    word: "Progressive Web App (PWA)",
+    word: "Progressive Web App",
     taboo: ["Offline", "Install", "Service Worker", "Manifest", "Mobile"],
     explanation: "",
     category: "Software Engineering",
@@ -562,7 +562,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 76,
-    word: "Random Access Memory (RAM)",
+    word: "Random Access Memory",
     taboo: ["Upgrade", "Performance", "Speed", "Fast", "Volatile"],
     explanation: "",
     category: "Software Engineering",
@@ -660,7 +660,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 90,
-    word: "Secure Sockets Layer (SSL)",
+    word: "Secure Sockets Layer",
     taboo: ["Certificate", "HTTP", "TLS", "Encryption", "HTTPS"],
     explanation: "",
     category: "Software Engineering",
@@ -695,7 +695,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 95,
-    word: "Simple Storage Service (S3)",
+    word: "Simple Storage Service",
     taboo: ["Amazon Web Services", "Bucket", "Image", "Cloud", "Object"],
     explanation: "",
     category: "Software Engineering",
@@ -737,7 +737,7 @@ export const softwareEngineeringTabooList: TabooWord[] = [
   },
   {
     index: 101,
-    word: "Test-Driven Development (TDD)",
+    word: "Test-Driven Development",
     taboo: ["Red", "Green", "Refactor", "Test", "Code"],
     explanation: "",
     category: "Software Engineering",

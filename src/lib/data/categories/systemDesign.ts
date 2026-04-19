@@ -39,7 +39,7 @@ export const systemDesignTabooList: TabooWord[] = [
   },
   {
     index: 6,
-    word: "Content Delivery Network (CDN)",
+    word: "Content Delivery Network",
     taboo: ["Cache", "Edge", "Fast", "Distributed", "Static"],
     explanation: "",
     category: "System Design",
@@ -346,7 +346,7 @@ export const systemDesignTabooList: TabooWord[] = [
   },
   {
     index: 49,
-    word: "Time to Live (TTL)",
+    word: "Time to Live",
     taboo: ["Expire", "Cache", "Duration", "Timeout", "Delete"],
     explanation: "",
     category: "System Design",

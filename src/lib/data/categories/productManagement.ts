@@ -134,7 +134,7 @@ export const productManagementTabooList: TabooWord[] = [
   // end of variety pack
   {
     index: 17,
-    word: "Product Document Review (PDR)",
+    word: "Product Document Review",
     taboo: ["Specification", "Approval", "Requirements", "Design", "Meeting"],
     explanation: "",
     category: "Product Management",
@@ -162,7 +162,7 @@ export const productManagementTabooList: TabooWord[] = [
   },
   {
     index: 21,
-    word: "Return on Investment (ROI)",
+    word: "Return on Investment",
     taboo: ["Interest", "Cost", "Profit", "Value", "Benefit"],
     explanation: "",
     category: "Product Management",

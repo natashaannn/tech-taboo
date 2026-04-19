@@ -5,7 +5,7 @@ export const generalTabooList: TabooWord[] = [
   // start of variety pack
   {
     index: 1,
-    word: "Artificial Intelligence (AI)",
+    word: "Artificial Intelligence",
     taboo: ["Replace", "Machine", "Model", "Language", "Chatbot"],
     explanation:
       "Technology that enables computers to perform tasks that typically require human intelligence, such as understanding speech or making decisions.",
@@ -77,7 +77,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 10,
-    word: "Development Operations (DevOps)",
+    word: "Development Operations",
     taboo: ["Software", "Lifecycle", "Pipeline", "CI/CD", "Infrastructure"],
     explanation:
       "A culture and practice that combines programmers and IT operations to deliver applications faster and more reliably.",
@@ -93,7 +93,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 12,
-    word: "Internet of Things (IoT)",
+    word: "Internet of Things",
     taboo: ["Devices", "Sensors", "Network", "Data", "Connectivity"],
     explanation:
       "Everyday objects embedded with technology that can connect to the internet and exchange information with each other.",
@@ -110,7 +110,7 @@ export const generalTabooList: TabooWord[] = [
   {
     index: 14,
     word: "5G Network",
-    taboo: ["Fast", "Mobile", "1/2/3/4/x G", "Connectivity", "Data"],
+    taboo: ["Fast", "Mobile", "1/2/3/4/x G", "Wifi", "Data"],
     explanation:
       "The fifth generation of cellular technology offering significantly faster speeds and lower latency than previous generations.",
     category: "General",
@@ -125,7 +125,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 16,
-    word: "Search Engine Optimization (SEO)",
+    word: "Search Engine Optimization",
     taboo: ["Top", "Google", "Keywords", "Browser", "Website"],
     explanation:
       "Techniques used to improve a site's visibility and ranking in search results.",
@@ -133,7 +133,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 17,
-    word: "Augmented Reality (AR)",
+    word: "Augmented Reality",
     taboo: ["Virtual", "Overlay", "Digital", "Information", "Interactive"],
     explanation:
       "Technology that superimposes computer-generated images onto the real world view, enhancing what you see.",
@@ -205,7 +205,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 26,
-    word: "Software-as-a-Service (SaaS)",
+    word: "Software-as-a-Service",
     taboo: ["Cloud", "Subscription", "Application", "Platform", "Online"],
     explanation:
       "Programs delivered over the internet that you pay for regularly instead of installing on your computer.",
@@ -285,7 +285,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 36,
-    word: "Chief Technology Officer (CTO)",
+    word: "Chief Technology Officer",
     taboo: ["Company", "Executive", "Lead", "Strategy", "Product"],
     explanation:
       "The senior leader responsible for overseeing technical direction and engineering teams in an organization.",
@@ -293,7 +293,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 37,
-    word: "Chief Executive Officer (CEO)",
+    word: "Chief Executive Officer",
     taboo: ["Company", "Founder", "Business", "Strategy", "Product"],
     explanation:
       "The highest-ranking person in an organization who makes major decisions and manages overall operations.",
@@ -309,7 +309,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 39,
-    word: "Financial Technology (FinTech)",
+    word: "Financial Technology",
     taboo: ["Bank", "Money", "Investment", "Payment", "Transaction"],
     explanation:
       "Technology used to improve and automate the delivery of financial services like transfers and lending.",
@@ -373,7 +373,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 47,
-    word: "User Interface (UI)",
+    word: "User Interface",
     taboo: ["Design", "Experience", "Interaction", "Visual", "Layout"],
     explanation:
       "The visual elements and controls that people use to interact with a digital product.",
@@ -389,7 +389,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 49,
-    word: "Key Performance Indicator (KPI)",
+    word: "Key Performance Indicator",
     taboo: ["Metric", "Measure", "Goal", "Target", "Performance"],
     explanation:
       "A quantifiable value that shows how effectively an organization is achieving its objectives.",
@@ -397,7 +397,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 50,
-    word: "Minimum Viable Product (MVP)",
+    word: "Minimum Viable Product",
     taboo: ["Launch", "Basic", "Core", "Features", "Prototype"],
     explanation:
       "The simplest version of a product with just enough functionality to gather user feedback.",
@@ -413,7 +413,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 52,
-    word: "Virtual Private Network (VPN)",
+    word: "Virtual Private Network",
     taboo: ["Netflix", "Country", "Internet", "Security", "Connectivity"],
     explanation:
       "A service that creates an encrypted tunnel for your internet traffic, hiding your location and activity.",
@@ -485,7 +485,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 61,
-    word: "Non-fungible Token (NFT)",
+    word: "Non-fungible Token",
     taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"],
     explanation: "",
     category: "General",
@@ -506,7 +506,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 64,
-    word: "User Experience (UX)",
+    word: "User Experience",
     taboo: ["Design", "Journey", "Interaction", "UI", "Layout"],
     explanation: "",
     category: "General",
@@ -736,7 +736,7 @@ export const generalTabooList: TabooWord[] = [
   },
   {
     index: 96,
-    word: "Local Area Network (LAN)",
+    word: "Local Area Network",
     taboo: ["Cable", "WAN", "Ethernet", "Router", "Device"],
     explanation: "",
     category: "General",
@@ -751,14 +751,14 @@ export const generalTabooList: TabooWord[] = [
   {
     index: 98,
     word: "Windows",
-    taboo: ["Operating System (OS)", "Linux", "Mac", "Computer", "Desktop"],
+    taboo: ["Operating System", "Linux", "Mac", "Computer", "Desktop"],
     explanation: "",
     category: "General",
   },
   {
     index: 99,
     word: "MacOS",
-    taboo: ["Operating System (OS)", "Linux", "Windows", "Apple", "Meta"],
+    taboo: ["Operating System", "Linux", "Windows", "Apple", "Meta"],
     explanation: "",
     category: "General",
   },
