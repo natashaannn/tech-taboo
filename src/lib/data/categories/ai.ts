@@ -135,154 +135,175 @@ export const aiTabooList: TabooWord[] = [
     index: 17,
     word: "HuggingFace",
     taboo: ["AI", "Models", "Transformers", "Library", "Community"],
-    explanation: "",
+    explanation:
+      "An open-source platform for sharing, discovering, and using machine learning models and datasets.",
     category: "AI",
   },
   {
     index: 18,
     word: "Inference",
     taboo: ["Prediction", "Model", "Output", "Runtime", "Deploy"],
-    explanation: "",
+    explanation:
+      "Running a trained AI model on new data to produce predictions or outputs.",
     category: "AI",
   },
   {
     index: 19,
     word: "Diffusers",
     taboo: ["AI", "Image", "Library", "Stable", "HuggingFace"],
-    explanation: "",
+    explanation:
+      "A library for running diffusion-based AI image generation models.",
     category: "AI",
   },
   {
     index: 20,
     word: "Llama",
     taboo: ["Meta", "AI", "Model", "LLM", "Open Source"],
-    explanation: "",
+    explanation:
+      "A family of open-source large language models released by Meta.",
     category: "AI",
   },
   {
     index: 21,
     word: "Machine Vision",
     taboo: ["Image", "Processing", "Analysis", "Recognition", "AI"],
-    explanation: "",
+    explanation:
+      "AI systems that interpret and understand visual information from images or video.",
     category: "AI",
   },
   {
     index: 22,
     word: "Midjourney",
     taboo: ["AI", "Image", "Generation", "Prompt", "Art"],
-    explanation: "",
+    explanation: "An AI tool that generates images from text descriptions.",
     category: "AI",
   },
   {
     index: 23,
     word: "Multimodal",
     taboo: ["AI", "Text", "Image", "Audio", "Model"],
-    explanation: "",
+    explanation:
+      "An AI system that can process and understand multiple types of input, such as text, images, and audio together.",
     category: "AI",
   },
   {
     index: 24,
     word: "DALL-E",
     taboo: ["OpenAI", "Image", "Generation", "AI", "Prompt"],
-    explanation: "",
+    explanation:
+      "OpenAI's AI model that creates images from text descriptions.",
     category: "AI",
   },
   {
     index: 25,
     word: "Anthropic",
     taboo: ["AI", "Claude", "Company", "Safety", "LLM"],
-    explanation: "",
+    explanation:
+      "An AI safety company and the creator of the Claude AI assistant.",
     category: "AI",
   },
   {
     index: 26,
     word: "Edge AI",
     taboo: ["Device", "Inference", "Local", "Model", "IoT"],
-    explanation: "",
+    explanation:
+      "Running AI models locally on devices rather than sending data to the cloud.",
     category: "AI",
   },
   {
     index: 27,
     word: "Prompt Injection",
     taboo: ["AI", "Attack", "Security", "Vulnerability", "Exploit"],
-    explanation: "",
+    explanation:
+      "An attack where malicious input is crafted to manipulate an AI model's behavior.",
     category: "AI",
   },
   {
     index: 28,
     word: "Claude",
     taboo: ["Anthropic", "AI", "Chatbot", "LLM", "Text"],
-    explanation: "",
+    explanation:
+      "An AI assistant created by Anthropic, designed to be helpful, harmless, and honest.",
     category: "AI",
   },
   {
     index: 29,
     word: "Self-Attention",
     taboo: ["AI", "Transformer", "Weights", "Focus", "Model"],
-    explanation: "",
+    explanation:
+      "A mechanism that lets a model weigh the importance of different parts of its input when processing each element.",
     category: "AI",
   },
   {
     index: 30,
     word: "Small Language Model",
     taboo: ["Llama", "Compact", "Phi", "AI", "Efficient"],
-    explanation: "",
+    explanation:
+      "A compact AI language model designed to run efficiently with fewer computing resources.",
     category: "AI",
   },
   {
     index: 31,
     word: "Gemini",
     taboo: ["Google", "AI", "Model", "LLM", "Chatbot"],
-    explanation: "",
+    explanation:
+      "Google's family of multimodal AI models capable of understanding text, images, and more.",
     category: "AI",
   },
   {
     index: 32,
     word: "Stable Diffusion",
     taboo: ["AI", "Image", "Model", "Generation", "Open Source"],
-    explanation: "",
+    explanation:
+      "An open-source AI model that generates images from text prompts.",
     category: "AI",
   },
   {
     index: 33,
     word: "Synthetic Data",
     taboo: ["AI", "Fake", "Generated", "Training", "Model"],
-    explanation: "",
+    explanation:
+      "Artificially generated data used to train or test AI models instead of real-world data.",
     category: "AI",
   },
   {
     index: 34,
     word: "Diffusion Pipeline",
     taboo: ["AI", "Image", "Generation", "Steps", "Model"],
-    explanation: "",
+    explanation:
+      "A sequence of steps used in AI image generation models to progressively create images from noise.",
     category: "AI",
   },
   {
     index: 35,
     word: "Transformer",
     taboo: ["AI", "Model", "Attention", "Neural", "Network"],
-    explanation: "",
+    explanation:
+      "A neural network architecture using attention mechanisms that is foundational to modern AI models.",
     category: "AI",
   },
   {
     index: 36,
     word: "Vector Database",
     taboo: ["Embedding", "AI", "Similarity", "Search", "Index"],
-    explanation: "",
+    explanation:
+      "A database optimized for storing and searching high-dimensional vector embeddings.",
     category: "AI",
   },
   {
     index: 37,
     word: "Voice Assistant",
     taboo: ["Siri", "Speech", "Recognition", "Alexa", "Help"],
-    explanation: "",
+    explanation:
+      "AI-powered software that understands spoken commands and responds verbally.",
     category: "AI",
   },
   {
     index: 38,
     word: "Voice Cloning",
     taboo: ["AI", "Speech", "Synthesis", "Imitate", "Audio"],
-    explanation: "",
+    explanation:
+      "An AI technique that replicates a specific person's voice from audio samples.",
     category: "AI",
   },
   // end of variety pack
@@ -290,98 +311,112 @@ export const aiTabooList: TabooWord[] = [
     index: 39,
     word: "Overfitting",
     taboo: ["Model", "Training", "Generalize", "Bias", "Variance"],
-    explanation: "",
+    explanation:
+      "When a model learns training data too precisely and performs poorly on new, unseen data.",
     category: "AI",
   },
   {
     index: 40,
     word: "Underfitting",
     taboo: ["Model", "Training", "Simple", "Bias", "Variance"],
-    explanation: "",
+    explanation:
+      "When a model is too simple to capture patterns in the data, resulting in poor performance.",
     category: "AI",
   },
   {
     index: 41,
     word: "Zero-Shot Learning",
     taboo: ["AI", "Model", "Unseen", "Prompt", "Examples"],
-    explanation: "",
+    explanation:
+      "The ability of a model to handle tasks it was never explicitly trained on.",
     category: "AI",
   },
   {
     index: 42,
     word: "Few-Shot Learning",
     taboo: ["AI", "Model", "Examples", "Prompt", "Training"],
-    explanation: "",
+    explanation:
+      "Training an AI model to learn a new task from only a handful of examples.",
     category: "AI",
   },
   {
     index: 43,
     word: "One-Shot Learning",
     taboo: ["AI", "Model", "Example", "Single", "Training"],
-    explanation: "",
+    explanation:
+      "An AI technique where a model learns to recognize something from a single example.",
     category: "AI",
   },
   {
     index: 44,
     word: "Transfer Learning",
     taboo: ["Model", "Pretrained", "Adapt", "Fine-tune", "Reuse"],
-    explanation: "",
+    explanation:
+      "Reusing a model trained on one task as a starting point for a different task.",
     category: "AI",
   },
   {
     index: 45,
     word: "Supervised Learning",
     taboo: ["AI", "Labels", "Training", "Classification", "Regression"],
-    explanation: "",
+    explanation:
+      "Training an AI model using labeled input-output pairs so it learns to map inputs to correct answers.",
     category: "AI",
   },
   {
     index: 46,
     word: "Unsupervised Learning",
     taboo: ["AI", "Clustering", "Training", "Unlabeled", "Pattern"],
-    explanation: "",
+    explanation:
+      "Training an AI model on data without labels, letting it discover patterns on its own.",
     category: "AI",
   },
   {
     index: 47,
     word: "Classification",
     taboo: ["Model", "Category", "Label", "Predict", "Type"],
-    explanation: "",
+    explanation:
+      "An AI task of assigning input data into predefined categories or classes.",
     category: "AI",
   },
   {
     index: 48,
     word: "Model Evaluation",
     taboo: ["Testing", "Metrics", "Performance", "Accuracy", "Validation"],
-    explanation: "",
+    explanation:
+      "Measuring how well an AI model performs on unseen data using metrics like accuracy.",
     category: "AI",
   },
   {
     index: 49,
     word: "Bias in AI",
     taboo: ["Fairness", "Model", "Discrimination", "Ethics", "Unfair"],
-    explanation: "",
+    explanation:
+      "Systematic errors in AI outputs caused by skewed training data or flawed design choices.",
     category: "AI",
   },
   {
     index: 50,
     word: "Batch Normalization",
     taboo: ["Layer", "Training", "Neural", "Network", "Normalize"],
-    explanation: "",
+    explanation:
+      "A technique that stabilizes neural network training by normalizing inputs within each layer.",
     category: "AI",
   },
   {
     index: 51,
     word: "Activation Function",
     taboo: ["Neural", "Network", "ReLU", "Sigmoid", "Layer"],
-    explanation: "",
+    explanation:
+      "A mathematical function that determines whether a neuron should fire in a neural network.",
     category: "AI",
   },
   {
     index: 52,
     word: "Gradient Descent",
     taboo: ["Optimization", "Training", "Minimize", "Loss", "Learning"],
-    explanation: "",
+    explanation:
+      "An optimization algorithm that iteratively adjusts model weights to minimize prediction errors.",
     category: "AI",
   },
 ];

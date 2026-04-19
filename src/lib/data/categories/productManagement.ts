@@ -136,252 +136,288 @@ export const productManagementTabooList: TabooWord[] = [
     index: 17,
     word: "Product Document Review",
     taboo: ["Specification", "Approval", "Requirements", "Design", "Meeting"],
-    explanation: "",
+    explanation:
+      "A structured review of product documentation to ensure accuracy and alignment with goals.",
     category: "Product Management",
   },
   {
     index: 18,
     word: "Product Market Fit",
     taboo: ["Demand", "Match", "Customers", "Value", "Success"],
-    explanation: "",
+    explanation:
+      "The degree to which a product satisfies a strong market demand.",
     category: "Product Management",
   },
   {
     index: 19,
     word: "Product Sense",
     taboo: ["Intuition", "Judgment", "Vision", "Understanding", "Instinct"],
-    explanation: "",
+    explanation:
+      "The intuition to understand what makes a product great and what users truly need.",
     category: "Product Management",
   },
   {
     index: 20,
     word: "Product-Led Growth",
     taboo: ["Strategy", "Acquisition", "Viral", "Self-Service", "Freemium"],
-    explanation: "",
+    explanation:
+      "A strategy where the product itself drives user acquisition, expansion, and retention.",
     category: "Product Management",
   },
   {
     index: 21,
     word: "Return on Investment",
     taboo: ["Interest", "Cost", "Profit", "Value", "Benefit"],
-    explanation: "",
+    explanation:
+      "A measure of the profit gained relative to the cost of an investment.",
     category: "Product Management",
   },
   {
     index: 22,
     word: "Go-to-Market Strategy",
     taboo: ["Launch", "Plan", "Sales", "Marketing", "Release"],
-    explanation: "",
+    explanation:
+      "The plan for launching a product and reaching target customers effectively.",
     category: "Product Management",
   },
   {
     index: 23,
     word: "North Star Metric",
     taboo: ["Goal", "KPI", "Success", "Measure", "Focus"],
-    explanation: "",
+    explanation:
+      "The single metric that best captures the core value a product delivers to customers.",
     category: "Product Management",
   },
   {
     index: 24,
     word: "Stakeholder",
     taboo: ["Interested", "Party", "Investor", "Influence", "Owner"],
-    explanation: "",
+    explanation:
+      "Any person or group with an interest in or influence over a product or project.",
     category: "Product Management",
   },
   {
     index: 25,
     word: "Backlog Grooming",
     taboo: ["Refinement", "Stories", "Prioritize", "Estimate", "Clean"],
-    explanation: "",
+    explanation:
+      "The process of reviewing, prioritizing, and refining items in the product backlog.",
     category: "Product Management",
   },
   {
     index: 26,
     word: "Feature Flag",
     taboo: ["Toggle", "Release", "Enable", "Control", "Rollout"],
-    explanation: "",
+    explanation:
+      "A toggle that allows teams to enable or disable features for users without deploying new code.",
     category: "Product Management",
   },
   {
     index: 27,
     word: "Use Case",
     taboo: ["Scenario", "User", "Story", "Example", "Application"],
-    explanation: "",
+    explanation:
+      "A description of how a user will interact with a system to achieve a specific goal.",
     category: "Product Management",
   },
   {
     index: 28,
     word: "User Acquisition",
     taboo: ["Growth", "Customers", "Marketing", "Onboarding", "Sign-up"],
-    explanation: "",
+    explanation:
+      "The process of attracting and converting new users to a product.",
     category: "Product Management",
   },
   {
     index: 29,
     word: "User Flow",
     taboo: ["Path", "Steps", "Navigation", "Interaction", "Diagram"],
-    explanation: "",
+    explanation:
+      "The sequence of steps a user takes to complete a task within a product.",
     category: "Product Management",
   },
   {
     index: 30,
     word: "User Research",
     taboo: ["Interview", "Survey", "Feedback", "Study", "Insights"],
-    explanation: "",
+    explanation:
+      "The study of target users to understand their behaviors, needs, and motivations.",
     category: "Product Management",
   },
   {
     index: 31,
     word: "Beta Testing",
     taboo: ["Users", "Early", "Feedback", "Release", "Preview"],
-    explanation: "",
+    explanation:
+      "Releasing a product to a limited group of real users before the full public launch.",
     category: "Product Management",
   },
   {
     index: 32,
     word: "Churn Rate",
     taboo: ["Attrition", "Retention", "Customers", "Leave", "Lost"],
-    explanation: "",
+    explanation:
+      "The percentage of users who stop using a product over a given time period.",
     category: "Product Management",
   },
   {
     index: 33,
     word: "Definition of Done",
     taboo: ["Criteria", "Complete", "Checklist", "Acceptance", "Ready"],
-    explanation: "",
+    explanation:
+      "A shared agreement on the criteria a task must meet to be considered complete.",
     category: "Product Management",
   },
   {
     index: 34,
     word: "Sprint Planning",
     taboo: ["Meeting", "Scrum", "Backlog", "Estimate", "Commit"],
-    explanation: "",
+    explanation:
+      "A meeting where the team selects and commits to work items for the upcoming sprint.",
     category: "Product Management",
   },
   {
     index: 35,
     word: "Product Backlog",
     taboo: ["Stories", "Tasks", "Prioritize", "Queue", "List"],
-    explanation: "",
+    explanation:
+      "A prioritized list of features, fixes, and tasks to be completed in future development.",
     category: "Product Management",
   },
   {
     index: 36,
     word: "Sprint Backlog",
     taboo: ["Tasks", "Scrum", "Iteration", "Commit", "Stories"],
-    explanation: "",
+    explanation:
+      "The set of tasks selected from the product backlog to be completed in the current sprint.",
     category: "Product Management",
   },
   {
     index: 37,
     word: "Burndown Chart",
     taboo: ["Graph", "Progress", "Sprint", "Remaining", "Velocity"],
-    explanation: "",
+    explanation:
+      "A visual representation of work remaining versus time in a sprint or project.",
     category: "Product Management",
   },
   {
     index: 38,
     word: "Value Proposition",
     taboo: ["Benefit", "Customers", "Sell", "Unique", "Offer"],
-    explanation: "",
+    explanation:
+      "A clear statement of why a customer should choose your product over alternatives.",
     category: "Product Management",
   },
   {
     index: 39,
     word: "Competitive Analysis",
     taboo: ["Research", "Rivals", "Market", "Comparison", "Benchmark"],
-    explanation: "",
+    explanation:
+      "Researching competitors to understand their strengths, weaknesses, and market position.",
     category: "Product Management",
   },
   {
     index: 40,
     word: "Product Vision",
     taboo: ["Strategy", "Future", "Goal", "Direction", "North Star"],
-    explanation: "",
+    explanation:
+      "A long-term statement of what a product aims to become and the impact it will have.",
     category: "Product Management",
   },
   {
     index: 41,
     word: "Customer Feedback Loop",
     taboo: ["Listening", "Input", "Survey", "Cycle", "Response"],
-    explanation: "",
+    explanation:
+      "A process for continuously collecting and acting on input from users to improve the product.",
     category: "Product Management",
   },
   {
     index: 42,
     word: "Product Analytics",
     taboo: ["Metrics", "Data", "Tracking", "Insights", "Dashboard"],
-    explanation: "",
+    explanation:
+      "Data collected and analyzed to understand how users interact with a product.",
     category: "Product Management",
   },
   {
     index: 43,
     word: "Minimum Lovable Product",
     taboo: ["MVP", "Delight", "First", "Version", "Launch"],
-    explanation: "",
+    explanation:
+      "A version of a product that is functional and delightful enough that early users love it.",
     category: "Product Management",
   },
   {
     index: 44,
     word: "Product Lifecycle",
     taboo: ["Stages", "Growth", "Maturity", "Decline", "Introduction"],
-    explanation: "",
+    explanation:
+      "The stages a product goes through from conception and launch to growth, maturity, and decline.",
     category: "Product Management",
   },
   {
     index: 45,
     word: "Engagement Metrics",
     taboo: ["Active", "Users", "Retention", "Analytics", "KPI"],
-    explanation: "",
+    explanation:
+      "Measurements that track how actively and frequently users interact with a product.",
     category: "Product Management",
   },
   {
     index: 46,
     word: "Pricing Model",
     taboo: ["Cost", "Revenue", "Tier", "Plan", "Value"],
-    explanation: "",
+    explanation:
+      "The strategy a company uses to set prices for its product or service.",
     category: "Product Management",
   },
   {
     index: 47,
     word: "Discovery Phase",
     taboo: ["Research", "Explore", "User", "Problem", "Validation"],
-    explanation: "",
+    explanation:
+      "The early stage of product development focused on understanding user needs and defining the problem.",
     category: "Product Management",
   },
   {
     index: 48,
     word: "Launch Strategy",
     taboo: ["Release", "Market", "Plan", "Rollout", "Go-Live"],
-    explanation: "",
+    explanation:
+      "The plan for introducing a new product or feature to the market.",
     category: "Product Management",
   },
   {
     index: 49,
     word: "Customer Retention",
     taboo: ["Churn", "Keep", "Loyal", "Success", "Stay"],
-    explanation: "",
+    explanation:
+      "The ability to keep existing customers engaged and using the product over time.",
     category: "Product Management",
   },
   {
     index: 50,
     word: "Market Segmentation",
     taboo: ["Target", "Group", "Audience", "Divide", "Demographics"],
-    explanation: "",
+    explanation:
+      "Dividing a broad market into smaller groups with shared characteristics or needs.",
     category: "Product Management",
   },
   {
     index: 51,
     word: "Product Owner",
     taboo: ["Scrum", "Backlog", "Prioritize", "Team", "Vision"],
-    explanation: "",
+    explanation:
+      "The team member responsible for defining and prioritizing the product backlog.",
     category: "Product Management",
   },
   {
     index: 52,
     word: "Release Planning",
     taboo: ["Version", "Schedule", "Deploy", "Launch", "Roadmap"],
-    explanation: "",
+    explanation:
+      "The process of scheduling when features and updates will be delivered to users.",
     category: "Product Management",
   },
 ];
