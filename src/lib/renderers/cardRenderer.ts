@@ -179,34 +179,54 @@ export async function generateCardSVG(
     }
   }
 
-  // Calculate font size for taboo words to prevent overflow
-  function getTabooFontSize(text: string, maxWidth = 360) {
+  // Returns fontSize, lineSpacing, and startY so words are centered in the white box.
+  // Box: y=boxY, height=boxHeight. Each taboo word is on its own line.
+  function getTabooLayout(
+    words: string[],
+    boxY = 140,
+    boxHeight = 250,
+    maxWidth = 360,
+  ): { fontSize: number; lineSpacing: number; startY: number } {
+    const n = words.length;
+    const padding = 20;
+    const contentH = boxHeight - padding * 2;
+
+    // Max font size that fits height: each slot is contentH/n, font fills ~72% of slot
+    const slotH = contentH / n;
+    const maxFontFromHeight = Math.floor(slotH * 0.72);
+
+    // Max font size that fits width
+    let maxFontFromWidth = maxFontFromHeight;
     try {
-      // Check if we're in a browser environment
-      if (typeof window === "undefined" || typeof document === "undefined") {
-        return 30;
+      if (typeof window !== "undefined" && typeof document !== "undefined") {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.font = `${maxFontFromHeight}px Monospace, 'Sometype Mono', monospace`;
+          const widest = Math.max(
+            ...words.map((w) => ctx.measureText(w).width),
+          );
+          if (widest > maxWidth) {
+            maxFontFromWidth = Math.floor(
+              maxFontFromHeight * (maxWidth / widest),
+            );
+          }
+        }
       }
-
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        return 30;
-      }
-
-      const baseFontSize = 30;
-      ctx.font = `${baseFontSize}px Monospace, 'Sometype Mono', monospace`;
-      const w = ctx.measureText(text).width;
-
-      if (w <= maxWidth) {
-        return baseFontSize;
-      }
-
-      // Scale down to fit
-      const ratio = maxWidth / w;
-      return Math.max(22, Math.floor(baseFontSize * ratio));
     } catch (_) {
-      return 30;
+      /* ignore */
     }
+
+    const fontSize = Math.max(
+      18,
+      Math.min(maxFontFromHeight, maxFontFromWidth),
+    );
+    const lineSpacing = slotH;
+    // Center the block: top of first glyph = boxY + padding + (contentH - n*lineSpacing)/2 + fontSize*0.8
+    const blockTop = boxY + padding + (contentH - n * lineSpacing) / 2;
+    const startY = Math.round(blockTop + lineSpacing * 0.5 + fontSize * 0.35);
+
+    return { fontSize, lineSpacing: Math.round(lineSpacing), startY };
   }
 
   const teacherImageHref =
@@ -216,8 +236,15 @@ export async function generateCardSVG(
 
   const topTextInfo = splitAndSizeText(top.word);
   const bottomTextInfo = splitAndSizeText(bottom.word);
-  const topTabooFontSize = getTabooFontSize(top.taboo.join(" "));
-  const bottomTabooFontSize = getTabooFontSize(bottom.taboo.join(" "));
+  const topTabooLayout = getTabooLayout(top.taboo);
+  const bottomTabooLayout = getTabooLayout(bottom.taboo);
+  // Use the smaller font size for both halves so the card looks uniform
+  const uniformTabooFontSize = Math.min(
+    topTabooLayout.fontSize,
+    bottomTabooLayout.fontSize,
+  );
+  topTabooLayout.fontSize = uniformTabooFontSize;
+  bottomTabooLayout.fontSize = uniformTabooFontSize;
 
   // Generate unique IDs
   const uniqueId = `svg_${Math.random().toString(36).substr(2, 9)}`;
@@ -252,7 +279,7 @@ export async function generateCardSVG(
       ${top.taboo
         .map(
           (w, i) =>
-            `<text x="250" y="${190 + i * 40}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="${topTabooFontSize}" fill="#062E35">${w}</text>`,
+            `<text x="250" y="${topTabooLayout.startY + i * topTabooLayout.lineSpacing}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="${topTabooLayout.fontSize}" fill="#062E35">${w}</text>`,
         )
         .join("")}
       <image href="${teacherImageHref}" x="400" y="320" width="80" height="80"/>
@@ -268,7 +295,7 @@ export async function generateCardSVG(
       ${bottom.taboo
         .map(
           (w, i) =>
-            `<text x="250" y="${190 + i * 40}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="${bottomTabooFontSize}" fill="#062E35">${w}</text>`,
+            `<text x="250" y="${bottomTabooLayout.startY + i * bottomTabooLayout.lineSpacing}" text-anchor="middle" font-family="Monospace, 'Sometype Mono', monospace" font-size="${bottomTabooLayout.fontSize}" fill="#062E35">${w}</text>`,
         )
         .join("")}
       <image href="${peekOutImageHref}" x="420" y="280" width="90" height="70"/>
