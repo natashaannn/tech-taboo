@@ -487,217 +487,247 @@ export const generalTabooList: TabooWord[] = [
     index: 61,
     word: "Non-fungible Token",
     taboo: ["Digital", "Asset", "Bitcoin", "Cryptocurrency", "Blockchain"],
-    explanation: "",
+    explanation:
+      "A unique digital asset stored on a blockchain that proves ownership of a specific item.",
     category: "General",
   },
   {
     index: 62,
     word: "Bitcoin",
     taboo: ["Cryptocurrency", "Solana", "Binance", "Asset", "Blockchain"],
-    explanation: "",
+    explanation:
+      "The first decentralized digital currency, allowing peer-to-peer transactions without a central authority.",
     category: "General",
   },
   {
     index: 63,
     word: "Digital Wallet",
     taboo: ["Payment", "Money", "Transaction", "Cryptocurrency", "Bitcoin"],
-    explanation: "",
+    explanation:
+      "An app or service that stores payment information and lets you pay digitally.",
     category: "General",
   },
   {
     index: 64,
     word: "User Experience",
     taboo: ["Design", "Journey", "Interaction", "UI", "Layout"],
-    explanation: "",
+    explanation:
+      "The overall feeling a person has when interacting with a product or service.",
     category: "General",
   },
   {
     index: 65,
     word: "iOS",
     taboo: ["Mobile", "Operating", "System", "Apple", "Phone"],
-    explanation: "",
+    explanation:
+      "Apple's mobile operating system that powers iPhones and iPads.",
     category: "General",
   },
   {
     index: 66,
     word: "Open-source",
     taboo: ["Code", "Software", "Project", "GitHub", "Community"],
-    explanation: "",
+    explanation:
+      "Software whose source code is freely available for anyone to view, modify, and distribute.",
     category: "General",
   },
   {
     index: 67,
     word: "Twitter",
     taboo: ["Social Media", "Character", "X", "Elon Musk", "Post"],
-    explanation: "",
+    explanation:
+      "A social media platform for short public messages, now rebranded as X.",
     category: "General",
   },
   {
     index: 68,
     word: "Cloud Storage",
     taboo: ["Google Drive", "Files", "Online", "Backup", "Save"],
-    explanation: "",
+    explanation:
+      "Saving files on remote servers accessible over the internet rather than on a local device.",
     category: "General",
   },
   {
     index: 69,
     word: "Wearable",
     taboo: ["Ring", "Tech", "Watch", "Health", "Fitness"],
-    explanation: "",
+    explanation:
+      "A small electronic device worn on the body, like a smartwatch or fitness tracker.",
     category: "General",
   },
   {
     index: 70,
     word: "Silicon Valley",
     taboo: ["California", "USA", "Tech", "Industry", "Company"],
-    explanation: "",
+    explanation:
+      "The region in California known as the global hub of the technology industry.",
     category: "General",
   },
   {
     index: 71,
     word: "Viral",
     taboo: ["Content", "Social", "Media", "Trend", "Share"],
-    explanation: "",
+    explanation:
+      "Content that spreads rapidly across the internet by being widely shared.",
     category: "General",
   },
   {
     index: 72,
     word: "Growth Hacker",
     taboo: ["Marketing", "Strategy", "Innovation", "Product", "Launch"],
-    explanation: "",
+    explanation:
+      "A marketer who uses creative, low-cost strategies to rapidly grow a product's user base.",
     category: "General",
   },
   {
     index: 73,
     word: "E-Commerce",
     taboo: ["Online", "Shopping", "Shopee", "Lazada", "Retail"],
-    explanation: "",
+    explanation: "Buying and selling goods or services over the internet.",
     category: "General",
   },
   {
     index: 74,
     word: "Drone",
     taboo: ["Aircraft", "Fly", "DJI", "Robotics", "Food"],
-    explanation: "",
+    explanation:
+      "An unmanned aerial vehicle controlled remotely or autonomously.",
     category: "General",
   },
   {
     index: 75,
     word: "Automation",
     taboo: ["Robotics", "Process", "AI", "Machine", "Learning"],
-    explanation: "",
+    explanation:
+      "Using technology to perform tasks with minimal human intervention.",
     category: "General",
   },
   {
     index: 76,
     word: "Pivot",
     taboo: ["Business", "Strategy", "Change", "Direction", "Rebrand"],
-    explanation: "",
+    explanation:
+      "A significant change in a company's strategy or product direction based on new learnings.",
     category: "General",
   },
   {
     index: 77,
     word: "Database",
     taboo: ["Management", "Storage", "Information", "SQL", "Relational"],
-    explanation: "",
+    explanation:
+      "An organized collection of structured data stored and accessed electronically.",
     category: "General",
   },
   {
     index: 78,
     word: "Gamification",
     taboo: ["Play", "Reward", "Video", "Challenge", "Score"],
-    explanation: "",
+    explanation:
+      "Applying game-like elements such as points and rewards to non-game contexts to boost engagement.",
     category: "General",
   },
   {
     index: 79,
     word: "Encryption",
     taboo: ["Security", "Data", "Information", "Access", "Decryption"],
-    explanation: "",
+    explanation:
+      "The process of converting data into a coded format so only authorized parties can read it.",
     category: "General",
   },
   {
     index: 80,
     word: "Emerging Technology",
     taboo: ["AI", "Development", "New", "Disrupt", "Future"],
-    explanation: "",
+    explanation:
+      "A new or developing technology with the potential to significantly change industries.",
     category: "General",
   },
   {
     index: 81,
     word: "Edge Computing",
     taboo: ["Distributed", "Near", "Network", "Latency", "Fast"],
-    explanation: "",
+    explanation:
+      "Processing data close to where it is generated rather than sending it to a central server.",
     category: "General",
   },
   {
     index: 82,
     word: "Blockchain",
     taboo: ["Distributed", "Ledger", "Cryptocurrency", "Contract", "Bitcoin"],
-    explanation: "",
+    explanation:
+      "A distributed ledger that records transactions across many computers in a tamper-resistant way.",
     category: "General",
   },
   {
     index: 83,
     word: "Decentralized",
     taboo: ["Blockchain", "Distributed", "Cloud", "Cryptocurrency", "Network"],
-    explanation: "",
+    explanation:
+      "A system with no single controlling authority, where control is spread across many participants.",
     category: "General",
   },
   {
     index: 84,
     word: "Programming",
     taboo: ["Language", "Code", "Software", "Development", "Computer"],
-    explanation: "",
+    explanation:
+      "Writing instructions in a language that computers can execute to perform tasks.",
     category: "General",
   },
   {
     index: 85,
     word: "Code",
     taboo: ["Language", "Program", "Software", "Development", "Computer"],
-    explanation: "",
+    explanation:
+      "Instructions written in a programming language that tell a computer what to do.",
     category: "General",
   },
   {
     index: 86,
     word: "Software",
     taboo: ["Program", "Development", "Computer", "Application", "Code"],
-    explanation: "",
+    explanation:
+      "Programs and operating information that run on a computer, as opposed to hardware.",
     category: "General",
   },
   {
     index: 87,
     word: "Hardware",
     taboo: ["Device", "Computer", "Software", "Development", "Code"],
-    explanation: "",
+    explanation:
+      "The physical components of a computer system, such as the processor, memory, and storage.",
     category: "General",
   },
   {
     index: 88,
     word: "Cookie",
     taboo: ["Data", "Reject", "Browser", "Internet", "Privacy"],
-    explanation: "",
+    explanation:
+      "A small file stored in a browser that saves user data and preferences for a website.",
     category: "General",
   },
   {
     index: 89,
     word: "JPEG",
     taboo: ["Image", "Format", "Compression", "PNG", "File"],
-    explanation: "",
+    explanation:
+      "A compressed image file format commonly used for photographs.",
     category: "General",
   },
   {
     index: 90,
     word: "PNG",
     taboo: ["Image", "Format", "Compression", "JPEG", "File"],
-    explanation: "",
+    explanation:
+      "An image file format that supports transparency and lossless compression.",
     category: "General",
   },
   {
     index: 91,
     word: "GIF",
     taboo: ["Image", "Format", "Animation", "File", "Send"],
-    explanation: "",
+    explanation:
+      "An image format that supports short animated sequences and is widely used online.",
     category: "General",
   },
   {
@@ -710,91 +740,103 @@ export const generalTabooList: TabooWord[] = [
       "Cryptocurrency",
       "Contract",
     ],
-    explanation: "",
+    explanation:
+      "A vision of the internet built on decentralized technology like blockchains, giving users more ownership over their data and digital assets.",
     category: "General",
   },
   {
     index: 93,
     word: "Search Engine",
     taboo: ["Google", "Optimization", "Find", "Browser", "Result"],
-    explanation: "",
+    explanation:
+      "A tool that indexes and retrieves web pages based on a user's search query.",
     category: "General",
   },
   {
     index: 94,
     word: "Quantum Computing",
     taboo: ["Quantum", "Bit", "Superposition", "Entanglement", "Gate"],
-    explanation: "",
+    explanation:
+      "Computing that uses quantum mechanics to process information far faster than classical computers.",
     category: "General",
   },
   {
     index: 95,
     word: "Spam",
     taboo: ["Email", "Message", "Scam", "Inbox", "Junk"],
-    explanation: "",
+    explanation:
+      "Unsolicited and often unwanted messages sent in bulk, typically by email.",
     category: "General",
   },
   {
     index: 96,
     word: "Local Area Network",
     taboo: ["Cable", "WAN", "Ethernet", "Router", "Device"],
-    explanation: "",
+    explanation:
+      "A network connecting computers within a limited area like an office or building.",
     category: "General",
   },
   {
     index: 97,
     word: "Ethernet",
     taboo: ["Cable", "WAN", "LAN", "Router", "Device"],
-    explanation: "",
+    explanation:
+      "A wired networking technology used to connect devices within a local area network.",
     category: "General",
   },
   {
     index: 98,
     word: "Windows",
     taboo: ["Operating System", "Linux", "Mac", "Computer", "Desktop"],
-    explanation: "",
+    explanation:
+      "Microsoft's widely used operating system for personal computers.",
     category: "General",
   },
   {
     index: 99,
     word: "MacOS",
     taboo: ["Operating System", "Linux", "Windows", "Apple", "Meta"],
-    explanation: "",
+    explanation: "Apple's desktop operating system for Mac computers.",
     category: "General",
   },
   {
     index: 100,
     word: "Command Line",
     taboo: ["Terminal", "Text", "Code", "Type", "Black Screen"],
-    explanation: "",
+    explanation:
+      "A text-based interface for interacting with a computer by typing commands.",
     category: "General",
   },
   {
     index: 101,
     word: "Server",
     taboo: ["Client", "Host", "Cloud", "Data", "Backend"],
-    explanation: "",
+    explanation:
+      "A computer or program that provides data or services to other computers over a network.",
     category: "General",
   },
   {
     index: 102,
     word: "Touchscreen",
     taboo: ["Screen", "Finger", "Tap", "Swipe", "Display"],
-    explanation: "",
+    explanation:
+      "A display that detects and responds to touch input from fingers or a stylus.",
     category: "General",
   },
   {
     index: 103,
     word: "Avatar",
     taboo: ["Virtual", "Character", "Metaverse", "Movie", "World"],
-    explanation: "",
+    explanation:
+      "A graphical image or character that represents a user in a digital environment.",
     category: "General",
   },
   {
     index: 104,
     word: "Meta",
     taboo: ["Social Media", "Instagram", "Facebook", "Post", "Mark Zuckerberg"],
-    explanation: "",
+    explanation:
+      "The parent company of Facebook, Instagram, and WhatsApp, focused on social media and the metaverse.",
     category: "General",
   },
 ];
