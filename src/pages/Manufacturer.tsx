@@ -218,15 +218,9 @@ export default function Manufacturer() {
       .filter((bucket) => bucket.pool.length > 0 && bucket.pairTarget > 0);
 
     const pairs: TabooCard[] = [];
-    let hasRemaining = true;
 
-    while (hasRemaining) {
-      hasRemaining = false;
-
-      for (const bucket of buckets) {
-        if (bucket.pairCount >= bucket.pairTarget) continue;
-        hasRemaining = true;
-
+    for (const bucket of buckets) {
+      while (bucket.pairCount < bucket.pairTarget) {
         const top = bucket.pool[bucket.cursor % bucket.pool.length];
         const bottom = bucket.pool[(bucket.cursor + 1) % bucket.pool.length];
         bucket.cursor += 2;

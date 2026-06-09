@@ -24,32 +24,45 @@ export function useCardGeneration({
 
   // Generate cards when category changes or on initial load
   useEffect(() => {
-    const generateCards = async () => {
-      if (filteredCards.length > 0) {
-        // Always generate all cards in the category for carousel mode
-        const pairs = [];
-        // Use filteredCards as-is to maintain order
-        for (let i = 0; i < filteredCards.length - 1; i += 2) {
-          pairs.push({
-            id: `${selectedCategory}-${Date.now()}-${i}`,
-            top: filteredCards[i],
-            bottom: filteredCards[i + 1],
-            createdAt: new Date(),
-          });
-        }
+    let cancelled = false;
 
-        if (pairs.length > 0) {
-          const svgs = await generateMultipleSVGs(pairs, {
-            category: selectedCategory,
-          });
-          setGeneratedCards(svgs);
-          setOutput(svgs[0]);
-          setCurrentCardIndex(0);
-        }
+    const generateCards = async () => {
+      if (filteredCards.length < 2) return;
+
+      const pairs: TabooCard[] = [];
+      for (let i = 0; i < filteredCards.length - 1; i += 2) {
+        pairs.push({
+          id: `${selectedCategory}-${Date.now()}-${i}`,
+          top: filteredCards[i],
+          bottom: filteredCards[i + 1],
+          createdAt: new Date(),
+        });
+      }
+      if (pairs.length === 0) return;
+
+      // Generate the first card individually so it appears immediately and
+      // warms the font/image cache before the parallel batch below.
+      const firstSvg = await generateSVG(pairs[0], {
+        category: selectedCategory,
+      });
+      if (cancelled) return;
+      setOutput(firstSvg);
+      setGeneratedCards([firstSvg]);
+      setCurrentCardIndex(0);
+
+      if (pairs.length > 1) {
+        const rest = await generateMultipleSVGs(pairs.slice(1), {
+          category: selectedCategory,
+        });
+        if (cancelled) return;
+        setGeneratedCards([firstSvg, ...rest]);
       }
     };
 
     generateCards();
+    return () => {
+      cancelled = true;
+    };
   }, [selectedCategory]);
 
   // Shuffle cards in the current category
