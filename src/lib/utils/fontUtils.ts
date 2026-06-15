@@ -70,33 +70,29 @@ export async function ensureEmbeddedTechybaraImages() {
   return TECHYBARA_IMAGE_CACHE;
 }
 
-export async function ensureEmbeddedFonts(): Promise<FontData> {
-  if (!FONT_DATA_CACHE.gaegu) {
-    FONT_DATA_CACHE.gaegu = await fetchImageAsDataUri(
-      "/assets/fonts/Gaegu/Gaegu-Bold.ttf",
-    );
+let _fontLoadPromise: Promise<FontData> | null = null;
+
+export function ensureEmbeddedFonts(): Promise<FontData> {
+  if (!_fontLoadPromise) {
+    _fontLoadPromise = Promise.all([
+      loadFontAsBase64("/assets/fonts/Gaegu/Gaegu-Bold.ttf"),
+      loadFontAsBase64("/assets/fonts/monospace/Monospace.ttf"),
+      loadFontAsBase64("/assets/fonts/monospace/MonospaceBold.ttf"),
+      loadFontAsBase64(
+        "/assets/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf",
+      ),
+    ]).then(([gaegu, mono, monoBold, sometypeMono]) => {
+      FONT_DATA_CACHE.gaegu = gaegu;
+      FONT_DATA_CACHE.mono = mono;
+      FONT_DATA_CACHE.monoBold = monoBold;
+      FONT_DATA_CACHE.sometypeMono = sometypeMono;
+      return FONT_DATA_CACHE;
+    });
   }
-  if (!FONT_DATA_CACHE.mono) {
-    FONT_DATA_CACHE.mono = await fetchImageAsDataUri(
-      "/assets/fonts/monospace/Monospace.ttf",
-    );
-  }
-  if (!FONT_DATA_CACHE.monoBold) {
-    FONT_DATA_CACHE.monoBold = await fetchImageAsDataUri(
-      "/assets/fonts/monospace/MonospaceBold.ttf",
-    );
-  }
-  if (!FONT_DATA_CACHE.sometypeMono) {
-    FONT_DATA_CACHE.sometypeMono = await fetchImageAsDataUri(
-      "/assets/fonts/Sometype_Mono/SometypeMono-VariableFont_wght.ttf",
-    );
-  }
-  return FONT_DATA_CACHE;
+  return _fontLoadPromise;
 }
 
-export async function ensurePackagingFonts(): Promise<FontData> {
-  return ensureEmbeddedFonts();
-}
+export const ensurePackagingFonts = ensureEmbeddedFonts;
 
 export async function loadFontAsBase64(url: string): Promise<string> {
   const response = await fetch(url);
